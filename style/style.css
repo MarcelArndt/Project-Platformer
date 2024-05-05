@@ -1,0 +1,144 @@
+/* Make a ColorTheme */
+:root{
+  --darker_text_color: #00003a;
+  --brighter_text_color: #ffffff;
+  --first_background_color: #42513b;
+  --second_background_color: #cce5cd;
+  --theme-color: rgb(108, 191, 133);
+  --footer_color: #0d2f2a;
+  --main_color: #056731;
+  --accent_color: #15b781;
+  --error_color: #db371a;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body,html{
+  height: 100%;
+}
+
+body{
+  font-family: OpenSans;
+  font-weight: 400;
+  margin:0px;
+  padding:0px;
+  color:var(--darker_text_color);
+  background: var(--first_background_color);
+}
+
+header{
+  background: var(--second_background_color);
+  padding: 64px 24px;
+}
+
+section{
+  padding: 0px 0px;
+}
+
+footer{
+  background: var(--footer_color);
+  color:var(--brighter_text_color);
+  padding: 64px 24px;
+}
+
+h1{
+  padding-top: 32px;
+  padding-bottom: 10px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  color:var(--main_color);
+}
+
+h2{
+  padding-top: 32px;
+  padding-bottom: 10px;
+  color:var(--accent_color);
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+h3{
+  padding-top: 16px;
+  padding-bottom: 10px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+h4{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+h5{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+h6{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color:var(--error_color);
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+p{
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
+#canvas{
+  background-color: #ffffff;
+}
+
+.main_wrapper{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.content_wrapper{
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1440px;
+}
+
+.fgrow{
+  flex-grow:1;
+  display: flex;
+  align-items: center;
+}
+
+.button{
+  cursor: pointer;
+  max-width: 200px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  background-color: var(--main_color);
+  padding: 8px 16px;
+  color: white;
+  transition: transform 0.25ms ease-in-out;
+}
+
+.button:hover{
+  text-decoration: underline;
+  transform: scale(1.05);
+  transition: transform 0.25ms ease-in-out;
+}
+
+.toCenterBox{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
