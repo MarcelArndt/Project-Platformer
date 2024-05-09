@@ -18,6 +18,19 @@ export class Entity extends Rectangle{
     }
 
     update(deltaTime){
-    
     }
+
+    searchAndDelete(type){
+        for (let i = 0; i < this.level.objects.length; i++){
+            if (this.level.objects[i].subType == type && this.level.objects[i].index == this.index){
+                this.level.objects.splice([i],1)
+            } 
+        }
+        for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){
+            if (this.level.obectsOfType.Entity[i].subType == type && this.level.obectsOfType.Entity[i].index == this.index){
+                this.level.obectsOfType.Entity.splice([i],1)
+            } 
+        }
+    }
+
 }

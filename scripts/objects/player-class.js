@@ -1,4 +1,6 @@
-import {Box} from "./box.js";
+import { Box} from "./box.js";
+import { Hitbox } from "./hitbox-class.js";
+import { Level } from "../level.js";
 
 export class Player extends Box {
     constructor(options, type){
@@ -11,6 +13,7 @@ export class Player extends Box {
         },
             type || "Player"
         );
+        this.facingLeft = true;
         this.crouch = false;
         this.jumpseed = -1.025;
         this.walkspeed = 0.005;
@@ -24,16 +27,17 @@ export class Player extends Box {
     addControll(){ 
         document.addEventListener("keydown", (event) => {     
             switch (event.key) {     
-                case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed;} break;
-                case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;} break ;s 
+                case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed; this.facingLeft = true;};  break;
+                case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;this.facingLeft = false;};  break ; 
 
                 case " ": case "w": if(this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch){
                     this.onGround = false;
                     this.isCoyoteTimeReady = false;
                     clearTimeout(this.currentCoyoteTime);
-                    this.vel[1] = this.jumpseed; break;  
-                };
-                case "f": console.log("attack"); break;s
+                    this.vel[1] = this.jumpseed; 
+                    break;  
+                }; break;
+                case "f": this.createHitbox(); break;s
                 case "r": console.log("do a roll"); break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;
             }
@@ -107,5 +111,30 @@ export class Player extends Box {
         if (currentTime - this.coyoteTime >= this.currentCoyoteTime){
             this.isCoyoteTimeReady = false;
         }
+    }
+
+    checkfacingForPos(amount){
+        let vector = "";
+        if (this.facingLeft) {
+            vector = this.posLeft + amount;
+        } else {
+            vector = this.posRight - amount * 2;
+        }
+        return vector;
+    }
+
+    createHitbox(){
+        let newPos = [this.checkfacingForPos(25), this.posBottom - 42]
+        let level = this.level;
+        let newObject = {
+            level: level,
+            pos: newPos,
+            size: [25, 40],
+            color: "#FF3A3A",
+            lifespan : 75
+        }
+        this.level.objects.push(
+            new Hitbox (newObject)
+        );
     }
 }

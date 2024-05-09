@@ -12,22 +12,9 @@ export class Coin extends Entity{
             if (obj.type == "Player"){
                 let isCollide = this.collideWith(obj);
                 if(isCollide){
-                        this.searchForCoinAndDelete();
+                        this.searchAndDelete("Coin");
                 }
             }  
         })
-    }
-
-    searchForCoinAndDelete(){
-        for (let i = 0; i < this.level.objects.length; i++){
-            if (this.level.objects[i].type == "Entity" && this.level.objects[i].index == this.index){
-                this.level.objects.splice([i],1)
-            } 
-        }
-        for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){
-            if (this.level.obectsOfType.Entity[i].subType == "Coin" && this.level.obectsOfType.Entity[i].index == this.index){
-                this.level.obectsOfType.Entity.splice([i],1)
-            } 
-        }
     }
 }
