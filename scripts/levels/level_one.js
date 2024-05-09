@@ -2,7 +2,8 @@ import { Level } from "../level.js";
 import { Player } from "../objects/player-class.js";
 import { Rectangle } from "../objects/rectangle.js";
 import { Box } from "../objects/box.js";
-import { Entity} from "../objects/Entity-Class.js"
+import { Entity} from "../objects/entity-class.js";
+import { Coin} from "../objects/coin-class.js";
 
 export const levelOne = new Level({
     size: [1200,1000],
@@ -55,12 +56,12 @@ export const levelOne = new Level({
             size: [40, 40],
             color: "#f7b94f"
     }),
-    new Entity({
+    new Coin({
         pos: [980, 950],
         size: [24, 24],
         color: "#FFD53D"
     }),    
-    new Entity({
+    new Coin({
         pos: [180, 950],
         size: [24, 24],
         color: "#FFD53D"

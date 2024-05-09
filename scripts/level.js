@@ -48,11 +48,11 @@ export class Level {
     update(deltaTime){
         clearCanvas();
         for(let i = 0; i < this.objects.length; i++){
-            this.objects[i].update(deltaTime, this.objects);
-            if (this.objects[i].type == "Player"){
-                this.objects[i].updatePlayerExtras();
-            }
-            this.objects[i].draw();
+            try{ this.objects[i].update(deltaTime, this.objects);
+                if (this.objects[i].type == "Player"){
+                    this.objects[i].updatePlayerExtras();
+                }
+                this.objects[i].draw();} catch{}
         }
         this.drawObjects();
         this.updateCamera();
@@ -65,10 +65,9 @@ export class Level {
         }
     }
 
-
-    updateCamera(){
-        this.cameraPos[0] = Math.max(0, Math.min(this.size[0] - canvas.width, this.player.posRight - canvas.width /2));
-        this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - canvas.height, this.player.posTop - canvas.height /2));
+    updateCamera(){  
+        this.cameraPos[0] = Math.max(0, Math.min(this.size[0] - canvas.width * 0.69, this.player.posRight - canvas.width * 0.65 /2 ));
+        this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - canvas.height * 0.69, this.player.posTop - canvas.height * 0.5 /2));
     }
 
     checkWin(){

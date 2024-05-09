@@ -2,10 +2,9 @@ import { Rectangle } from "./rectangle.js";
 
 export class Entity extends Rectangle{
     constructor(options, type){
-        const {pos, size, color, value} = options
+        const {pos, size, color} = options
         super({pos, size, color}, type || "Entity");
-        this.index = this.genEntityIndex();
-        
+        this.index = this.genEntityIndex();  
     }
 
     genEntityIndex(){
@@ -19,12 +18,6 @@ export class Entity extends Rectangle{
     }
 
     update(deltaTime){
-        this.level.objects.forEach(obj => {
-            if (obj.type == "Player"){
-                let isCollide = this.collideWith(obj);
-                if(isCollide){
-                }
-            }  
-        })
+    
     }
 }
