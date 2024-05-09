@@ -1,5 +1,4 @@
 import {Box} from "./box.js";
-import {canvas} from "../canvas.js";
 
 export class Player extends Box {
     constructor(options, type){
@@ -20,23 +19,20 @@ export class Player extends Box {
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
         this.addControll();
-        this
-        
     }
 
     addControll(){ 
         document.addEventListener("keydown", (event) => {     
             switch (event.key) {     
                 case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed;} break;
-                case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;} break ;
+                case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;} break ;s 
 
-                case " ": case "w": if(this.onGround || this.isCoyoteTimeReady && !this.crouch){
-                        this.onGround = false;
-                        this.isCoyoteTimeReady = false;
-                        clearTimeout(this.currentCoyoteTime);
-                        this.vel[1] = this.jumpseed; break;  
-                        };
-
+                case " ": case "w": if(this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch){
+                    this.onGround = false;
+                    this.isCoyoteTimeReady = false;
+                    clearTimeout(this.currentCoyoteTime);
+                    this.vel[1] = this.jumpseed; break;  
+                };
                 case "f": console.log("attack"); break;s
                 case "r": console.log("do a roll"); break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;

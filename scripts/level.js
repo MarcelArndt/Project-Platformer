@@ -28,7 +28,8 @@ export class Level {
             Rectangle: [],
             Box: [],
             Player: [],
-            Goal: []
+            Goal: [],
+            Entity: [],
         }
 
         this.addObjects(option.objects || []);

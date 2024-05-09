@@ -77,7 +77,7 @@ export class Box extends Rectangle{
     collide(obj){
         return {
             fromAbove: () =>{
-                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj)){
+                if (this.getPrevPosBottom() <= obj.posTop && obj.type != "Entity" && this.collideWith(obj)){
                     this.setBottom(obj.posTop);
                     this.vel[1] = 0;
                     this.onGround = true;
@@ -85,13 +85,13 @@ export class Box extends Rectangle{
             }
             },
             fromBottom: () =>{
-                if (this.getPrevPosTop() >= obj.posBottom && this.collideWith(obj)){
+                if (this.getPrevPosTop() >= obj.posBottom && obj.type != "Entity" && this.collideWith(obj)){
                     this.setTop(obj.posBottom);
                     this.vel[1] = 0;
             }
             },
             fromRight: () =>{
-                if ( this.getPrevPosRight() <= obj.posLeft && this.collideWith(obj)){
+                if ( this.getPrevPosRight() <= obj.posLeft && obj.type != "Entity" && this.collideWith(obj)){
                     if (this.pushObject(obj, this.level.objects).toRight()) {
                         return
                     }
@@ -100,12 +100,13 @@ export class Box extends Rectangle{
             }
             },
             fromLeft: () =>{
-                if ( this.getPrevPosLeft() >= obj.posRight && this.collideWith(obj)){
+                if ( this.getPrevPosLeft() >= obj.posRight && obj.type != "Entity" && this.collideWith(obj)){
                     if (this.pushObject(obj, this.level.objects).toLeft()){
                         return
                     }
                     this.setLeft(obj.posRight);
                     this.vel[0] = 0;
+
                 }
             }
         }
