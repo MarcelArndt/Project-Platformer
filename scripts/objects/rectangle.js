@@ -1,8 +1,9 @@
 import {ctx} from "../canvas.js";
-import { camera } from "../level.js";
+
 
 export class Rectangle {
     constructor(option, type){
+    this.level = null;
     this.pos = option.pos;
     this.size = option.size;
     this.color = option.color; 
@@ -43,7 +44,7 @@ export class Rectangle {
 
     draw(){
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.pos[0] - camera.pos[0], this.pos[1] - camera.pos[1], this.size[0], this.size[1]);
+        ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
     }
 
     collideWith(objectRectangle, VectorOffest = [0,0]){

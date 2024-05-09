@@ -1,5 +1,5 @@
-class Timer{
-    constructor(deltaTime) {
+export class Timer{
+    constructor(deltaTime = 1000 / 60) {
         this.lastTime = null;
         this.accumulatedTime = 0;
         this.deltaTime = deltaTime;
@@ -39,5 +39,3 @@ class Timer{
 
 
 }
-
-export const timer = new Timer (1000/60);

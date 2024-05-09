@@ -1,5 +1,4 @@
 import  {Rectangle} from "./rectangle.js";
-import  {levelSize} from "../level.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -18,22 +17,16 @@ export class Box extends Rectangle{
         return false;
     }
 
-    canBeMoved(objects, VectorOffest){
-        let fildertObjects = []
+    canBeMoved(VectorOffest){
+        let fildertObjects = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
 
         if( this.posLeft + VectorOffest[0] < 0 || 
-            this.posRight + VectorOffest[0] > levelSize[0] || 
+            this.posRight + VectorOffest[0] > this.level.size[0] || 
             this.posTop + VectorOffest[1] < 0 || 
-            this.PosBottom + VectorOffest[1] > levelSize[1])
+            this.PosBottom + VectorOffest[1] > this.level.size[1])
             {
                 return false;
             }
-    
-        for (let i = 0; i < objects.length; i++){
-            if(objects[i].type !== "Player"){
-            fildertObjects.push(objects[i]);
-            }
-        }
        
         return fildertObjects.every(obj => !this.collideWith(obj, VectorOffest));
     }
@@ -67,41 +60,36 @@ export class Box extends Rectangle{
         this.onGround = false
     }
 
-    update(deltaTime, levelObj){
+    update(deltaTime){
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
         this.boundToLevel();
-        levelObj.forEach(obj => {
-            this.collide(obj, levelObj).fromAbove();
-            this.collide(obj, levelObj).fromBottom();
-            this.collide(obj, levelObj).fromLeft();
-            this.collide(obj, levelObj).fromRight();
+        this.level.objects.forEach(obj => {
+            this.collide(obj).fromAbove();
+            this.collide(obj).fromBottom();
+            this.collide(obj).fromLeft();
+            this.collide(obj).fromRight();
         })
-        this.updatePlayer();
     }
 
-    updatePlayer(){
-        // find in PlayerClass
-    }
-
-    collide(obj, objects){
+    collide(obj){
         return {
             fromAbove: () =>{
-                if ( this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj)){
+                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj)){
                     this.setBottom(obj.posTop);
                     this.vel[1] = 0;
                     this.onGround = true;
             }
             },
             fromBottom: () =>{
-                if ( this.getPrevPosTop() >= obj.posBottom && this.collideWith(obj)){
+                if (this.getPrevPosTop() >= obj.posBottom && this.collideWith(obj)){
                     this.setTop(obj.posBottom);
                     this.vel[1] = 0;
             }
             },
             fromRight: () =>{
                 if ( this.getPrevPosRight() <= obj.posLeft && this.collideWith(obj)){
-                    if (this.pushObject(obj, objects).toRight()) {
+                    if (this.pushObject(obj, this.level.objects).toRight()) {
                         return
                     }
                     this.setRight(obj.posLeft);
@@ -110,7 +98,7 @@ export class Box extends Rectangle{
             },
             fromLeft: () =>{
                 if ( this.getPrevPosLeft() >= obj.posRight && this.collideWith(obj)){
-                    if (this.pushObject(obj, objects).toLeft()){
+                    if (this.pushObject(obj, this.level.objects).toLeft()){
                         return
                     }
                     this.setLeft(obj.posRight);
@@ -120,9 +108,6 @@ export class Box extends Rectangle{
         }
     }
 
-    /**
-     *   pushObject() is only accessible with Objects/Classes which can push (Only "Player" can push something).
-     */
     pushObject(){
         return{
             toRight:() => false,
@@ -131,29 +116,24 @@ export class Box extends Rectangle{
     }
  
     boundToLevel(){
-        if (this.posBottom >= levelSize[1]){
+        if (this.posBottom >= this.level.size[1]){
             this.vel[1] = 0;
-            this.setBottom(levelSize[1]);
+            this.setBottom(this.level.size[1]);
             this.onGround = true;
         }
         
         if (this.posLeft <= 0){
             this.setLeft(0);
             this.vel[0] = 0;
-        } else if (this.posRight >= levelSize[0]){
+        } else if (this.posRight >= this.level.size[0]){
             this.vel[0] = 0;
-            this.setRight(levelSize[0]);
+            this.setRight(this.level.size[0]);
         }
     }
 
-    getRemainingDistanceRight(objects){
-        let distance = levelSize[0] - this.posRight;
-        let filterdArray = [];
-        for (let i = 0; i < objects.length; i++){
-            if(objects[i].type !== "Player"){
-                filterdArray.push(objects[i]);
-            }
-        }
+    getRemainingDistanceRight(){
+        let distance = this.level.size[0] - this.posRight;
+        let filterdArray = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
         filterdArray.forEach(obj => {
             if (this.posRight <= obj.posLeft && 
                 this.posBottom > obj.posTop &&
@@ -164,14 +144,9 @@ export class Box extends Rectangle{
         return distance 
     }
 
-    getRemainingDistanceLeft(objects){
+    getRemainingDistanceLeft(){
         let distance = this.posLeft;
-        let filterdArray = [];
-        for (let i = 0; i < objects.length; i++){
-            if(objects[i].type !== "Player"){
-                filterdArray.push(objects[i]);
-            }
-        }
+        let filterdArray = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
         filterdArray.forEach(obj => {
             if (this.posLeft >= obj.posRight && 
                 this.posBottom > obj.posTop &&

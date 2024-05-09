@@ -1,5 +1,4 @@
 import {Box} from "./box.js";
-import {camera, levelSize} from "../level.js";
 import {canvas} from "../canvas.js";
 
 export class Player extends Box {
@@ -21,7 +20,6 @@ export class Player extends Box {
 
         
     }
-
 
     addControll(){ 
         document.addEventListener("keydown", (event) => {     
@@ -55,17 +53,17 @@ export class Player extends Box {
 
     }
 
-    pushObject(box, objects){
+    pushObject(box){
         return{
             toLeft:() => {
                 if(box.type !== "Box") return false;
                 const distance = box.posRight - this.posLeft;
-                if(box.canBeMoved(objects, [-distance, 0])){  
+                if(box.canBeMoved([-distance, 0])){  
                     box.setRight(this.posLeft);
                     return true; 
                 }
-                const smallGap = box.getRemainingDistanceLeft(objects);
-                if(box.canBeMoved(objects, [-smallGap, 0])){
+                const smallGap = box.getRemainingDistanceLeft();
+                if(box.canBeMoved([-smallGap, 0])){
                     box.setLeft(box.posLeft - smallGap);
                     this.setLeft(box.posRight);
                     return true;
@@ -75,13 +73,12 @@ export class Player extends Box {
             toRight: () => {
                 if(box.type !== "Box") return false;
                 const distance = this.posRight - box.posLeft;
-                if(box.canBeMoved(objects, [distance, 0])){  
+                if(box.canBeMoved([distance, 0])){  
                     box.setLeft(this.posRight);
                     return true; 
                 }
-                const smallGap = box.getRemainingDistanceRight(objects);
-                if(box.canBeMoved(objects, [-smallGap, 0])){
-                    console.log("smallgap")
+                const smallGap = box.getRemainingDistanceRight();
+                if(box.canBeMoved([-smallGap, 0])){
                     box.setRight(box.posRight + smallGap);
                     this.setRight(box.posLeft);
                     return true;
@@ -89,10 +86,5 @@ export class Player extends Box {
                 return false;
             }
         }
-    }
-
-    updatePlayer(){
-        camera.pos[0] = Math.max(0, Math.min(levelSize[0] - canvas.width, this.posRight - canvas.width /2));
-        camera.pos[1] = Math.max(0, Math.min(levelSize[1] - canvas.height, this.posTop - canvas.height /2));
     }
 }
