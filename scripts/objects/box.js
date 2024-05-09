@@ -1,4 +1,4 @@
-import  {Rectangle} from "./rectangle.js";
+import {Rectangle} from "./rectangle.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -72,6 +72,8 @@ export class Box extends Rectangle{
         })
     }
 
+
+
     collide(obj){
         return {
             fromAbove: () =>{
@@ -79,6 +81,7 @@ export class Box extends Rectangle{
                     this.setBottom(obj.posTop);
                     this.vel[1] = 0;
                     this.onGround = true;
+                    return this.onGround;
             }
             },
             fromBottom: () =>{

@@ -48,6 +48,9 @@ export class Level {
         clearCanvas();
         for(let i = 0; i < this.objects.length; i++){
             this.objects[i].update(deltaTime, this.objects);
+            if (this.objects[i].type == "Player"){
+                this.objects[i].updatePlayerExtras();
+            }
             this.objects[i].draw();
         }
         this.drawObjects();

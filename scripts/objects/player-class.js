@@ -15,9 +15,12 @@ export class Player extends Box {
         this.crouch = false;
         this.jumpseed = -1.025;
         this.walkspeed = 0.005;
-
+        this.coyoteTime = 75;
+        this.isCoyoteTimeReady = true;
+        this.latestOnGround = 0;
+        this.currentCoyoteTime = null;
         this.addControll();
-
+        this
         
     }
 
@@ -27,8 +30,10 @@ export class Player extends Box {
                 case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed;} break;
                 case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;} break ;
 
-                case " ": case "w": if(this.onGround && this.crouch == false){
+                case " ": case "w": if(this.onGround || this.isCoyoteTimeReady && !this.crouch){
                         this.onGround = false;
+                        this.isCoyoteTimeReady = false;
+                        clearTimeout(this.currentCoyoteTime);
                         this.vel[1] = this.jumpseed; break;  
                         };
 
@@ -85,6 +90,26 @@ export class Player extends Box {
                 }
                 return false;
             }
+        }
+    }
+
+    updatePlayerExtras(){
+        if (this.onGround && !this.isCoyoteTimeReady){
+            this.isCoyoteTimeReady = true;
+        } else if(!this.onGround && this.isCoyoteTimeReady){
+          this.startCoyoteTime();
+        }
+    }
+
+    startCoyoteTime(){
+        this.latestOnGround = new Date();
+        this.currentCoyoteTime = setTimeout(() => {this.isCoyoteTimeOver()}, this.coyoteTime);
+    }
+
+    isCoyoteTimeOver(){
+        let currentTime = new Date();
+        if (currentTime - this.coyoteTime >= this.currentCoyoteTime){
+            this.isCoyoteTimeReady = false;
         }
     }
 }

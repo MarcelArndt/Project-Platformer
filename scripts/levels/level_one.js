@@ -6,20 +6,20 @@ import { Box } from "../objects/box.js";
 export const levelOne = new Level({
     size: [1200,1000],
     objects: [new Player({
-        pos: [50,540],
+        pos: [50,940],
         size: [23,43],
         color:'#354f52'
      }),
     
     
     new Rectangle({
-            pos: [0, 430 ],
+            pos: [360, 940 ],
             size: [50, 70],
             color: "#354f52"
     }),
     
     new Rectangle({
-            pos: [450, 900 ],
+            pos: [475, 900 ],
             size: [50, 20],
             color: "#354f52"
     }),
