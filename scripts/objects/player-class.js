@@ -1,6 +1,6 @@
-import { Box} from "./box.js";
+import { Box} from "./box-class.js";
 import { Hitbox } from "./hitbox-class.js";
-import { Level } from "../level.js";
+
 
 export class Player extends Box {
     constructor(options, type){

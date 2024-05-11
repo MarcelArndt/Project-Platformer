@@ -1,8 +1,8 @@
 import { Level } from "../level.js";
 import { Player } from "../objects/player-class.js";
 import { Rectangle } from "../objects/rectangle.js";
-import { Box } from "../objects/box.js";
-import { Entity} from "../objects/entity-class.js";
+import { Box } from "../objects/box-class.js";
+import { Enemy } from "../objects/enemy-class.js";
 import { Coin} from "../objects/coin-class.js";
 
 export const levelOne = new Level({
@@ -12,7 +12,12 @@ export const levelOne = new Level({
         size: [23,43],
         color:'#354f52'
      }),
-    
+
+     new Enemy({
+        pos: [250,840],
+        size: [23,43],
+        color:'#C90202'
+     }),
     
     new Rectangle({
             pos: [360, 940 ],

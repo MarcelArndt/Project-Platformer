@@ -1,4 +1,5 @@
 import {canvas, clearCanvas} from "./canvas.js";
+import { Enemy } from "./objects/enemy-class.js";
 import {Timer} from "./timer.js";
 
 
@@ -30,6 +31,7 @@ export class Level {
             Player: [],
             Goal: [],
             Entity: [],
+            Enemy: []
         }
 
         this.addObjects(option.objects || []);
