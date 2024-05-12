@@ -1,5 +1,4 @@
 import {canvas, clearCanvas} from "./canvas.js";
-import { Enemy } from "./objects/enemy-class.js";
 import {Timer} from "./timer.js";
 
 
@@ -50,11 +49,15 @@ export class Level {
     update(deltaTime){
         clearCanvas();
         for(let i = 0; i < this.objects.length; i++){
-            try{ this.objects[i].update(deltaTime, this.objects);
+            try{ this.objects[i].update(deltaTime);
                 if (this.objects[i].type == "Player"){
-                    this.objects[i].updatePlayerExtras();
+                    this.objects[i].updatePlayerExtras(deltaTime);
                 }
-                this.objects[i].draw();} catch{}
+                if (this.objects[i].type == "Enemy"){
+                    this.objects[i].updateEnemy();
+                 }
+                this.objects[i].draw();
+            } catch{}
         }
         this.drawObjects();
         this.updateCamera();

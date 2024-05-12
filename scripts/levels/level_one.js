@@ -14,7 +14,7 @@ export const levelOne = new Level({
      }),
 
      new Enemy({
-        pos: [250,840],
+        pos: [450,900],
         size: [23,43],
         color:'#C90202'
      }),
@@ -57,7 +57,7 @@ export const levelOne = new Level({
     }),
     
     new Box({
-            pos: [550, 1000],
+            pos: [480, 800],
             size: [40, 40],
             color: "#f7b94f"
     }),

@@ -97,6 +97,9 @@ export class Box extends Rectangle{
                     }
                     this.setRight(obj.posLeft);
                     this.vel[0] = 0;
+                    if(this.type == "Enemy"){
+                        this.changeDirection();
+                    }
             }
             },
             fromLeft: () =>{
@@ -106,7 +109,9 @@ export class Box extends Rectangle{
                     }
                     this.setLeft(obj.posRight);
                     this.vel[0] = 0;
-
+                    if(this.type == "Enemy"){
+                        this.changeDirection();
+                    }
                 }
             }
         }
@@ -129,9 +134,15 @@ export class Box extends Rectangle{
         if (this.posLeft <= 0){
             this.setLeft(0);
             this.vel[0] = 0;
+            if (this.type == "Enemy"){
+                this.changeDirection();
+            }
         } else if (this.posRight >= this.level.size[0]){
             this.vel[0] = 0;
             this.setRight(this.level.size[0]);
+            if (this.type == "Enemy"){
+                this.changeDirection();
+            }
         }
     }
 
@@ -159,5 +170,9 @@ export class Box extends Rectangle{
                 }
         })
         return distance 
+    }
+
+    changeDirection(){
+        //
     }
 }
