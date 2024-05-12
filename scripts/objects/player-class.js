@@ -115,23 +115,30 @@ export class Player extends Box {
 
     checkfacingForPos(amount){
         let vector = "";
+        let motion = 0;
+        if (this.vel[0] > 0 || this.vel[0] < 0){
+            motion = 40;
+        }
         if (this.facingLeft) {
-            vector = this.posLeft + amount;
+            vector = this.posLeft - 15 + amount + motion;
         } else {
-            vector = this.posRight - amount * 2;
+            vector = this.posRight - 45 - amount - motion;
         }
         return vector;
     }
 
     createHitbox(){
-        let newPos = [this.checkfacingForPos(25), this.posBottom - 42]
+        let newPos = [this.checkfacingForPos(0), this.posBottom - 41]
         let level = this.level;
         let newObject = {
             level: level,
             pos: newPos,
-            size: [25, 40],
+            size: [60, 40],
             color: "#FF3A3A",
             lifespan : 75
+        }
+        if (this.onGround){
+            this.vel[0] = 0;
         }
         this.level.objects.push(
             new Hitbox (newObject)

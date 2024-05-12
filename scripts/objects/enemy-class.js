@@ -23,7 +23,9 @@ export class Enemy extends Box {
         this.currentCoyoteTime = null;
         this.walkDirection = 0;
         this.PlayerLocation = [];
-        
+        this.gethit = false;
+        this.activeInvincibility = 0;
+        this.invincibilityTimer = 1000;
     }
 
     pushObject(box){
@@ -70,9 +72,25 @@ export class Enemy extends Box {
         this.level.obectsOfType.Box.forEach(obj => {
             this.isCollideWithBox(obj);
         });
+        this.level.objects.forEach(obj => {
+            if (obj.subType == "Hitbox"){
+                this.isCollideWithHitbox(obj)
+            }
+        });
         this.checkPlayerPosition();
         this.checkCurrentStatus();
+        this.checkInvincibilityTimer();
         this.checkMaxSpeed();
+
+    }
+
+
+    checkInvincibilityTimer(){
+        let currentTimer = new Date();
+        if (this.gethit && currentTimer - this.invincibilityTimer > this.activeInvincibility){
+            this.color = "red"
+            this.gethit = false;
+        }
     }
 
     isCollideWithBox(obj){
@@ -82,6 +100,25 @@ export class Enemy extends Box {
             this.changeDirection();
         }
     }
+
+    isCollideWithHitbox(obj){
+        let objPosX = obj.posRight + obj.posLeft;
+        objPosX = objPosX / 2
+        if(objPosX <= this.posLeft && objPosX <= this.posRight && this.collideWith(obj)){
+                this.color = "green";
+                this.gethit = true;
+                this.activeInvincibility = new Date();
+                this.set
+
+        } else if(objPosX >= this.posRight && objPosX >= this.posLeft && this.collideWith(obj)){
+                this.color = "green";
+                this.gethit = true;
+                this.activeInvincibility = new Date();
+                this.vel[0] = 250;
+
+        }
+    }
+    
 
     startCoyoteTime(){
         this.latestOnGround = new Date();
@@ -116,12 +153,12 @@ export class Enemy extends Box {
         let enemyPosY = this.posTop + this.posBottom / 2;
       
         if( playerPosX > enemyPosX - AgroRange && playerPosX < enemyPosX + AgroRange && playerPosY < enemyPosY + AgroRange * 1 && playerPosY > enemyPosY - AgroRange * 1){
-            if (playerPosX < enemyPosX && this.walkspeed > 0){
+            if (playerPosX < enemyPosX && this.walkspeed > 0 && !this.gethit){
                 this.changeDirection();
-            } else if (playerPosX > enemyPosX && this.walkspeed < 0){
+            } else if (playerPosX > enemyPosX && this.walkspeed < 0 && !this.gethit){
                 this.changeDirection();
             }
-            if (this.vel[0] == 0 && this.onGround){
+            if (this.vel[0] == 0 && this.onGround && !this.gethit){
                 this.jump();
             }
             
