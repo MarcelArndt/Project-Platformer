@@ -1,9 +1,7 @@
 import { Box} from "./box-class.js";
-import { Hitbox } from "./hitbox-class.js";
-
 
 export class Enemy extends Box {
-    constructor(options, type, HitPoints){
+    constructor(options, type){
         super({
             pos: options.pos,
             size: options.size,
@@ -28,6 +26,7 @@ export class Enemy extends Box {
         this.distanceToPlayer = [];
 
         this.gethit = false;
+        this.getPushBack = false;
         this.HitPoints = options.HitPoints || 10;
 
         this.activeInvincibility = 0;
@@ -37,7 +36,7 @@ export class Enemy extends Box {
         this.onChasing = false;
         this.start = false;
 
-        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed}
+        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color}
     }
 
 
@@ -77,15 +76,6 @@ export class Enemy extends Box {
     }
 
 
-    checkInvincibilityTimer(){
-        let currentTimer = new Date();
-        if (this.gethit && currentTimer - this.invincibilityTimer > this.activeInvincibility){
-            this.color = "red"
-            this.gethit = false;
-        }
-    }
-
-
     startCoyoteTime(){
         this.latestOnGround = new Date();
         this.currentCoyoteTime = setTimeout(() => {this.isCoyoteTimeOver()}, this.coyoteTime);
@@ -117,7 +107,6 @@ export class Enemy extends Box {
         }
         this.checkPlayerPosition();
         this.checkCurrentStatus();
-        this.checkInvincibilityTimer();
         this.checkMaxSpeed();
         this.checkAggro();
     }
@@ -139,14 +128,9 @@ export class Enemy extends Box {
         let isInFall = this.isInFall();
         let inAggro = this.checkIsPlayerinAggro();
         let HitPointsLeft = this.HitPointsLeft();
-    
-        this.level.objects.forEach(obj => {
-            if (obj.subType == "Hitbox"){
-                this.checkIsHit(obj)
-            }
-        });
+        let getHit = this.gethit
+        this.checkIsHit();
 
-        //console.log( this.vel[1], isInFall)
         if (!HitPointsLeft){
             this.status = "dead";
             //play dieAnimation and delete Enemey in Array of Objects
@@ -160,11 +144,13 @@ export class Enemy extends Box {
             this.status = "jump";
             //play jumpAnimation
 
-        } else if (this.gethit && HitPointsLeft){
+        } else if (getHit && HitPointsLeft){
+            this.checkInvincibilityTimer();
             this.status = "getHit";
+            this.pushBack();
             //set Status to pushBack
 
-        } else if (inAggro[0] && HitPointsLeft){
+        } else if (inAggro[0] && HitPointsLeft && !getHit){
             if(!this.onChasing){
                 this.onChasing = true;
                 this.jump(-0.50)
@@ -173,16 +159,15 @@ export class Enemy extends Box {
             //set Status to chasing Player
             this.chasing();
 
-        } else if(HitPointsLeft && !inAggro[0]){
+        } else if(HitPointsLeft && !inAggro[0] && !getHit){
             this.status = "walking";
             if(this.onChasing){
                 this.onChasing = false;
                 this.jump(-0.25)
             }
-            //set Status to walking around
+            //set Status to walking aroundd
             this.walking();
         }
-
     }
 
 
@@ -236,20 +221,61 @@ export class Enemy extends Box {
     }
 
 
-    checkIsHit(obj){
-        if(this.collideWith(obj)){
-            if(obj.forceToLeft && !this.gethit){
-                this.getHitLeft = true;
-            } else if(!obj.forceToLeft && !this.gethit){
-                this.getHitLeft = false;
-            }
-            this.color = "grey";
-            this.gethit = true;
-            this.activeInvincibility = new Date();
+    checkInvincibilityTimer(){
+        let timer = new Date();
+        if (this.gethit && timer - this.invincibilityTimer > this.activeInvincibility){
+            this.color = this.backupOption.color;
+            this.gethit = false;
+            this.getPushBack  = false;
         }
     }
 
 
+    checkIsHit(){
+        let leftForce = false;
+        this.level.objects.forEach(obj => {
+            if (obj.subType == "Hitbox"){
+                leftForce = obj.forceToLeft;
+                if(this.collideWith(obj) && !this.gethit){
+                    if(leftForce){
+                        this.getHitLeft = true;
+                    } else if(!leftForce){
+                        this.getHitLeft = false;
+                    }
+                    this.color = "grey";
+                    this.gethit = true;
+                    this.activeInvincibility = new Date();
+                }
+            }
+        });
+    }
+
+
+    pushBack(){
+
+        let currenttime = new Date();
+        let holdingtime = this.invincibilityTimer / 14;
+        let pushBackStrengh = 0.005;
+
+        
+        if (!this.getHitLeft) {
+            pushBackStrengh = pushBackStrengh * -1;
+        }
+
+        if(this.gethit && !this.getPushBack){
+            this.jump(-0.75);
+            this.acc = pushBackStrengh;
+            this.getPushBack  = true;
+        }
+
+        if (currenttime - holdingtime  >= this.activeInvincibility){
+            this.walkspeed = this.backupOption.walkspeed
+            this.grav = this.backupOption.grav
+        }
+
+    }
+
+/*
    old_checkIsHit(){
         if (this.gethit){
             let currenttime = new Date();
@@ -268,7 +294,7 @@ export class Enemy extends Box {
             }
         }
     }
-
+*/
 
     checkIsPlayerinAggro(){
         let playerdistance = this.checkDistanceToPlayer();
