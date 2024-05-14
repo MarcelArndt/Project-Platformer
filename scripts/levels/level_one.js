@@ -24,6 +24,12 @@ export const levelOne = new Level({
             size: [50, 70],
             color: "#354f52"
     }),
+
+    new Rectangle({
+        pos: [1060, 940 ],
+        size: [50, 70],
+        color: "#354f52"
+}),
     
     new Rectangle({
             pos: [475, 900 ],

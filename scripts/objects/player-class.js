@@ -113,29 +113,30 @@ export class Player extends Box {
         }
     }
 
-    checkfacingForPos(amount){
+    checkfacingForPos(){
         let vector = "";
         let motion = 0;
         if (this.vel[0] > 0 || this.vel[0] < 0){
             motion = 40;
         }
         if (this.facingLeft) {
-            vector = this.posLeft - 15 + amount + motion;
+            vector = this.posLeft 
         } else {
-            vector = this.posRight - 45 - amount - motion;
+            vector = this.posRight - 80;
         }
         return vector;
     }
 
     createHitbox(){
-        let newPos = [this.checkfacingForPos(0), this.posBottom - 41]
+        let newPos = [this.checkfacingForPos(), this.posBottom - 41]
         let level = this.level;
         let newObject = {
             level: level,
             pos: newPos,
-            size: [60, 40],
+            size: [80, 40],
             color: "#FF3A3A",
-            lifespan : 75
+            lifespan : 75,
+            forceToLeft: this.facingLeft
         }
         if (this.onGround){
             this.vel[0] = 0;
