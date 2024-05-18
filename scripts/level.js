@@ -23,7 +23,7 @@ export class Level {
         this.timer = new Timer(1000 / 60);
         this.status = status.ready;
         this.levelIsWon = false;
-        this.timer.update = (deltaTime) => this.update(deltaTime);
+        this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
         this.obectsOfType = {
             Rectangle: [],
             Box: [],
@@ -32,7 +32,9 @@ export class Level {
             Entity: [],
             Enemy: []
         }
-
+        this.screenshakeValue = 0;
+        this.screenshake = false;
+        this.screenshakeMaxRange = 24;
         this.addObjects(option.objects || []);
         this.start();
     }
@@ -62,6 +64,28 @@ export class Level {
         this.drawObjects();
         this.updateCamera();
         this.checkWin();
+        this.doScreenshake();
+    }
+
+    doScreenshake(){
+        let timeValue;
+        let value = this.screenshakeMaxRange;
+        if (this.screenshake){
+            console.log("screenshake")
+            for (let x = 0; x < 8; x++){
+                for (let i = -value; i < this.screenshakeMaxRange; i++){
+                    if( i % 2 == 0){
+                        this.screenshakeValue = i;
+                    } else {
+                        setTimeout(() => {
+                            this.screenshakeValue = i;
+                        }, 250);
+                    }
+                }
+            }
+        }
+        this.screenshake = false;
+        this.screenshakeValue = 0;
     }
 
     drawObjects(){
@@ -71,8 +95,8 @@ export class Level {
     }
 
     updateCamera(){  
-        this.cameraPos[0] = Math.max(0, Math.min(this.size[0] - canvas.width * 0.69, this.player.posRight - canvas.width * 0.65 /2 ));
-        this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - canvas.height * 0.69, this.player.posTop - canvas.height * 0.5 /2));
+        this.cameraPos[0] = Math.max(0, Math.min(this.size[0] -( canvas.width + (this.screenshakeValue * 2)) * 0.69, this.player.posRight - canvas.width * 0.65 /2) );
+        this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - (canvas.height + (this.screenshakeValue / 2)) * 0.69, this.player.posTop - canvas.height * 0.5 /2));
     }
 
     checkWin(){

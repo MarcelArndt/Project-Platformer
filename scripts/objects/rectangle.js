@@ -26,6 +26,14 @@ export class Rectangle {
         return this.pos[1] + this.size[1];
     }
 
+    get posX(){
+        return (this.posLeft + this.posRight) / 2
+    }
+
+    get posY(){
+        return (this.posTop + this.posBottom) / 2
+    }
+
     setLeft(val){
         this.pos[0] = val;
     }
@@ -45,6 +53,7 @@ export class Rectangle {
     draw(){
         ctx.fillStyle = this.color;
         ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
+        this.characterDraw();
     }
 
     collideWith(objectRectangle, VectorOffest = [0,0]){
@@ -59,5 +68,9 @@ export class Rectangle {
 
     update(){
         // in Main
+    }
+
+    characterDraw(){
+        //
     }
 }

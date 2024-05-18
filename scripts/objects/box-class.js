@@ -81,6 +81,10 @@ export class Box extends Rectangle{
                     this.setBottom(obj.posTop);
                     this.vel[1] = 0;
                     this.onGround = true;
+                    if (obj.type == "Player"){
+                        obj.jump.currentPressingKey = false;
+                        obj.jump.alreadyInJump = false
+                    }
                     return this.onGround;
             }
             },

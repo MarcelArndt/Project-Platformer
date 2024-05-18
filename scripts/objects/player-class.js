@@ -7,7 +7,7 @@ export class Player extends Box {
         super({
             pos: options.pos,
             size: options.size,
-            color: "blue",
+            color: options.color || "blue",
             grav: 0.005,
             friction: 0.2
         },
@@ -15,12 +15,28 @@ export class Player extends Box {
         );
         this.facingLeft = true;
         this.crouch = false;
-        this.jumpseed = -1.025;
+        this.jumpseed = -1.1;
         this.walkspeed = 0.005;
         this.coyoteTime = 75;
         this.isCoyoteTimeReady = true;
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
+        this.status = "";
+        this.cooldown = {dash: false,
+                         dashCooldown : "",
+                         mainAttack: false,
+                         mainCooldown: "",
+                         mainCooldownValue: 350,
+        };
+        this.jump = {
+                        alreadyInJump: false,
+                        currentPressingKey: false,
+                        jumpseed: -1.025,
+                        latestJump: "",
+                        latestKeyUp: "",
+                        maxWalljump: 2,
+                        isOnWall: false,
+        }
         this.addControll();
     }
 
@@ -29,33 +45,52 @@ export class Player extends Box {
             switch (event.key) {     
                 case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed; this.facingLeft = true;};  break;
                 case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;this.facingLeft = false;};  break ; 
+                case " ": case "w": this.playerJump(); break;
 
-                case " ": case "w": if(this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch){
-                    this.onGround = false;
-                    this.isCoyoteTimeReady = false;
-                    clearTimeout(this.currentCoyoteTime);
-                    this.vel[1] = this.jumpseed; 
-                    break;  
-                }; break;
-                case "f": this.createHitbox(); break;s
+               
+                case "f": this.playerAttack(); break;s
                 case "r": console.log("do a roll"); break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;
             }
         });
 
-        document.addEventListener("keydown", (event) => {
+        document.addEventListener("keypress", (event) => {
             switch (event.key) { 
-            
+
             }
         });
 
         document.addEventListener("keyup", (event) => { 
             switch (event.key) {   
+                
                 case "ArrowRight": case "d": case "ArrowLeft": case "a": this.acc = 0; break;
                 case "s": case "ArrowDown": if(this.crouch == true){this.crouch = false; this.size[1] = this.size[1] * 2}; this.setTop(this.posTop - this.size[1]/2); break;
+                case " ": case "w" : this.stopHoldingJump();
             }
         });
 
+    }
+
+    stopHoldingJump(){
+        this.jump.currentPressingKey = false; 
+        this.jump. latestKeyUp = new Date();
+    }
+
+    playerJump(){
+        if(this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch || this.jump.isOnWall && !this.crouch){
+            this.vel[1] += this.jumpseed;
+            this.onGround = false;
+            this.jump.alreadyInJump = false;
+            this.isCoyoteTimeReady = false;
+            clearTimeout(this.currentCoyoteTime);
+        }
+    }
+ 
+    checkKeyPressedTime(keyIsPressedTime){
+        if(keyIsPressedTime - 1000 >= this.jump.latestJump ){
+            return false
+        }
+        return true
     }
 
     pushObject(box){
@@ -94,6 +129,27 @@ export class Player extends Box {
     }
 
     updatePlayerExtras(){
+        this.checkCoyoteTime();
+        this.checkStatus();
+        this.ceckCooldown();
+    }
+
+    ceckCooldown(){
+        let currentTime = new Date();
+        this.checkMainAttackCooldown(currentTime);
+    }
+
+    checkMainAttackCooldown(currentTime){
+        if(currentTime - this.cooldown.mainCooldownValue > this.cooldown.mainCooldown){
+            this.cooldown.mainAttack = false;
+        }
+    }
+
+    checkStatus(){
+        //
+    }
+
+    checkCoyoteTime(){
         if (this.onGround && !this.isCoyoteTimeReady){
             this.isCoyoteTimeReady = true;
         } else if(!this.onGround && this.isCoyoteTimeReady){
@@ -113,12 +169,16 @@ export class Player extends Box {
         }
     }
 
+    playerAttack(){
+        if (!this.cooldown.mainAttack){
+            this.cooldown.mainAttack = true
+            this.createHitbox();
+            this.cooldown.mainCooldown = new Date();
+        }
+    }
+
     checkfacingForPos(){
         let vector = "";
-        let motion = 0;
-        if (this.vel[0] > 0 || this.vel[0] < 0){
-            motion = 40;
-        }
         if (this.facingLeft) {
             vector = this.posLeft 
         } else {
@@ -136,6 +196,7 @@ export class Player extends Box {
             size: [80, 40],
             color: "#FF3A3A",
             lifespan : 75,
+            demage : 10,
             forceToLeft: this.facingLeft
         }
         if (this.onGround){

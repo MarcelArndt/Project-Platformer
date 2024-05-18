@@ -27,7 +27,7 @@ export class Enemy extends Box {
 
         this.gethit = false;
         this.getPushBack = false;
-        this.HitPoints = options.HitPoints || 10;
+        this.HitPoints = options.HitPoints || 30;
 
         this.activeInvincibility = 0;
         this.invincibilityTimer = 500;
@@ -36,7 +36,34 @@ export class Enemy extends Box {
         this.onChasing = false;
         this.start = false;
 
-        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color}
+        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color};
+        this.Id = this.genIndex();
+    }
+
+
+    genIndex(){
+        let newIndex = "";
+        let subIndex = "";
+        for (let i = 0; i < 24;i++){
+            subIndex = Math.floor(Math.random()* 9).toString();
+            newIndex += subIndex;
+        }
+        return newIndex;
+    }
+
+
+    delete(type = this.type){
+
+        for (let i = 0; i < this.level.objects.length; i++){
+            if (this.level.objects[i].type == type && this.level.objects[i].index == this.index){
+                this.level.objects.splice([i],1)
+            } 
+        }
+        for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){
+            if (this.level.obectsOfType.Entity[i].type == type && this.level.obectsOfType.Entity[i].index == this.index){
+                this.level.obectsOfType.Entity.splice([i],1)
+            } 
+        }
     }
 
 
@@ -108,7 +135,6 @@ export class Enemy extends Box {
         this.checkPlayerPosition();
         this.checkCurrentStatus();
         this.checkMaxSpeed();
-        this.checkAggro();
     }
 
 
@@ -122,8 +148,6 @@ export class Enemy extends Box {
      *  chasing = enable if Player is in Aggrorange
      *  walking = default modus if nothing is in condition
      */
-
-    
     checkCurrentStatus(){
         let isInFall = this.isInFall();
         let inAggro = this.checkIsPlayerinAggro();
@@ -133,11 +157,12 @@ export class Enemy extends Box {
 
         if (!HitPointsLeft){
             this.status = "dead";
+            this.stopMoving();
+            this.delete();
             //play dieAnimation and delete Enemey in Array of Objects
 
         } else if (HitPointsLeft && isInFall){
             this.status = "fall";
-            this.stopMoving();
             //play fallingAnimation
 
         } else if (HitPointsLeft && !isInFall && this.vel[1] < 0){
@@ -245,14 +270,23 @@ export class Enemy extends Box {
                     this.color = "grey";
                     this.gethit = true;
                     this.activeInvincibility = new Date();
+                    this.reduceHealth(obj);
+                    
                 }
             }
         });
     }
 
+    makeScreenShake(){
+        this.level.screenshake = true;
+    }
+
+    reduceHealth(obj){
+        this.HitPoints -= obj.demage;
+    }
+
 
     pushBack(){
-
         let currenttime = new Date();
         let holdingtime = this.invincibilityTimer / 14;
         let pushBackStrengh = 0.005;
@@ -269,32 +303,10 @@ export class Enemy extends Box {
         }
 
         if (currenttime - holdingtime  >= this.activeInvincibility){
-            this.walkspeed = this.backupOption.walkspeed
-            this.grav = this.backupOption.grav
+            this.acc = 0;
         }
 
     }
-
-/*
-   old_checkIsHit(){
-        if (this.gethit){
-            let currenttime = new Date();
-            let holdingtime = this.invincibilityTimer / 14;
-            if (this.getHitLeft){
-                this.walkspeed = 0.02;
-            } else if (!this.getHitLeft) {
-                this.walkspeed = -0.02 * 2;
-            }
-
-            this.grav = -0.008;
-
-            if (currenttime - holdingtime  >= this.activeInvincibility){
-                this.walkspeed = this.backupOption.walkspeed
-                this.grav = this.backupOption.grav
-            }
-        }
-    }
-*/
 
     checkIsPlayerinAggro(){
         let playerdistance = this.checkDistanceToPlayer();
