@@ -7,7 +7,7 @@ export class Coin extends Entity{
         this.Value =  value || 10;
     }
 
-    update(deltaTime){
+    update(){
         this.level.objects.forEach(obj => {
             if (obj.type == "Player"){
                 let isCollide = this.collideWith(obj);

@@ -9,7 +9,8 @@ export class Player extends Box {
             size: options.size,
             color: options.color || "blue",
             grav: 0.005,
-            friction: 0.2
+            friction: 0.2,
+            playerHealth: options.playerHealth || 3
         },
             type || "Player"
         );
@@ -22,11 +23,13 @@ export class Player extends Box {
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
         this.status = "";
+        this.prevStatus = "";
+        this.playerHealth = options.playerHealth || 3;
         this.cooldown = {dash: false,
                          dashCooldown : "",
                          mainAttack: false,
                          mainCooldown: "",
-                         mainCooldownValue: 350,
+                         mainCooldownValue: 850,
         };
         this.jump = {
                         alreadyInJump: false,
@@ -43,13 +46,12 @@ export class Player extends Box {
     addControll(){ 
         document.addEventListener("keydown", (event) => {     
             switch (event.key) {     
-                case "ArrowRight": case "d": if(this.crouch == false){this.acc = this.walkspeed; this.facingLeft = true;};  break;
-                case "ArrowLeft":  case "a": if(this.crouch == false){this.acc = -this.walkspeed;this.facingLeft = false;};  break ; 
+                case "ArrowRight": case "d": if(this.crouch == false && !this.cooldown.mainAttack){this.acc = this.walkspeed; this.facingLeft = true;};  break;
+                case "ArrowLeft":  case "a": if(this.crouch == false && !this.cooldown.mainAttack){this.acc = -this.walkspeed;this.facingLeft = false;};  break ; 
                 case " ": case "w": this.playerJump(); break;
 
                
-                case "f": this.playerAttack(); break;s
-                case "r": console.log("do a roll"); break;
+                case "f": this.playerAttack(); break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;
             }
         });
@@ -128,10 +130,19 @@ export class Player extends Box {
         }
     }
 
-    updatePlayerExtras(){
+    updatePlayerExtras(deltaTime){
         this.checkCoyoteTime();
         this.checkStatus();
+        this.updateFrameAnimation(deltaTime);
         this.ceckCooldown();
+    }
+
+    playerAttack(){
+        if (!this.cooldown.mainAttack){
+            this.cooldown.mainAttack = true
+            this.createHitbox();
+            this.cooldown.mainCooldown = new Date();
+        }
     }
 
     ceckCooldown(){
@@ -143,10 +154,39 @@ export class Player extends Box {
         if(currentTime - this.cooldown.mainCooldownValue > this.cooldown.mainCooldown){
             this.cooldown.mainAttack = false;
         }
+        
+        if(this.onGround && this.cooldown.mainAttack && currentTime - this.cooldown.mainCooldownValue < this.cooldown.mainCooldown){ 
+            this.vel[0] = 0;
+            this.cooldown.mainAttack = false;
+        }
     }
 
+
+  
+
     checkStatus(){
-        //
+        this.prevStatus = this.status
+        if (this.playerHealth <= 0){
+            this.status = "death";
+        } else if(this.playerHealth > 0 && this.crouch){
+            this.status = "crouch";
+        } else if (this.playerHealth > 0 && this.vel[1] > 0){
+            this.status = "fall";
+        }  else if (this.playerHealth > 0 && this.vel[1] < 0){
+            this.status = "jump";
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc> 0){
+            this.status = "walking";
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc < -0){
+            this.status = "walking";
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc == 0 && this.cooldown.mainAttack){
+            this.status = "attack";
+        } else {
+            this.status = "idle";
+        }
+    }
+
+    updateFrameAnimation(deltaTime){
+       // overwritten in Character class
     }
 
     checkCoyoteTime(){
@@ -169,14 +209,6 @@ export class Player extends Box {
         }
     }
 
-    playerAttack(){
-        if (!this.cooldown.mainAttack){
-            this.cooldown.mainAttack = true
-            this.createHitbox();
-            this.cooldown.mainCooldown = new Date();
-        }
-    }
-
     checkfacingForPos(){
         let vector = "";
         if (this.facingLeft) {
@@ -188,13 +220,13 @@ export class Player extends Box {
     }
 
     createHitbox(){
-        let newPos = [this.checkfacingForPos(), this.posBottom - 41]
+        let newPos = [this.checkfacingForPos(), this.posBottom - 67]
         let level = this.level;
         let newObject = {
             level: level,
             pos: newPos,
-            size: [80, 40],
-            color: "#FF3A3A",
+            size: [75, 65],
+            color: "",
             lifespan : 75,
             demage : 10,
             forceToLeft: this.facingLeft
