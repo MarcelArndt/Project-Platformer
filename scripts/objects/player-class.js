@@ -1,5 +1,5 @@
 import { Box} from "./box-class.js";
-import { Hitbox } from "./hitbox-class.js";
+
 
 
 export class Player extends Box {
@@ -24,12 +24,15 @@ export class Player extends Box {
         this.currentCoyoteTime = null;
         this.status = "";
         this.prevStatus = "";
+        this.prevKeyInput = ""
         this.playerHealth = options.playerHealth || 3;
         this.cooldown = {dash: false,
                          dashCooldown : "",
                          mainAttack: false,
                          mainCooldown: "",
-                         mainCooldownValue: 850,
+                         mainKeyIsPressed: false,
+                         mainCooldownValue: 1050, 
+                         mainCurrentFiringSetTimer: "", 
         };
         this.jump = {
                         alreadyInJump: false,
@@ -46,15 +49,14 @@ export class Player extends Box {
     addControll(){ 
         document.addEventListener("keydown", (event) => {     
             switch (event.key) {     
-                case "ArrowRight": case "d": if(this.crouch == false && !this.cooldown.mainAttack){this.acc = this.walkspeed; this.facingLeft = true;};  break;
-                case "ArrowLeft":  case "a": if(this.crouch == false && !this.cooldown.mainAttack){this.acc = -this.walkspeed;this.facingLeft = false;};  break ; 
-                case " ": case "w": this.playerJump(); break;
-
-               
-                case "f": this.playerAttack(); break;
+                case "f": this.playerAttack(); this.cooldown.mainKeyIsPressed = true; break;
+                case "ArrowRight": case "d":if(!this.cooldown.mainKeyIsPressed && !this.cooldown.mainAttack){this.moving("ArrowRight")}else{ this.acc = 0; this.vel[0] = 0;}; break;
+                case "ArrowLeft":  case "a":if(!this.cooldown.mainKeyIsPressed && !this.cooldown.mainAttack){this.moving("ArrowLeft")} else{ this.acc = 0; this.vel[0] = 0;};  break ; 
+                case " ": case "w": this.playerJump(); this.prevKeyInput = "jump" ; break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;
             }
         });
+
 
         document.addEventListener("keypress", (event) => {
             switch (event.key) { 
@@ -64,13 +66,28 @@ export class Player extends Box {
 
         document.addEventListener("keyup", (event) => { 
             switch (event.key) {   
-                
                 case "ArrowRight": case "d": case "ArrowLeft": case "a": this.acc = 0; break;
                 case "s": case "ArrowDown": if(this.crouch == true){this.crouch = false; this.size[1] = this.size[1] * 2}; this.setTop(this.posTop - this.size[1]/2); break;
-                case " ": case "w" : this.stopHoldingJump();
+                case " ": case "w" : this.stopHoldingJump(); break;
+                case "f": this.cooldown.mainKeyIsPressed = false;  break;
             }
         });
 
+    }
+
+    moving(pressedKey){
+        if(this.crouch == false && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
+            this.prevKeyInput = pressedKey
+            if (pressedKey == "ArrowRight"){
+                if(!this.cooldown.mainKeyIsPressed){
+                    this.acc = this.walkspeed; 
+                }
+                this.facingLeft = true; 
+            } else if(pressedKey == "ArrowLeft"){
+                this.acc = -this.walkspeed; 
+                this.facingLeft = false; 
+            }
+        }
     }
 
     stopHoldingJump(){
@@ -138,7 +155,7 @@ export class Player extends Box {
     }
 
     playerAttack(){
-        if (!this.cooldown.mainAttack){
+        if (!this.cooldown.mainAttack && this.status != "jump" && this.status != "crouch"){
             this.cooldown.mainAttack = true
             this.createHitbox();
             this.cooldown.mainCooldown = new Date();
@@ -154,15 +171,8 @@ export class Player extends Box {
         if(currentTime - this.cooldown.mainCooldownValue > this.cooldown.mainCooldown){
             this.cooldown.mainAttack = false;
         }
-        
-        if(this.onGround && this.cooldown.mainAttack && currentTime - this.cooldown.mainCooldownValue < this.cooldown.mainCooldown){ 
-            this.vel[0] = 0;
-            this.cooldown.mainAttack = false;
-        }
     }
 
-
-  
 
     checkStatus(){
         this.prevStatus = this.status
@@ -174,13 +184,13 @@ export class Player extends Box {
             this.status = "fall";
         }  else if (this.playerHealth > 0 && this.vel[1] < 0){
             this.status = "jump";
-        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc> 0){
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc> 0  && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
             this.status = "walking";
-        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc < -0){
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc < -0 && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
             this.status = "walking";
-        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc == 0 && this.cooldown.mainAttack){
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.cooldown.mainAttack){
             this.status = "attack";
-        } else {
+        } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.vel[0] < 3 && this.vel[0] > -3 && this.acc == 0 && !this.cooldown.mainAttack){
             this.status = "idle";
         }
     }
@@ -219,23 +229,9 @@ export class Player extends Box {
         return vector;
     }
 
+    
     createHitbox(){
-        let newPos = [this.checkfacingForPos(), this.posBottom - 67]
-        let level = this.level;
-        let newObject = {
-            level: level,
-            pos: newPos,
-            size: [75, 65],
-            color: "",
-            lifespan : 75,
-            demage : 10,
-            forceToLeft: this.facingLeft
-        }
-        if (this.onGround){
-            this.vel[0] = 0;
-        }
-        this.level.objects.push(
-            new Hitbox (newObject)
-        );
+            //
     }
+
 }

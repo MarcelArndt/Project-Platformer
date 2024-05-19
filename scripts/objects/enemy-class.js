@@ -2,6 +2,7 @@ import { Box} from "./box-class.js";
 
 export class Enemy extends Box {
     constructor(options, type){
+        const {walkspeed, jumpseed, aggroRange, HitPoints, invincibilityTimer} = options
         super({
             pos: options.pos,
             size: options.size,
@@ -11,35 +12,27 @@ export class Enemy extends Box {
         },
             type || "Enemy"
         );
-
         this.facingLeft = true;
-        this.jumpseed = options.jumpseed || -1.025;
-        this.walkspeed = options.walkspeed || 0.00125;
-        this.aggroRange = options.aggroRange || 325;
-
+        this.jumpseed = jumpseed || -1.025;
+        this.walkspeed = walkspeed || 0.00125;
+        this.aggroRange = aggroRange || 525;
         this.coyoteTime = 75;
         this.isCoyoteTimeReady = true;
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
-
         this.PlayerLocation = [];
         this.distanceToPlayer = [];
-
         this.gethit = false;
         this.getPushBack = false;
-        this.HitPoints = options.HitPoints || 30;
-
+        this.HitPoints = HitPoints || 30;
         this.activeInvincibility = 0;
-        this.invincibilityTimer = 500;
-
-        this.status = "null";
+        this.invincibilityTimer = invincibilityTimer || 500;
+        this.status = "idle";
         this.onChasing = false;
         this.start = false;
-
         this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color};
         this.Id = this.genIndex();
     }
-
 
     genIndex(){
         let newIndex = "";
@@ -50,7 +43,6 @@ export class Enemy extends Box {
         }
         return newIndex;
     }
-
 
     delete(type = this.type){
 
@@ -65,7 +57,6 @@ export class Enemy extends Box {
             } 
         }
     }
-
 
     pushObject(box){
         return{
@@ -102,12 +93,10 @@ export class Enemy extends Box {
         }
     }
 
-
     startCoyoteTime(){
         this.latestOnGround = new Date();
         this.currentCoyoteTime = setTimeout(() => {this.isCoyoteTimeOver()}, this.coyoteTime);
     }
-
 
     isCoyoteTimeOver(){
         let currentTime = new Date();
@@ -116,7 +105,6 @@ export class Enemy extends Box {
         }
     }
 
-
     checkPlayerPosition(){
         let currentPosRight = this.level.obectsOfType.Player[0].posRight
         let currentPosLeft = this.level.obectsOfType.Player[0].posLeft
@@ -124,7 +112,6 @@ export class Enemy extends Box {
         let currentPosBottom = this.level.obectsOfType.Player[0].posBottom
         this.PlayerLocation = [currentPosTop,currentPosLeft,currentPosBottom,currentPosRight]
     } 
-
 
     updateEnemy(){
         if (this.onGround && !this.isCoyoteTimeReady){
@@ -136,7 +123,6 @@ export class Enemy extends Box {
         this.checkCurrentStatus();
         this.checkMaxSpeed();
     }
-
 
     /**
      *  __________________________ STATE MACHINE ____________________________
@@ -195,7 +181,6 @@ export class Enemy extends Box {
         }
     }
 
-
     chasing(){
         let willCollide = this.checkisObjectNear();
         let distance = this.checkDistanceToPlayer();
@@ -227,7 +212,6 @@ export class Enemy extends Box {
         this.acc = 0;
     }
 
-
     HitPointsLeft(){
         let isHPLeft = true;
         if(this.HitPoints <= 0){
@@ -235,7 +219,6 @@ export class Enemy extends Box {
         }
         return isHPLeft;
     }
-
 
     isInFall(){
         let isInFall = false;
@@ -245,7 +228,6 @@ export class Enemy extends Box {
         return isInFall;
     }
 
-
     checkInvincibilityTimer(){
         let timer = new Date();
         if (this.gethit && timer - this.invincibilityTimer > this.activeInvincibility){
@@ -254,7 +236,6 @@ export class Enemy extends Box {
             this.getPushBack  = false;
         }
     }
-
 
     checkIsHit(){
         let leftForce = false;
@@ -285,11 +266,10 @@ export class Enemy extends Box {
         this.HitPoints -= obj.demage;
     }
 
-
     pushBack(){
         let currenttime = new Date();
         let holdingtime = this.invincibilityTimer / 14;
-        let pushBackStrengh = 0.005;
+        let pushBackStrengh = 0.007;
 
         
         if (!this.getHitLeft) {
@@ -321,7 +301,6 @@ export class Enemy extends Box {
         return [inBigAggro, inSmallAggro];
     }
 
-
     /**
      * posArray[0] & posArray[1] = Player Position X und Player Position Y
      * posArray[2] & posArray[3] = Enemy Position X und Enemy Position Y
@@ -343,12 +322,10 @@ export class Enemy extends Box {
         return [distanceX, distanceY]
     }
 
-
     jump(jumpspeed = this.jumpseed){
         this.vel[1] = jumpspeed;
         this.vel[0] = this.walkspeed;
     }
-
 
     walking(){
         let willCollide = this.checkisObjectNear();

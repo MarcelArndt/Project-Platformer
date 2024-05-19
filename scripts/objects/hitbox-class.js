@@ -14,9 +14,11 @@ export class Hitbox extends Entity{
     }
 
     update(deltaTime){
+        //
     }
 
     draw(){
         //
     }
+    
 }
