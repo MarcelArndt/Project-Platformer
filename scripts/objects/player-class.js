@@ -233,5 +233,4 @@ export class Player extends Box {
     createHitbox(){
             //
     }
-
 }

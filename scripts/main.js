@@ -1,4 +1,5 @@
 import {levelOne} from "./levels/level_one.js"
 
 
-levelOne.drawObjects();
+//levelOne.drawObjects();
+levelOne.addControll();

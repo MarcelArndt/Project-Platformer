@@ -8,6 +8,7 @@ export class Rectangle {
     this.size = option.size;
     this.color = option.color; 
     this.type = type || 'Rectangle';
+    this.originalPos = [... this.pos];
     }
 
     get posLeft(){
@@ -73,4 +74,9 @@ export class Rectangle {
     characterDraw(){
         //
     }
+
+    reset(){
+       this.pos = [... this.originalPos];
+    }
+    
 }

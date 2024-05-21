@@ -23,7 +23,11 @@ export class Entity extends Rectangle{
     searchAndDelete(type){
         for (let i = 0; i < this.level.objects.length; i++){
             if (this.level.objects[i].subType == type && this.level.objects[i].index == this.index){
+                if(this.subType != "Hitbox"){
+                    this.level.deleteObjects.push(this)
+                }
                 this.level.objects.splice([i],1)
+                console.log(this.level.deleteObjects);
             } 
         }
         for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){

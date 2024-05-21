@@ -30,8 +30,9 @@ export class Enemy extends Box {
         this.status = "idle";
         this.onChasing = false;
         this.start = false;
-        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color};
+        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpseed: this.jumpseed, color: this.color, hitPoints: this.HitPoints};
         this.Id = this.genIndex();
+        this.originalPos = [... options.pos];
     }
 
     genIndex(){
@@ -45,9 +46,12 @@ export class Enemy extends Box {
     }
 
     delete(type = this.type){
-
         for (let i = 0; i < this.level.objects.length; i++){
             if (this.level.objects[i].type == type && this.level.objects[i].index == this.index){
+                if(this.subType != "Hitbox"){
+                    this.HitPoints = this.backupOption.hitPoints;
+                    this.level.deleteObjects.push(this);
+                }
                 this.level.objects.splice([i],1)
             } 
         }
@@ -379,5 +383,9 @@ export class Enemy extends Box {
         if (this.vel[0] <= -0.2 && !this.gethit){
             this.vel[0] = -0.2;
         }
+    }
+
+    reset(){
+        this.pos = [... this.originalPos]
     }
 }

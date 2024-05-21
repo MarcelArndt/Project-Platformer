@@ -30,15 +30,44 @@ export class Level {
             Player: [],
             Goal: [],
             Entity: [],
-            Enemy: []
+            Enemy: [],
         }
+        this.deleteObjects = []
         this.screenshakeValue = 0;
         this.screenshake = false;
         this.screenshakeMaxRange = 24;
         this.addObjects(option.objects || []);
         this.start();
+        this.keyFuncRef = (e) => this.keyFunction(e);
+    }
+
+
+    addControll(){
+        window.addEventListener("keydown", this.keyFuncRef);
+    }
+
+    removeControll(){
+        window.removeEventListener("keydown",this.keyFuncRef);
     }
     
+    keyFunction(e){
+        if (e.key == "p" || e.key == "enter"){
+            if(this.status == status.ready){
+                this.start();
+            } else if(this.status == status.running){
+                this.pause();   // toTo
+            } else if(this.status == status.pause){
+                this.resume(); // toTo
+            }
+        } else if(e.key == "r" && this.status == status.running){
+            this.resetLevel();   // toTo
+        }
+    }
+
+
+
+
+
     addObjects(obj){
         for (let i = 0; i < obj.length; i++){
             const type = obj[i].type
@@ -100,7 +129,10 @@ export class Level {
     }
 
     checkWin(){
-
+        if(!this.levelIsWon) return;
+        this.status =  status.pause;
+        this.timer.pause;
+        this.removeControll();
     }
 
     start(){
@@ -108,6 +140,24 @@ export class Level {
         this.status = status.running;
         this.timer.pause = false;
         this.timer.start();
+    }
+
+    pause(){
+       this.status = status.pause
+       this.timer.pause();
+    }
+
+    resume(){
+        this.status = status.running;
+        this.timer.pause() = false;
+        this.timer.start();
+    }
+
+    resetLevel(){
+        this.objects.forEach(obj => obj.reset());
+        this.cameraPos =[... this.originalCameraPos];
+        this.addObjects(this.deleteObjects || []);
+        this.deleteObjects = [];
     }
 
 }
