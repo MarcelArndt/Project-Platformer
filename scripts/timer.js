@@ -11,9 +11,7 @@ export class Timer{
         }
 
         loop(currentTime){
-            if (this.pause){
-                return;
-            }
+            if (this.pause) return;
             if(this.lastTime){
                 this.accumulatedTime += currentTime - this.lastTime;
                 if(this.accumulatedTime > 1000){
@@ -28,12 +26,12 @@ export class Timer{
             this.start();
         }
 
-        pause(){
+        getInPause(){
             this.lastTime = null;
             this.pause = true;
         }
 
-        update(){
+        update(deltaTime){
             //not is this data
         }
 

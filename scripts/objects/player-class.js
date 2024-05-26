@@ -22,7 +22,7 @@ export class Player extends Box {
         this.isCoyoteTimeReady = true;
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
-        this.status = "";
+        this.status = "idle";
         this.prevStatus = "";
         this.prevKeyInput = ""
         this.playerHealth = options.playerHealth || 3;
@@ -150,7 +150,7 @@ export class Player extends Box {
     updatePlayerExtras(deltaTime){
         this.checkCoyoteTime();
         this.checkStatus();
-        this.updateFrameAnimation(deltaTime);
+        //this.updateFrameAnimation(deltaTime);
         this.ceckCooldown();
     }
 
@@ -193,10 +193,6 @@ export class Player extends Box {
         } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.vel[0] < 3 && this.vel[0] > -3 && this.acc == 0 && !this.cooldown.mainAttack){
             this.status = "idle";
         }
-    }
-
-    updateFrameAnimation(deltaTime){
-       // overwritten in Character class
     }
 
     checkCoyoteTime(){

@@ -20,7 +20,9 @@ export class Level {
         this.originalCameraPos = [... this.cameraPos];
         this.objects = [];
         this.player = null;
-        this.timer = new Timer(1000 / 60);
+        this.game = null;
+        this.index = 0;
+        this.timer = new Timer();
         this.status = status.ready;
         this.levelIsWon = false;
         this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
@@ -37,8 +39,9 @@ export class Level {
         this.screenshake = false;
         this.screenshakeMaxRange = 24;
         this.addObjects(option.objects || []);
-        this.start();
+        
         this.keyFuncRef = (e) => this.keyFunction(e);
+        //this.timer.getInPause();
     }
 
 
@@ -52,21 +55,17 @@ export class Level {
     
     keyFunction(e){
         if (e.key == "p" || e.key == "enter"){
-            if(this.status == status.ready){
+            if(this.status === status.ready){
                 this.start();
-            } else if(this.status == status.running){
-                this.pause();   // toTo
-            } else if(this.status == status.pause){
-                this.resume(); // toTo
+            } else if(this.status === status.running){
+                this.pause();
+            } else if(this.status === status.pause){
+                this.resume();
             }
-        } else if(e.key == "r" && this.status == status.running){
-            this.resetLevel();   // toTo
+        } else if(e.key == "r" && this.status === status.running){
+            this.resetLevel();
         }
     }
-
-
-
-
 
     addObjects(obj){
         for (let i = 0; i < obj.length; i++){
@@ -79,7 +78,16 @@ export class Level {
 
     update(deltaTime){
         clearCanvas();
+        this.updateCamera();
+        this.checkWin();
+        this.doScreenshake();
         for(let i = 0; i < this.objects.length; i++){
+            if(this.objects[i].animationFrames && this.objects[i].type == "Player" || this.objects[i].animationFrames && this.objects[i].type == "Enemy"){
+                if(Object.keys(this.objects[i].animationFrames).length > 0){
+                    this.objects[i].updateFrameAnimation(deltaTime);
+                }
+            }
+
             try{ this.objects[i].update(deltaTime);
                 if (this.objects[i].type == "Player"){
                     this.objects[i].updatePlayerExtras(deltaTime);
@@ -88,12 +96,9 @@ export class Level {
                     this.objects[i].updateEnemy();
                  }
                 this.objects[i].draw();
+               
             } catch{}
         }
-        this.drawObjects();
-        this.updateCamera();
-        this.checkWin();
-        this.doScreenshake();
     }
 
     doScreenshake(){
@@ -133,6 +138,7 @@ export class Level {
         this.status =  status.pause;
         this.timer.pause;
         this.removeControll();
+        this.game.switchToNextLevel();
     }
 
     start(){
@@ -144,16 +150,17 @@ export class Level {
 
     pause(){
        this.status = status.pause
-       this.timer.pause();
+       this.timer.getInPause();
     }
 
     resume(){
         this.status = status.running;
-        this.timer.pause() = false;
+        this.timer.pause = false;
         this.timer.start();
     }
 
     resetLevel(){
+        this.status = status.ready;
         this.objects.forEach(obj => obj.reset());
         this.cameraPos =[... this.originalCameraPos];
         this.addObjects(this.deleteObjects || []);
