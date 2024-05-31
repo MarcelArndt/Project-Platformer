@@ -1,5 +1,4 @@
-import { levelOne } from "./levels/level_one.js";
-import { levelTwo } from "./levels/level_two.js";
+
 
 export class Game {
     constructor(levelList){

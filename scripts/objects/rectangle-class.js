@@ -7,20 +7,23 @@ export class Rectangle {
     this.size = option.size;
     this.color = option.color; 
     this.type = type || 'Rectangle';
-    this.originalPos = [... this.pos];
+    this.originalPos = this.pos;
 
     this.animationImage = new Image();
     this.animationImage.src =  "";
     this.crouch = false;
     this.facingLeft = false;
     this.status = "";
+    this.animationStatus = "idle";
     this.animationFrames = false;
     this.frame = {x:0, y:0};
     this.animationTimer = 0;
+    this.animationSpeed = 1;
     this.frameWidth = 16;
     this.frameHight = 16;
     this.frameWidthOffset = 0;
     this.frameHightOffset = 0;
+    this.animationIsRunning = false;
     }
 
     get posLeft(){
@@ -84,23 +87,27 @@ export class Rectangle {
         );
     }
 
-    updateAnimationTimer(deltaTime = this.level.timer.deltaTime, speed = 1){
-        const secDeltaTime = deltaTime / 100 * speed;
-        if (this.prevStatus != this.status && this.animationFrames[this.status][1] || this.animationTimer >= (this.animationFrames[this.status][0].length -1) && this.animationFrames[this.status][1]){
+    updateAnimationTimer(deltaTime = this.level.timer.deltaTime){
+        const secDeltaTime = deltaTime / 100 * this.animationSpeed;
+     
+        if(this.animationTimer >= (this.animationFrames[this.animationStatus][0].length -1) && !this.animationFrames[this.animationStatus][1]){
+            this.animationTimer = this.animationFrames[this.animationStatus][0].length -1;
+            this.animationIsRunning = false;
+        } else if (this.animationTimer >= (this.animationFrames[this.animationStatus][0].length -1) && this.animationFrames[this.animationStatus][1]){
             this.animationTimer = 0;
-        } else if(this.animationTimer >= (this.animationFrames[this.status][0].length -1) && !this.animationFrames[this.status][1]){
-            this.animationTimer = this.animationFrames[this.status][0].length -1;
-        }
-        else{
+            this.animationIsRunning = true;
+        } else if (this.animationTimer < (this.animationFrames[this.animationStatus][0].length -1)){
             this.animationTimer += secDeltaTime;
+            this.animationIsRunning = true;
         }
+        
     }
 
     updateFrameAnimation(deltaTime, speed = 1){
             let FrameIndex = 0;
             this.updateAnimationTimer(deltaTime, speed)
             FrameIndex = Math.floor(this.animationTimer);
-            this.frame = this.animationFrames[this.status][0][FrameIndex];
+            this.frame = this.animationFrames[this.animationStatus][0][FrameIndex];
     }
 
 

@@ -17,8 +17,6 @@ export class Hitbox extends Entity{
         //
     }
 
-    draw(){
-        //
-    }
+    //draw(){}
     
 }

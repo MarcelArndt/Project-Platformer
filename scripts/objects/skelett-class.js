@@ -9,8 +9,9 @@ export class Skelett extends Enemy{
             friction: options.friction || 0.2,
             jumpspeed: options.jumpspeed ||  -0.85,
             walkspeed: options.walkspeed || 0.00125,
-            aggroRange: options.aggroRange || 450,
-            HitPoints: options.HitPoints || 50,
+            aggroRange: options.aggroRange || 625,
+            smallAggroRange: options.smallAggroRange || 150,
+            HitPoints: options.HitPoints || 10,
             invincibilityTimer: options.invincibilityTimer || 575,
             type: type || "Enemy"
         });
@@ -25,11 +26,35 @@ export class Skelett extends Enemy{
             jump: [[{x:0, y:0}], false],
             fall: [[{x:0, y:0}], false]
         }
+
+        this.cooldown = {
+            isMainAttack: false,
+            latestDateOfAttack: "",
+            MainAttackCooldownValue: 1350,
+        }
+
         this.status = "idle"
         this.frameWidth = 150;
         this.frameHight = 65;
         this.animationImage.src = "./assets/skelet-animation-atlas.png";
         this.frameHightOffset = 78;
         this.frameWidthOffset = 90;
+        this.currentTime = 0;
+    }
+
+
+    updateSpecial(deltaTime){
+      //
+    }
+
+    checkSpecialStatus(options){
+       //
+    }
+
+    checkForCooldown(){
+        this.currentTime = new Date();
+        if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
+            this.cooldown.isMainAttack = false;
+        }
     }
 }

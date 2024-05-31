@@ -1,8 +1,9 @@
 import { Box} from "./box-class.js";
+import {StateMachine, Idle} from "./StateMashine-class.js";
 
 export class Enemy extends Box {
     constructor(options, type){
-        const {walkspeed, jumpspeed, aggroRange, HitPoints, invincibilityTimer} = options
+        const {walkspeed, jumpspeed, aggroRange, HitPoints, invincibilityTimer, smallAggroRange} = options
         super({
             pos: options.pos,
             size: options.size,
@@ -13,27 +14,33 @@ export class Enemy extends Box {
             type || "Enemy"
         );
         this.facingLeft = true;
-        this.jumpspeed = jumpspeed || -1.025;
-        this.walkspeed = walkspeed || 0.00125;
-        this.aggroRange = aggroRange || 525;
+        this.jumpspeed = options.jumpspeed || -1.025;
+        this.walkspeed = options.walkspeed || 0.00125;
+        this.aggroRange = options.aggroRange || 725;
+        this.smallAggroRange = options.smallAggroRange || 30;
         this.coyoteTime = 75;
         this.isCoyoteTimeReady = true;
         this.latestOnGround = 0;
         this.currentCoyoteTime = null;
-        this.PlayerLocation = [];
+        this.playerLocation = [];
         this.distanceToPlayer = [];
         this.gethit = false;
         this.getPushBack = false;
-        this.HitPoints = HitPoints || 30;
+        this.getHitLeft = "";
+        this.HitPoints = options.HitPoints || 30;
         this.activeInvincibility = 0;
-        this.invincibilityTimer = invincibilityTimer || 500;
-        this.status = "idle";
+        this.invincibilityTimer = options.invincibilityTimer || 500;
         this.onChasing = false;
+        this.PlayerInAggro = [false,false];
+        this.fall = false;
         this.start = false;
-        this.backupOption = {grav: this.grav, walkspeed: this.walkspeed, jumpspeed: this.jumpspeed, color: this.color, hitPoints: this.HitPoints};
+        this.backupOption = {grav: this.grav, walkspeed: options.walkspeed || 0.00125, jumpspeed:  options.jumpspeed || -1.025, color: this.color, hitPoints: options.HitPoints || 30};
+        this.originalStats = {pos: options.pos, facingLeft: this.facingLeft, vel: this.vel,acc: this.acc, HitPoints: this.HitPoints, isCoyoteTimeReady: this.isCoyoteTimeReady, walkspeed: options.walkspeed || 0.00125,}
         this.Id = this.genIndex();
-        this.prevStatus = "";
-        this.originalPos = [... options.pos];
+        this.status = "idle";
+        this.animationStatus = "idle";
+        this.prevStatus = "idle";
+        this.stateMachine = new StateMachine(new Idle(), this);
     }
 
     genIndex(){
@@ -115,117 +122,45 @@ export class Enemy extends Box {
         let currentPosLeft = this.level.obectsOfType.Player[0].posLeft
         let currentPosTop = this.level.obectsOfType.Player[0].posTop
         let currentPosBottom = this.level.obectsOfType.Player[0].posBottom
-        this.PlayerLocation = [currentPosTop,currentPosLeft,currentPosBottom,currentPosRight]
+        this.playerLocation = [currentPosTop,currentPosLeft,currentPosBottom,currentPosRight]
     } 
 
-    updateEnemy(){
+    updateEnemy(deltaTime){
+        this.screenShake();
         if (this.onGround && !this.isCoyoteTimeReady){
             this.isCoyoteTimeReady = true;
         } else if(!this.onGround && this.isCoyoteTimeReady){
-          this.startCoyoteTime();
+            this.startCoyoteTime();
         }
+        this.checkIsHit();
         this.checkPlayerPosition();
-        this.checkCurrentStatus();
         this.checkMaxSpeed();
+        this.updateSpecial(deltaTime);
+        this.stateMachine.updateState();
     }
 
-    /**
-     *  __________________________ STATE MACHINE ____________________________
-     * Status -> walking, chasing, jump, fall, pushBack, die
-     *  die = Enemy has zero HP left -> Anaimation
-     *  fall = Enemy vertical Speed is above 0 and there is no ground beneath -> Anaimation
-     *  jump = enable if Player is in Aggrorange and an Objects is between Enemey and Player
-     *  pushBack = Enemy gets hit by Hitbox with "Enemy" as flag
-     *  chasing = enable if Player is in Aggrorange
-     *  walking = default modus if nothing is in condition
-     */
-    checkCurrentStatus(){
-        this.checkIsFacingLeft();
-        let isInFall = this.isInFall();
-        let inAggro = this.checkIsPlayerinAggro();
-        let HitPointsLeft = this.HitPointsLeft();
-        let getHit = this.gethit
-        this.prevStatus = this.status;
-        this.checkIsHit();
-        if (!HitPointsLeft){
-            this.status = "dead";
-        } else if (HitPointsLeft && isInFall && !inAggro[0]){
-            this.status = "fall";
-        } else if (HitPointsLeft && !isInFall && !inAggro[0] &&  this.vel[1] < 0){
-            this.status = "jump";
-        } else if (getHit && HitPointsLeft){
-            this.status = "getHit";
-        } else if (inAggro[0] && HitPointsLeft && !getHit){
-            this.status = "chasing";
-        } else if(HitPointsLeft && !inAggro[0] && !getHit){
-            this.status = "walking";   
-        }
-        this.changeBehaviour();
+    updateSpecial(deltaTime){
+        //
     }
+
 
     checkIsFacingLeft(){
-        if(this.acc <= 0 && !this.gethit){
+        if(this.acc < 0.00020 && !this.gethit && this.acc != 0){
             this.facingLeft = false
-        } else if (!this.gethit) {
+        } else if (this.acc > -0.00020 && !this.gethit && this.acc != 0) {
             this.facingLeft = true;
         }
     }
 
-    changeBehaviour(){
-        let status = this.status;
-        switch(status){
-            case "dead": this.stopMoving(); this.delete(); break;
-            case "getHit":  this.checkInvincibilityTimer(); this.pushBack(); break;
-            case "chasing": this.chasing(); if (!this.onChasing ){ this.onChasing = true; this.jump(-0.50)} break;
-            case "walking": this.walking(); if(this.onChasing){this.onChasing = false;this.jump(-0.25)} break;
-            default: this.walking(); break;
-        }
-    }
-
-    chasing(){
-        let willCollide = this.checkisObjectNear();
-        let distance = this.checkDistanceToPlayer();
-        let aggro = this.checkIsPlayerinAggro();
-        if (distance[0] >= 0 && !aggro[1]){
-            if (this.walkspeed >= 0 ){
-                this.acc = this.walkspeed;
-            } else {
-                this.walkspeed = this.walkspeed * -1
-                this.acc = this.walkspeed;
-            } 
-
-        } else if(distance[0] <= 0 && !aggro[1]){
-            if (this.walkspeed <= 0 ){
-                this.acc = this.walkspeed;
-            } else {
-                this.walkspeed = this.walkspeed * -1
-                this.acc = -this.walkspeed;
-            }
-        }
-        if(willCollide[0]){
-            this.jump(); 
-        }
-    }
-
-    stopMoving(){
-        this.acc = 0;
-    }
-
-    HitPointsLeft(){
-        let isHPLeft = true;
-        if(this.HitPoints <= 0){
-            isHPLeft = false;
-        }
-        return isHPLeft;
-    }
 
     isInFall(){
         let isInFall = false;
         if(this.vel[1] > 0 && !this.onGround){
             isInFall = true;
         }
-        return isInFall;
+        return;
     }
+
 
     checkInvincibilityTimer(){
         let timer = new Date();
@@ -235,6 +170,7 @@ export class Enemy extends Box {
             this.getPushBack  = false;
         }
     }
+
 
     checkIsHit(){
         let leftForce = false;
@@ -251,51 +187,27 @@ export class Enemy extends Box {
                     this.gethit = true;
                     this.activeInvincibility = new Date();
                     this.reduceHealth(obj);
-                    
                 }
             }
         });
-    }
-
-    makeScreenShake(){
-        this.level.screenshake = true;
     }
 
     reduceHealth(obj){
         this.HitPoints -= obj.demage;
     }
 
-    pushBack(){
-        let currenttime = new Date();
-        let holdingtime = this.invincibilityTimer / 14;
-        let pushBackStrengh = 0.05;
-        if (!this.getHitLeft) {
-            pushBackStrengh = pushBackStrengh * -1;
-        }
-
-        if(this.gethit && !this.getPushBack){
-            this.jump(-0.75);
-            this.acc = pushBackStrengh;
-            this.getPushBack  = true;
-        }
-
-        if (currenttime - holdingtime  >= this.activeInvincibility){
-            this.acc = 0;
-        }
-
-    }
 
     checkIsPlayerinAggro(){
         let playerdistance = this.checkDistanceToPlayer();
         let inBigAggro = false;
         let inSmallAggro = false;
-        if( playerdistance[0] > this.aggroRange * -1 && playerdistance[0] < this.aggroRange && playerdistance[1] > this.aggroRange * -1 / 1.5 && playerdistance[1] < this.aggroRange / 1.5){
-            if( playerdistance[0] > this.aggroRange / 4  * -1 && playerdistance[0] < this.aggroRange / 4  && playerdistance[1] > this.aggroRange / 4 * -1 && playerdistance[1] < this.aggroRange / 4){
+        if( playerdistance[0] > this.aggroRange * -1 && playerdistance[0] < this.aggroRange && playerdistance[1] > (this.aggroRange * -1 / 2) && playerdistance[1] < (this.aggroRange / 2)){
+            if( playerdistance[0] > this.smallAggroRange * -1 && playerdistance[0] < this.smallAggroRange  && playerdistance[1] > this.smallAggroRange * -1 && playerdistance[1] < this.smallAggroRange){
                 inSmallAggro = true
             }
             inBigAggro = true
         }
-        return [inBigAggro, inSmallAggro];
+        this.PlayerInAggro = [inBigAggro, inSmallAggro]
     }
 
     /**
@@ -303,19 +215,16 @@ export class Enemy extends Box {
      * posArray[2] & posArray[3] = Enemy Position X und Enemy Position Y
      */
     checkDistanceToPlayer(){
-        let posArray = [this.PlayerLocation[1] + this.PlayerLocation[3], this.PlayerLocation[0] + this.PlayerLocation[2], this.posLeft + this.posRight, this.posTop + this.posBottom];
+        let posArray = [this.playerLocation[1] + this.playerLocation[3], this.playerLocation[0] + this.playerLocation[2], this.posLeft + this.posRight, this.posTop + this.posBottom];
         let distanceX = 0;
         let distanceY = 0;
-
         for (let i = 0; i < posArray; i++){
             posArray[i] = posArray[i] / 2;
         }
-
         distanceX = posArray[2] - posArray[0];
         distanceX = distanceX * -1;
         distanceY = posArray[3] - posArray[1];
         distanceY = distanceY * -1;
-
         return [distanceX, distanceY]
     }
 
@@ -326,47 +235,42 @@ export class Enemy extends Box {
         }
     }
 
-    walking(){
-        let willCollide = this.checkisObjectNear();
-        if (!this.start && this.status != "chasing" && !willCollide[0]){
-            this.acc = this.walkspeed;
-        } else if(willCollide[0]){
-            this.walkspeed = this.walkspeed * -1;
-        }
-    }
-
 /**
  * 
  * @returns - Value 1 = will it collide at all | Value 2 = will it collide from left = true or Right = false;
  */
     checkisObjectNear(){
-        let offset = [1,0];
+        let offset = [2,0];
         let willCollide = [false, false];
         if (this.walkspeed < 0){
             offset = [offset[0] *-1,0];
         }
-
         this.level.objects.forEach( obj => {
             if (this.collideWith(obj, offset) && obj.type != "Entity" && obj.type != "Player"){
-                 if (this.posLeft - 1 < obj.posRight && this.posRight > obj.posRight) {
-                    willCollide[1] = true;
-                 } else if(this.posRight + 1 > obj.posLeft && this.posLeft < obj.posLeft){
-                    willCollide[1] = false;
-                 }
+                if(this.posRight + offset[0] > obj.posLeft && this.posLeft < obj.posLeft) {
+                    willCollide[1] = true
+                }
                 willCollide[0] = true;
             }
+            return willCollide;
         });
+        willCollide = this.checkIsLevelSizeNear(willCollide, offset);
+        return willCollide;
+    }
 
-        if(this.posRight == this.level.size[0]){
-            willCollide[0] = true
-            this.setRight(this.posRight - 3)
+
+    checkIsLevelSizeNear(willCollide, offset){
+  
+        if(this.posRight + offset[0] >= this.level.size[0]){
+            willCollide[0] = true;
+            willCollide[1] = true;
         }
 
-        if ( this.posLeft == 0){
-            willCollide[0] = true
-            this.setLeft(this.posLeft + 3)
-        }
+        if (this.posLeft + offset[0] <= 0){
+            willCollide[0] = true;
+            willCollide[1] = false;
 
+        }
         return willCollide;
     }
 
@@ -381,6 +285,27 @@ export class Enemy extends Box {
     }
 
     reset(){
-        this.pos = [... this.originalPos]
+        this.pos = this.originalStats.pos;
+        this.facingLeft = this.originalStats.facingLeft;
+        this.vel = this.originalStats.vel;
+        this.acc = this.originalStats.acc;
+        this.HitPoints = this.originalStats.HitPoints;
+        this.isCoyoteTimeReady = this.originalStats.isCoyoteTimeReady;
     }
+
+    screenShake(timeout = 2){
+        let deltaTimeSec = 1 / 60;
+        this.level.screenEffektTimer += deltaTimeSec;
+
+        if (this.level.screenEffektTimer >= 10 && !this.screenshake){
+            this.level.screenEffektTimer = 0;
+        }
+
+        if (this.level.screenEffektTimer > timeout && this.screenshake){
+            this.level.screenshake = false;
+            this.level.screenEffektTimer = 0;
+        }
+
+    }
+    
 }

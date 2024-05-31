@@ -50,23 +50,16 @@ export class Player extends Box {
         document.addEventListener("keydown", (event) => {     
             switch (event.key) {     
                 case "f": this.playerAttack(); this.cooldown.mainKeyIsPressed = true; break;
-                case "ArrowRight": case "d":if(!this.cooldown.mainKeyIsPressed && !this.cooldown.mainAttack){this.moving("ArrowRight")}else{ this.acc = 0; this.vel[0] = 0;}; break;
-                case "ArrowLeft":  case "a":if(!this.cooldown.mainKeyIsPressed && !this.cooldown.mainAttack){this.moving("ArrowLeft")} else{ this.acc = 0; this.vel[0] = 0;};  break ; 
-                case " ": case "w": this.playerJump(); this.prevKeyInput = "jump" ; break;
+                case "ArrowRight": case "d":this.moving("ArrowRight", event); break;
+                case "ArrowLeft":  case "a":this.moving("ArrowLeft", event);  break ; 
+                case " ": case "w": this.playerJump(); this.prevKeyInput = "jump"; break;
                 case "s": case "ArrowDown": if (this.crouch == false){this.setBottom(this.posBottom + this.size[1]/2); this.crouch = true; this.size[1] = this.size[1] / 2; this.acc = 0} break;
-            }
-        });
-
-
-        document.addEventListener("keypress", (event) => {
-            switch (event.key) { 
-
             }
         });
 
         document.addEventListener("keyup", (event) => { 
             switch (event.key) {   
-                case "ArrowRight": case "d": case "ArrowLeft": case "a": this.acc = 0; break;
+                case "ArrowRight": case "d": case "ArrowLeft": case "a": this.reducemoving(); break;
                 case "s": case "ArrowDown": if(this.crouch == true){this.crouch = false; this.size[1] = this.size[1] * 2}; this.setTop(this.posTop - this.size[1]/2); break;
                 case " ": case "w" : this.stopHoldingJump(); break;
                 case "f": this.cooldown.mainKeyIsPressed = false;  break;
@@ -75,13 +68,20 @@ export class Player extends Box {
 
     }
 
-    moving(pressedKey){
-        if(this.crouch == false && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
+
+    reducemoving(){
+            this.acc = 0;
+    }
+
+    moving(pressedKey, event){
+        if (event.key == "f") {
+            this.acc == 0;
+            return;
+        }
+        if(this.crouch == false && this.status != "attack"){
             this.prevKeyInput = pressedKey
             if (pressedKey == "ArrowRight"){
-                if(!this.cooldown.mainKeyIsPressed){
-                    this.acc = this.walkspeed; 
-                }
+                this.acc = this.walkspeed; 
                 this.facingLeft = true; 
             } else if(pressedKey == "ArrowLeft"){
                 this.acc = -this.walkspeed; 
@@ -156,6 +156,8 @@ export class Player extends Box {
 
     playerAttack(){
         if (!this.cooldown.mainAttack && this.status != "jump" && this.status != "crouch"){
+            this.vel[0] = 0;
+            this.acc = 0;
             this.cooldown.mainAttack = true
             this.createHitbox();
             this.cooldown.mainCooldown = new Date();
@@ -178,20 +180,28 @@ export class Player extends Box {
         this.prevStatus = this.status
         if (this.playerHealth <= 0){
             this.status = "death";
+            this.animationStatus = "death";
         } else if(this.playerHealth > 0 && this.crouch){
             this.status = "crouch";
+            this.animationStatus = "crouch";
         } else if (this.playerHealth > 0 && this.vel[1] > 0){
             this.status = "fall";
+            this.animationStatus = "fall";
         }  else if (this.playerHealth > 0 && this.vel[1] < 0){
             this.status = "jump";
+            this.animationStatus = "jump";
         } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc> 0  && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
             this.status = "walking";
+            this.animationStatus = "walking";
         } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.acc < -0 && !this.cooldown.mainAttack && !this.cooldown.mainKeyIsPressed){
             this.status = "walking";
+            this.animationStatus = "walking";
         } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.cooldown.mainAttack){
             this.status = "attack";
+            this.animationStatus = "attack";
         } else if (this.playerHealth > 0 && this.vel[1] == 0 && this.vel[0] < 3 && this.vel[0] > -3 && this.acc == 0 && !this.cooldown.mainAttack){
             this.status = "idle";
+            this.animationStatus = "idle";
         }
     }
 
@@ -200,6 +210,11 @@ export class Player extends Box {
             this.isCoyoteTimeReady = true;
         } else if(!this.onGround && this.isCoyoteTimeReady){
           this.startCoyoteTime();
+        }
+        if(this.status != "Jump" && this.isCoyoteTimeReady && !this.onGround){
+            this.grav = 0;
+        } else {
+            this.grav = 0.005;
         }
     }
 

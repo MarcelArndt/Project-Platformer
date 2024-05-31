@@ -5,22 +5,21 @@ import { Enemy } from "../objects/enemy-class.js";
 import { Coin} from "../objects/coin-class.js";
 import { Character} from "../objects/main-character-class.js";
 import { Goal } from "../objects/goal-class.js";
-import { Skelett } from "../objects/skelett-class.js";
 
-export const levelOne = new Level({
+export const levelThree = new Level({
     size: [2900,1300],
     objects: [new Character({
-        pos: [500,700],
+        pos: [50,1000],
         size: [36,67],
         color:'edff2b',
         type: "Player"
         }),
 
-        new Skelett ({
-            pos: [300,950],
-            size: [44,100],
-            color:'#000'
-            }),
+        new Enemy({
+        pos: [2000,1000],
+        size: [23,43],
+        color:'#C90202'
+        }),
 
         new Rectangle({
         pos: [0, 1125],
@@ -29,11 +28,23 @@ export const levelOne = new Level({
         }),
 
         new Rectangle({
-                pos: [250, 885],
-                size: [550, 32],
+                pos: [650, 885],
+                size: [150, 32],
                 color: "#354f52"
         }),
     
+        new Rectangle({
+            pos: [560, 0 ],
+            size: [160, 1045],
+            color: "#354f52"
+        }),
+
+        new Rectangle({
+            pos: [160, 0 ],
+            size: [160, 1045],
+            color: "#354f52"
+        }),
+
 
         new Rectangle({
                 pos: [1300, 0],
@@ -60,7 +71,7 @@ export const levelOne = new Level({
                 color: "#354f52"
         }),
 
-        new Rectangle({
+            new Rectangle({
                 pos: [1300, 900],
                 size: [560, 80],
                 color: "#354f52"
@@ -130,6 +141,8 @@ export const levelOne = new Level({
         }),
 
 
+
+
     new Rectangle({
         pos: [915, 975],
         size: [260, 450],
@@ -137,12 +150,12 @@ export const levelOne = new Level({
 }),
     
     new Box({
-            pos: [500, 1000],
+            pos: [500, 900],
             size: [64, 64],
             color: "#f7b94f"
     }),
     new Coin({
-        pos: [345, 835],
+        pos: [745, 835],
         size: [24, 24],
         color: "#FFD53D"
     }), 

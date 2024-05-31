@@ -5,6 +5,7 @@ import { Enemy } from "../objects/enemy-class.js";
 import { Coin} from "../objects/coin-class.js";
 import { Character} from "../objects/main-character-class.js";
 import { Goal } from "../objects/goal-class.js";
+import { Skelett } from "../objects/skelett-class.js";
 
 export const levelTwo = new Level({
     size: [2900,1300],
@@ -15,11 +16,11 @@ export const levelTwo = new Level({
         type: "Player"
         }),
 
-        new Enemy({
-        pos: [2000,1000],
-        size: [23,43],
-        color:'#C90202'
-        }),
+        new Skelett ({
+            pos: [1945,950],
+            size: [44,100],
+            color:'#000'
+            }),
 
         new Rectangle({
         pos: [0, 1125],
@@ -35,12 +36,6 @@ export const levelTwo = new Level({
     
         new Rectangle({
             pos: [560, 0 ],
-            size: [160, 1045],
-            color: "#354f52"
-        }),
-
-        new Rectangle({
-            pos: [160, 0 ],
             size: [160, 1045],
             color: "#354f52"
         }),
