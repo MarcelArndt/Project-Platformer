@@ -1,8 +1,9 @@
-import {canvas, clearCanvas} from "./canvas.js";
-import {Timer} from "./timer.js";
+import { canvas, clearCanvas } from "./canvas.js";
+import { Timer } from "./timer.js";
+import { Background } from "./background-class.js";
 
 
-export const camera = {
+export let camera = {
     pos: [0,0],
 };
 
@@ -19,6 +20,7 @@ export class Level {
         this.cameraPos = option.cameraPos || [0,this.size[1] - canvas.height];
         this.originalCameraPos = [... this.cameraPos];
         this.objects = [];
+        this.receivingObjects = option.objects
         this.player = null;
         this.game = null;
         this.index = 0;
@@ -26,19 +28,11 @@ export class Level {
         this.status = status.ready;
         this.levelIsWon = false;
         this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
-        this.obectsOfType = {
-            Rectangle: [],
-            Box: [],
-            Player: [],
-            Goal: [],
-            Entity: [],
-            Enemy: [],
-        }
+        this.obectsOfType = null;
         this.deleteObjects = []
         this.screenshakeValue = 0;
         this.screenshake = false;
         this.screenshakeMaxRange = 24;
-        this.addObjects(option.objects || []);
         this.screenAnimationTimer = 0;
         this.screenEffektTimer = 0;
         this.keyFuncRef = (e) => this.keyFunction(e);
@@ -77,6 +71,7 @@ export class Level {
     }
 
     update(deltaTime){
+        
         clearCanvas();
         this.updateCamera();
         this.checkWin();
@@ -86,6 +81,10 @@ export class Level {
                 if(Object.keys(this.objects[i].animationFrames).length > 0){
                     this.objects[i].updateFrameAnimation(deltaTime);
                 }
+            }
+
+            if(this.objects[i].type == "backgroundElements"){
+                this.objects[i].updateBackground(this.obectsOfType.Player);
             }
 
             try{ this.objects[i].update(deltaTime);
@@ -138,6 +137,16 @@ export class Level {
     }
 
     start(){
+        this.obectsOfType = {
+            Rectangle: [],
+            Box: [],
+            Player: [],
+            Goal: [],
+            Entity: [],
+            Enemy: [],
+            backgroundElements:[],
+        }
+        this.addObjects(this.receivingObjects || []);
         this.player = this.obectsOfType.Player[0];
         this.status = status.running;
         this.timer.pause = false;

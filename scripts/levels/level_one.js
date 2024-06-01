@@ -6,10 +6,17 @@ import { Coin} from "../objects/coin-class.js";
 import { Character} from "../objects/main-character-class.js";
 import { Goal } from "../objects/goal-class.js";
 import { Skelett } from "../objects/skelett-class.js";
+import { Background } from "../background-class.js";
 
 export const levelOne = new Level({
     size: [2900,1300],
-    objects: [new Character({
+    objects: [
+        
+        new Background({
+
+        }),
+        
+        new Character({
         pos: [500,700],
         size: [36,67],
         color:'edff2b',

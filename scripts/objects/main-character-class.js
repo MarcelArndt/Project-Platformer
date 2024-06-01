@@ -1,6 +1,6 @@
 import { Player} from "./player-class.js";
-import {canvas, ctx} from "../canvas.js";
 import { Hitbox } from "./hitbox-class.js";
+
 
 export class Character extends Player {
     constructor(options){
@@ -21,9 +21,10 @@ export class Character extends Player {
         }
         this.frameWidth = 64;
         this.frameHight = 44;
-        this.animationImage.src = "./assets/character-animation-atlas.png";
         this.frameHightOffset = 48;
         this.frameWidthOffset = 0;
+        this.animationImage = new Image();
+        this.animationImage.src = "./assets/character-animation-atlas.png";
     }
 
     createHitbox(){
@@ -34,7 +35,7 @@ export class Character extends Player {
                     level: level,
                     pos: newPos,
                     size: [90, 55],
-                    color: "",
+                    color: "grey",
                     lifespan : 600,
                     demage : 10,
                     forceToLeft: this.facingLeft
@@ -42,6 +43,7 @@ export class Character extends Player {
                 if (this.onGround){
                     this.vel[0] = 0;
                 }
+                debugger;
                 this.level.objects.push(
                     new Hitbox (newObject)
                 );

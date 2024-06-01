@@ -33,6 +33,7 @@ export class State{
 ////////// IDLE STATUS ////////////
 //////////////////////////////////////
 export class Idle{
+
     start(entity){
         entity.animationStatus = "idle"
     }
@@ -43,7 +44,10 @@ export class Idle{
     }
 
     checkConditions(entity){
-        
+        if(entity.gethit){
+            this.leaveState(entity);  
+            entity.stateMachine.changeState(new GetHit());    
+        }
     }
     
     leaveState(entity){
@@ -56,6 +60,7 @@ export class Idle{
 ////////// WALKING STATUS ////////////
 //////////////////////////////////////
 export class Walking{
+
     start(entity){
         entity.acc = entity.backupOption.walkspeed
         entity.animationStatus = "walking"
@@ -78,6 +83,11 @@ export class Walking{
             entity.stateMachine.changeState(new Chasing());
             this.leaveState(entity);
         }
+
+        if(entity.gethit){
+            this.leaveState(entity);  
+            entity.stateMachine.changeState(new GetHit());    
+        }
       
     }
     
@@ -91,9 +101,9 @@ export class Walking{
 ////////// CHASING STATUS ////////////
 //////////////////////////////////////
 export class Chasing{
+
     start(entity){
-        entity.jump(-0.5);
-        entity.walkspeed *= 1.75;
+        entity.walkspeed *= 2;
         entity.acc = entity.walkspeed;
         entity.animationStatus = "chasing";
     }
@@ -124,6 +134,11 @@ export class Chasing{
             this.leaveState(entity);
         }
 
+        if(entity.gethit){
+            this.leaveState(entity);  
+            entity.stateMachine.changeState(new GetHit());    
+        }
+
     }
     
     leaveState(entity){
@@ -137,6 +152,7 @@ export class Chasing{
 ////////// ATTACK STATUS /////////////
 //////////////////////////////////////
 export class Attack{
+
     start(entity){
         entity.walkspeed = 0;
         entity.acc = 0;
@@ -181,10 +197,12 @@ export class Attack{
     }
 }
 
+
 //////////////////////////////////////
 ///////// GET HIT STATUS /////////////
 //////////////////////////////////////
 export class GetHit{
+
     start(entity){
         entity.animationStatus = "getHit";
         entity.jump(-1);
@@ -220,6 +238,7 @@ export class GetHit{
 /////////// DEATH STATUS /////////////
 //////////////////////////////////////
 export class Death{
+
     start(entity){
         entity.walkspeed = 0;
         entity.acc = 0;
@@ -227,6 +246,7 @@ export class Death{
         entity.animationSpeed = 1
 
     }
+
     behave(entity){
         if(!entity.onGround){
             entity.animationStatus = "death"
@@ -242,9 +262,12 @@ export class Death{
             }, 1500);
         }
     }
+
     checkConditions(entity){ 
 
     }
+
     leaveState(entity){
+
     }
 }

@@ -1,7 +1,12 @@
 import { Enemy } from "./enemy-class.js";
+
+let animationImage = new Image();
+    animationImage.src = "./assets/skelet-animation-atlas.png";
+
 export class Skelett extends Enemy{
     constructor(options, type){
         super({
+            spriteSheet: animationImage,
             pos: options.pos,
             size: options.size,
             color: options.color || "grey",
@@ -36,6 +41,7 @@ export class Skelett extends Enemy{
         this.status = "idle"
         this.frameWidth = 150;
         this.frameHight = 65;
+        this.animationImage = new Image();
         this.animationImage.src = "./assets/skelet-animation-atlas.png";
         this.frameHightOffset = 78;
         this.frameWidthOffset = 90;

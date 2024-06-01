@@ -68,10 +68,10 @@ export class Player extends Box {
 
     }
 
-
     reducemoving(){
             this.acc = 0;
     }
+
 
     moving(pressedKey, event){
         if (event.key == "f") {

@@ -8,7 +8,6 @@ export class Rectangle {
     this.color = option.color; 
     this.type = type || 'Rectangle';
     this.originalPos = this.pos;
-
     this.animationImage = new Image();
     this.animationImage.src =  "";
     this.crouch = false;
