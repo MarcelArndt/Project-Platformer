@@ -43,7 +43,7 @@ export class Character extends Player {
                 if (this.onGround){
                     this.vel[0] = 0;
                 }
-                debugger;
+                
                 this.level.objects.push(
                     new Hitbox (newObject)
                 );

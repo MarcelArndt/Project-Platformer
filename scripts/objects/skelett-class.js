@@ -16,7 +16,7 @@ export class Skelett extends Enemy{
             walkspeed: options.walkspeed || 0.00125,
             aggroRange: options.aggroRange || 625,
             smallAggroRange: options.smallAggroRange || 150,
-            HitPoints: options.HitPoints || 10,
+            HitPoints: options.HitPoints || 30,
             invincibilityTimer: options.invincibilityTimer || 575,
             type: type || "Enemy"
         });
