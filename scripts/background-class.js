@@ -11,9 +11,9 @@ let backgroundImageLayerThree = new Image();
 backgroundImageLayerThree.src = "./assets/background/background_layer_3.png";
 
 let imageObject = [
-    { image: backgroundImageLayerOne, offset: [0.32, 0.32], offsetValues:[6, 0], heightOffset: -120 },
-    { image: backgroundImageLayerTwo, offset: [0.64, 0.64], offsetValues:[12, 3], heightOffset: -120 },
-    { image: backgroundImageLayerThree, offset: [1.28, 1.28], offsetValues:[24, 7], heightOffset: 60 }
+    { image: backgroundImageLayerOne, offset: [0.32, 0.32], offsetValues:[6, 3], heightOffset:-200 },
+    { image: backgroundImageLayerTwo, offset: [0.64, 0.64], offsetValues:[12, 5], heightOffset: -190 },
+    { image: backgroundImageLayerThree, offset: [1.28, 1.28], offsetValues:[24, 7], heightOffset: -50 }
 ]
 
 export class Background{
@@ -55,16 +55,15 @@ export class Background{
                 backgroundImg.offset[0] = 0;
             }
             backgroundImg.offset[0] = this.multiplyerX * backgroundImg.offsetValues[0];
-            backgroundImg.offset[1] = (this.playerPos[1] / 25) * backgroundImg.offsetValues[1];
+            backgroundImg.offset[1] = (this.playerPos[1] / 30) * backgroundImg.offsetValues[1];
         });
     }
 
     draw(){
-       
         ctx.fillStyle = this.color;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         this.image.forEach(backgroundImg => {
-            ctx.drawImage(backgroundImg.image, backgroundImg.offset[0], 0, canvas.width, canvas.height, -50, 80 + backgroundImg.heightOffset -backgroundImg.offset[1], canvas.width * 3, canvas.height * 3);
+            ctx.drawImage(backgroundImg.image, backgroundImg.offset[0], 0, canvas.width, canvas.height, -35, 130 + backgroundImg.heightOffset -backgroundImg.offset[1], canvas.width * 2.3, canvas.height * 2.3);
         });
        
     }

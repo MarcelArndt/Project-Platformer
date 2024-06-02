@@ -18,7 +18,7 @@ export class Box extends Rectangle{
     }
 
     canBeMoved(VectorOffest){
-        let fildertObjects = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
+        let fildertObjects = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
 
         if( this.posLeft + VectorOffest[0] < 0 || 
             this.posRight + VectorOffest[0] > this.level.size[0] || 
@@ -152,7 +152,7 @@ export class Box extends Rectangle{
 
     getRemainingDistanceRight(){
         let distance = this.level.size[0] - this.posRight;
-        let filterdArray = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
+        let filterdArray = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
         filterdArray.forEach(obj => {
             if (this.posRight <= obj.posLeft && 
                 this.posBottom > obj.posTop &&
@@ -165,7 +165,7 @@ export class Box extends Rectangle{
 
     getRemainingDistanceLeft(){
         let distance = this.posLeft;
-        let filterdArray = [...this.level.obectsOfType.Rectangle, ...this.level.obectsOfType.Box];
+        let filterdArray = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
         filterdArray.forEach(obj => {
             if (this.posLeft >= obj.posRight && 
                 this.posBottom > obj.posTop &&

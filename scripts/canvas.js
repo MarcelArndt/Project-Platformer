@@ -7,4 +7,4 @@ export function clearCanvas(){
     ctx.msImageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
 }
-ctx.scale(1.45, 1.45);
+ctx.scale(1.5, 1.5);

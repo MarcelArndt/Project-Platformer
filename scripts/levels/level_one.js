@@ -1,164 +1,100 @@
 import { Level } from "../level.js";
+import { Background } from "../background-class.js";
 import { Rectangle } from "../objects/rectangle-class.js";
 import { Box } from "../objects/box-class.js";
-import { Enemy } from "../objects/enemy-class.js";
 import { Coin} from "../objects/coin-class.js";
 import { Character} from "../objects/main-character-class.js";
 import { Goal } from "../objects/goal-class.js";
 import { Skelett } from "../objects/skelett-class.js";
-import { Background } from "../background-class.js";
+import { Tileset } from "../tileset.js";
+
+
+const tileSize = 36;
+const levelSizeInTiles = 130;
+const tileset = new Tileset({
+    src: "./assets/oak_woods_tileset-36x36.png",
+    size: tileSize,
+});
+const background = new Background({});
+
+let TilesArrayData = [];
+let TilesetArray = [];
+
+const collisonBlocks = [];
+const lvl2DCollison = [];
+let collisionArray = [];
+
+
+async function loadJson(){
+    let response = fetch("./scripts/levels/level_one.json")
+    response  = await (await response).json()
+    collisionArray = await response.layers[1].data
+    TilesArrayData =  await response.layers[0].data
+}
+
+
+async function init(){
+    await loadJson();
+    generateCollision();
+    generateTiles();
+}
+
+
+function generateCollision(){
+for (let i=0; i < collisionArray.length; i += levelSizeInTiles){
+    lvl2DCollison.push(collisionArray.slice(i, i + levelSizeInTiles))
+    lvl2DCollison.forEach((row, x) => {
+        row.forEach(((tile, y) => {
+            switch (tile) {
+                case 316: 
+                    collisonBlocks.push(new Rectangle({
+                        pos: [y * tileSize , x * tileSize],
+                        size: [tileSize + 0.5 ,tileSize + 0.5],
+                        color:'#354f52',
+                        type: "Rectangle"
+                    }));  break;
+                }
+            })); 
+        });
+    }
+}
+
+
+
+function generateTiles(){
+    for (let i=0; i < TilesArrayData.length; i += levelSizeInTiles){
+        TilesetArray.push(TilesArrayData.slice(i, i + levelSizeInTiles))
+        TilesetArray.forEach((row, y) => {
+            row.forEach(((tile, x) => {
+                if(tile != 0){
+                    tileset.createTile(x, y, tile);
+                }
+            })); 
+        });
+    }
+}
+
+init();
+
 
 export const levelOne = new Level({
-    size: [2900,1300],
-    objects: [
-        
-        new Background({
+    size: [levelSizeInTiles * tileSize ,1260],
+    background: background,
+    objects: [  
 
-        }),
-        
         new Character({
-        pos: [500,700],
+        pos: [250,900],
         size: [36,67],
         color:'edff2b',
         type: "Player"
         }),
 
         new Skelett ({
-            pos: [300,950],
+            pos: [2850, 900],
             size: [44,100],
             color:'#000'
-            }),
-
-        new Rectangle({
-        pos: [0, 1125],
-        size: [960, 225],
-        color: "#354f52"
-        }),
-
-        new Rectangle({
-                pos: [250, 885],
-                size: [550, 32],
-                color: "#354f52"
-        }),
-    
-
-        new Rectangle({
-                pos: [1300, 0],
-                size: [80, 800],
-                color: "#354f52"
-        }),
-
-        
-        new Rectangle({
-                pos: [1380, 0],
-                size: [500, 732],
-                color: "#354f52"
-        }),
-
-        new Rectangle({
-                pos: [1800, 0],
-                size: [80, 980],
-                color: "#354f52"
-        }),
-
-        new Rectangle({
-                pos: [1736, 884],
-                size: [64, 16],
-                color: "#354f52"
-        }),
-
-        new Rectangle({
-                pos: [1300, 900],
-                size: [560, 80],
-                color: "#354f52"
-        }),
-
-        new Rectangle({
-                pos: [1348, 1145],
-                size: [525, 1045],
-                color: "#354f52"
-            }),
-
-            
-        new Rectangle({
-                pos: [1675, 1100],
-                size: [208, 180],
-                color: "#354f52"
-            }),
-
-
-            new Rectangle({
-                pos: [1848, 1245],
-                size: [600, 1045],
-                color: "#354f52"
-            }),
-
-            new Rectangle({
-                pos: [2375, 1150],
-                size: [208, 400],
-                color: "#354f52"
-            }),
-
-            new Rectangle({
-                pos: [2475, 1250],
-                size: [508, 400],
-                color: "#354f52"
-            }),
-
-            new Coin({
-                pos: [1415, 845],
-                size: [24, 24],
-                color: "#FFD53D"
-            }),
-
-            new Coin({
-                pos: [1367, 845],
-                size: [24, 24],
-                color: "#FFD53D"
-            }),
-
-            new Coin({
-                pos: [1319, 845],
-                size: [24, 24],
-                color: "#FFD53D"
-            }),
-
-                        
-            new Coin({
-                pos: [1271, 845],
-                size: [24, 24],
-                color: "#FFD53D"
-            }),
-
-            new Box({
-                pos: [1670, 700],
-                size: [64, 64],
-                color: "#f7b94f"
-        }),
-
-
-    new Rectangle({
-        pos: [915, 975],
-        size: [260, 450],
-        color: "#354f52"
-}),
-    
-    new Box({
-            pos: [500, 1000],
-            size: [64, 64],
-            color: "#f7b94f"
-    }),
-    new Coin({
-        pos: [345, 835],
-        size: [24, 24],
-        color: "#FFD53D"
-    }), 
-
-    new Goal({
-        pos: [2876, 975],
-        size: [24, 600],
-        color: "#9cb6b7"
-    }),  
-
-    ]
+            }), 
+    ],
+    tileset: tileset,
+    collisionTiles: collisonBlocks,
 })

@@ -20,6 +20,9 @@ export class Level {
         this.cameraPos = option.cameraPos || [0,this.size[1] - canvas.height];
         this.originalCameraPos = [... this.cameraPos];
         this.objects = [];
+        this.background = option.background;
+        this.tileset = option.tileset;
+        this.collisionTiles = option.collisionTiles;
         this.receivingObjects = option.objects
         this.player = null;
         this.game = null;
@@ -28,7 +31,7 @@ export class Level {
         this.status = status.ready;
         this.levelIsWon = false;
         this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
-        this.obectsOfType = null;
+        this.objectsOfType = null;
         this.deleteObjects = []
         this.screenshakeValue = 0;
         this.screenshake = false;
@@ -61,42 +64,48 @@ export class Level {
         }
     }
 
+    addCollisionTiles(){
+        this.collisionTiles.forEach((tile) => {
+            tile.level = this;
+            this.objects.push(tile);
+            this.objectsOfType[tile.type].push(tile);
+        });
+    }
+
     addObjects(obj){
         for (let i = 0; i < obj.length; i++){
             const type = obj[i].type
             obj[i].level = this;
             this.objects.push(obj[i]);
-            this.obectsOfType[type].push(obj[i]);
+            this.objectsOfType[type].push(obj[i]);
         }
     }
 
     update(deltaTime){
-        
         clearCanvas();
+        this.background.updateBackground(this.objectsOfType.Player);
+        this.tileset.draw(this.cameraPos);
         this.updateCamera();
         this.checkWin();
         this.animateScreenshake(deltaTime, 1);
         for(let i = 0; i < this.objects.length; i++){
+
             if(this.objects[i].animationFrames && this.objects[i].type == "Player" || this.objects[i].animationFrames && this.objects[i].type == "Enemy"){
                 if(Object.keys(this.objects[i].animationFrames).length > 0){
                     this.objects[i].updateFrameAnimation(deltaTime);
                 }
             }
-
-            if(this.objects[i].type == "backgroundElements"){
-                this.objects[i].updateBackground(this.obectsOfType.Player);
-            }
-
+            
             try{ this.objects[i].update(deltaTime);
                 if (this.objects[i].type == "Player"){
                     this.objects[i].updatePlayerExtras(deltaTime);
                 }
-                if (this.objects[i].type == "Enemy"){
-                    this.objects[i].updateEnemy(deltaTime);
-                 }
-                this.objects[i].draw();
-               
+
             } catch{}
+            if (this.objects[i].type == "Enemy"){
+                this.objects[i].updateEnemy(deltaTime);
+             }
+             this.objects[i].draw();
         }
     }
 
@@ -137,17 +146,17 @@ export class Level {
     }
 
     start(){
-        this.obectsOfType = {
+        this.objectsOfType = {
             Rectangle: [],
             Box: [],
             Player: [],
             Goal: [],
             Entity: [],
             Enemy: [],
-            backgroundElements:[],
         }
+        this.addCollisionTiles();
         this.addObjects(this.receivingObjects || []);
-        this.player = this.obectsOfType.Player[0];
+        this.player = this.objectsOfType.Player[0];
         this.status = status.running;
         this.timer.pause = false;
         this.timer.start();

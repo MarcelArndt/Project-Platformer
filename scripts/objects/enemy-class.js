@@ -63,9 +63,9 @@ export class Enemy extends Box {
                 this.level.objects.splice([i],1)
             } 
         }
-        for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){
-            if (this.level.obectsOfType.Entity[i].type == type && this.level.obectsOfType.Entity[i].index == this.index){
-                this.level.obectsOfType.Entity.splice([i],1)
+        for (let i = 0; i < this.level.objectsOfType.Entity.length; i++){
+            if (this.level.objectsOfType.Entity[i].type == type && this.level.objectsOfType.Entity[i].index == this.index){
+                this.level.objectsOfType.Entity.splice([i],1)
             } 
         }
     }
@@ -118,10 +118,10 @@ export class Enemy extends Box {
     }
 
     checkPlayerPosition(){
-        let currentPosRight = this.level.obectsOfType.Player[0].posRight
-        let currentPosLeft = this.level.obectsOfType.Player[0].posLeft
-        let currentPosTop = this.level.obectsOfType.Player[0].posTop
-        let currentPosBottom = this.level.obectsOfType.Player[0].posBottom
+        let currentPosRight = this.level.objectsOfType.Player[0].posRight
+        let currentPosLeft = this.level.objectsOfType.Player[0].posLeft
+        let currentPosTop = this.level.objectsOfType.Player[0].posTop
+        let currentPosBottom = this.level.objectsOfType.Player[0].posBottom
         this.playerLocation = [currentPosTop,currentPosLeft,currentPosBottom,currentPosRight]
     } 
 
