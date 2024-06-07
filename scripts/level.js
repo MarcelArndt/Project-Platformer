@@ -1,6 +1,5 @@
 import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
-import { Background } from "./background-class.js";
 
 
 export let camera = {
@@ -95,16 +94,16 @@ export class Level {
                     this.objects[i].updateFrameAnimation(deltaTime);
                 }
             }
-            
-            try{ this.objects[i].update(deltaTime);
-                if (this.objects[i].type == "Player"){
-                    this.objects[i].updatePlayerExtras(deltaTime);
-                }
+            this.objects[i].update(deltaTime);
 
-            } catch{}
+            if (this.objects[i].type == "Player"){
+                this.objects[i].updatePlayerExtras(deltaTime);
+            }
+
             if (this.objects[i].type == "Enemy"){
                 this.objects[i].updateEnemy(deltaTime);
-             }
+            }
+
              this.objects[i].draw();
         }
     }

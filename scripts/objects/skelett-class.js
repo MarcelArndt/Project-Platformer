@@ -1,4 +1,5 @@
 import { Enemy } from "./enemy-class.js";
+import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
 
 let animationImage = new Image();
     animationImage.src = "./assets/skelet-animation-atlas.png";
@@ -20,6 +21,11 @@ export class Skelett extends Enemy{
             invincibilityTimer: options.invincibilityTimer || 575,
             type: type || "Enemy"
         });
+
+        this.status = "idle";
+        this.animationStatus = "idle";
+        this.prevStatus = "idle";
+        this.stateMachine = new StateMachine(new Idle(), this);
 
         this.animationFrames = {
             idle: [[{x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}], true],
@@ -46,15 +52,6 @@ export class Skelett extends Enemy{
         this.frameHightOffset = 78;
         this.frameWidthOffset = 90;
         this.currentTime = 0;
-    }
-
-
-    updateSpecial(deltaTime){
-      //
-    }
-
-    checkSpecialStatus(options){
-       //
     }
 
     checkForCooldown(){

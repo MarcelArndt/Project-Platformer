@@ -1,5 +1,5 @@
 import { Box} from "./box-class.js";
-import {StateMachine, Idle} from "./StateMashine-class.js";
+import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
 
 export class Enemy extends Box {
     constructor(options, type){
@@ -135,12 +135,7 @@ export class Enemy extends Box {
         this.checkIsHit();
         this.checkPlayerPosition();
         this.checkMaxSpeed();
-        this.updateSpecial(deltaTime);
         this.stateMachine.updateState();
-    }
-
-    updateSpecial(deltaTime){
-        //
     }
 
 
