@@ -1,5 +1,6 @@
 import { Player} from "./player-class.js";
 import { Hitbox } from "./hitbox-class.js";
+import { imageIsloadet } from "../images.js";
 
 
 export class Character extends Player {
@@ -23,8 +24,8 @@ export class Character extends Player {
         this.frameHight = 44;
         this.frameHightOffset = 48;
         this.frameWidthOffset = 0;
-        this.animationImage = new Image();
-        this.animationImage.src = "./assets/character-animation-atlas.png";
+        this.animationImage = new Image()
+        this.animationImage.src = "./assets/character-animation-atlas.png"
     }
 
     createHitbox(){

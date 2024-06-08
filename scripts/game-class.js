@@ -1,5 +1,4 @@
 
-
 export class Game {
     constructor(levelList){
         this.levelList = [];

@@ -1,5 +1,6 @@
 import { Box} from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-bird-class.js";
+import { imageIsloadet } from "../images.js";
 
 export class Bird extends Box {
     constructor(options, type){
@@ -12,6 +13,7 @@ export class Bird extends Box {
             friction: options.friction || 0.2
         },
         );
+
         this.type =  options.type || "Entity",
         this.subType =  options.subType || "Bird",
         this.walkspeed = options.walkspeed || -0.00075;
@@ -29,24 +31,18 @@ export class Bird extends Box {
             idle: [[{x:0, y:4}, {x:0, y:4}, {x:1, y:4}, {x:1, y:4},{x:2, y:4}, {x:2, y:4}], true],
             flying: [[{x:0, y:0}, {x:0, y:0}, {x:1, y:0}, {x:1, y:0},{x:2, y:0}, {x:2, y:0}], true],
         }
-
         this.scaling = 0.7
         this.frameWidth = 32;
         this.frameHight = 32;
         this.frameHightOffset = 1;
         this.frameWidthOffset = 0;
+        this.imageArray = [imageIsloadet.whiteBird, imageIsloadet.bluejayBird, imageIsloadet.robinBird]
+
         this.animationImage = new Image();
-        this.imageArray = ["./assets/bird_1_bluejay.png", "./assets/bird_2_white.png", "./assets/bird_3_robin.png"]
-        this.randomNumberForImage = this.randomNumber(2);
-        this.animationImage.src = this.imageArray[this.randomNumber(3)];
+        this.animationImage = this.imageArray[this.randomNumber(3)];
         this.animationTimer = 0;
        
     }
-
-    pickRandomImage(){
-
-    }
-
 
     moving(changeValue = 1){
         let randomNumber = this.randomNumber(50);
@@ -77,7 +73,8 @@ export class Bird extends Box {
     
     update(deltaTime){
         super.update(deltaTime);
-        this.applyFlyingPhsics(deltaTime)
+        this.updateFrameAnimation(deltaTime);
+        this.applyFlyingPhsics(deltaTime);
         this.stateMachine.updateState();
     }
 
@@ -129,6 +126,5 @@ export class Bird extends Box {
         let distance = Math.hypot(distanceX, distanceY); 
         return distance;
     }
-
 
 }

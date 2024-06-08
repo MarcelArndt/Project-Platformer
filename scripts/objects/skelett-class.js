@@ -1,5 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
+import { imageIsloadet } from "../images.js";
 
 let animationImage = new Image();
     animationImage.src = "./assets/skelet-animation-atlas.png";
@@ -47,7 +48,7 @@ export class Skelett extends Enemy{
         this.status = "idle"
         this.frameWidth = 150;
         this.frameHight = 65;
-        this.animationImage = new Image();
+        this.animationImage = imageIsloadet.skeleton;
         this.animationImage.src = "./assets/skelet-animation-atlas.png";
         this.frameHightOffset = 78;
         this.frameWidthOffset = 90;

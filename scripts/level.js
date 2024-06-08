@@ -1,5 +1,10 @@
 import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
+import { Bird } from "./objects/bird-class.js";
+import { Skelett } from "./objects/skelett-class.js";
+import { Character } from "./objects/main-character-class.js";
+import { imageIsloadet } from "./images.js";
+import { Tileset } from "./tileset.js";
 
 
 export let camera = {
@@ -19,10 +24,19 @@ export class Level {
         this.cameraPos = option.cameraPos || [0,this.size[1] - canvas.height];
         this.originalCameraPos = [... this.cameraPos];
         this.objects = [];
-        this.background = option.background;
-        this.tileset = option.tileset;
-        this.collisionTiles = option.collisionTiles;
-        this.receivingObjects = option.objects
+
+        this.entityArrayData = option.entityArrayData
+        this.entityArray = [];
+
+        this.tilesArrayData =  option.tilesArrayData
+        this.tilesArray = []
+
+        this.tileSize = option.tileSize
+        this.levelSizeInTiles = option.levelSizeInTiles
+
+        this.tileset = null;
+
+        this.receivingObjects = [option.objects, option.background, option.tileset,  option.collisionTiles]
         this.player = null;
         this.game = null;
         this.index = 0;
@@ -82,35 +96,17 @@ export class Level {
 
     update(deltaTime){
         clearCanvas();
-        this.background.updateBackground(this.objectsOfType.Player);
-       
         this.updateCamera();
         this.checkWin();
         this.animateScreenshake(deltaTime, 1);
+        this.background.updateBackground(this.objectsOfType.Player);
         this.tileset.draw(this.cameraPos);
         for(let i = 0; i < this.objects.length; i++){
-
-            if(this.objects[i].animationFrames && this.objects[i].type == "Player" || this.objects[i].animationFrames && this.objects[i].type == "Enemy"
-                || this.objects[i].animationFrames && this.objects[i].subType == "Bird" 
-            ){
-                if(Object.keys(this.objects[i].animationFrames).length > 0){
-                    this.objects[i].updateFrameAnimation(deltaTime);
-                }
-            }
-            this.objects[i].update(deltaTime);
-
-            if (this.objects[i].type == "Player"){
-                this.objects[i].updatePlayerExtras(deltaTime);
-            }
-
-            if (this.objects[i].type == "Enemy"){
-                this.objects[i].updateEnemy(deltaTime);
-            }
-           
+            this.objects[i].update(deltaTime); 
             this.objects[i].draw();
         }
-      
     }
+
 
     animateScreenshake(deltaTime, speed = 1){
         const secDeltaTime = deltaTime / 100 * speed;
@@ -140,6 +136,61 @@ export class Level {
         this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - (canvas.height) * 0.69, this.player.posTop - canvas.height * 0.5 /2) + this.screenshakeValue);
     }
 
+    createTileset(){
+        let newTilesetImage = imageIsloadet.tileset;
+//newTilesetImage.src = "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png";
+        this.tileset = new Tileset({
+        image: newTilesetImage,
+        size: this.tileSize,
+        });
+    }
+
+
+    createTiles(){
+        let newTile = null;
+        for (let i=0; i < this.tilesArrayData.length; i += this.levelSizeInTiles){
+           
+            this.tilesArray.push(this.tilesArrayData.slice(i, i +  this.levelSizeInTiles))
+        }
+        this.tilesArray.forEach((row, y) => {
+            row.forEach(((tileNumber, x) => {
+                console.log(tileNumber);
+                switch (tileNumber) {
+                    case 0:  break;
+                    default: this.tileset.createTile(x, y, tileNumber); break;
+                }
+            })); 
+        });
+    }
+
+    createEntity(){
+        let newEntity = null;
+        for (let i=0; i < this.entityArrayData.length; i += this.levelSizeInTiles){
+           
+            this.entityArray.push(this.entityArrayData.slice(i, i +  this.levelSizeInTiles))
+        }
+        this.entityArray.forEach((row, y) => {
+            row.forEach(((tileNumber, x) => {
+                switch (tileNumber) {
+                    case 0: break;
+                    case 635: newEntity = new Character({pos: [x * this.tileSize , y * this.tileSize],size: [36,67],color:'edff2b',type: "Player"}); break;
+                    case 636: newEntity = new Coin({pos: [x * this.tileSize , y * this.tileSize], size: [24, 24], color: "#FFD53D" }); this.pushNewObject(newEntity); break;
+                    case 637: newEntity = new Skelett({pos: [x * this.tileSize , y * this.tileSize], size: [44, 100], color: "#FFD53D" }); this.pushNewObject(newEntity); break;
+                    case 639: newEntity = new Bird({pos: [x * this.tileSize , y * this.tileSize], size: [22, 22]}); this.pushNewObject(newEntity); break;
+                    case 640: newEntity = new Box({pos: [x * this.tileSize , y * this.tileSize], size: [36, 36], color:"brown"}); this.pushNewObject(newEntity); break;
+                }
+            })); 
+        });
+    }
+
+    pushNewObject(obj){
+        let type = obj.type;
+        obj.level = this;
+        console.log(obj)
+        this.objects.push(obj);
+        this.objectsOfType[type].push(obj);
+    }
+
     checkWin(){
         if(!this.levelIsWon) return;
         this.status =  status.pause;
@@ -157,12 +208,19 @@ export class Level {
             Entity: [],
             Enemy: [],
         }
+
+        this.background = this.receivingObjects[1];
+        this.tileset = this.receivingObjects[2];
+        this.collisionTiles = this.receivingObjects[3];
         this.addCollisionTiles();
-        this.addObjects(this.receivingObjects || []);
+        this.addObjects(this.receivingObjects[0] || []);
         this.player = this.objectsOfType.Player[0];
         this.status = status.running;
         this.timer.pause = false;
         this.timer.start();
+        this.createTileset();
+        this.createTiles();
+        this.createEntity();
     }
 
     pause(){

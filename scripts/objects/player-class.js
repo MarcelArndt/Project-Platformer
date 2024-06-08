@@ -147,10 +147,12 @@ export class Player extends Box {
         }
     }
 
-    updatePlayerExtras(deltaTime){
+    update(deltaTime){
+        this.updateFrameAnimation(deltaTime);
         this.checkCoyoteTime();
         this.checkStatus();
         this.ceckCooldown();
+        super.update(deltaTime);
     }
 
     playerAttack(){

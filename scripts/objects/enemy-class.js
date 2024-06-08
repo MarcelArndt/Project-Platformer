@@ -125,7 +125,10 @@ export class Enemy extends Box {
         this.playerLocation = [currentPosTop,currentPosLeft,currentPosBottom,currentPosRight]
     } 
 
-    updateEnemy(deltaTime){
+
+    update(deltaTime){
+        super.update(deltaTime);
+        this.updateFrameAnimation(deltaTime);
         this.screenShake();
         if (this.onGround && !this.isCoyoteTimeReady){
             this.isCoyoteTimeReady = true;
