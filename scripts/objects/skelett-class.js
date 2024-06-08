@@ -43,7 +43,7 @@ export class Skelett extends Enemy{
             latestDateOfAttack: "",
             MainAttackCooldownValue: 1350,
         }
-
+        this.scaling = 1
         this.status = "idle"
         this.frameWidth = 150;
         this.frameHight = 65;

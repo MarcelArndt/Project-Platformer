@@ -30,15 +30,17 @@ export class Bird extends Box {
             flying: [[{x:0, y:0}, {x:0, y:0}, {x:1, y:0}, {x:1, y:0},{x:2, y:0}, {x:2, y:0}], true],
         }
 
+        this.scaling = 0.7
         this.frameWidth = 32;
         this.frameHight = 32;
-        this.frameHightOffset = 14;
+        this.frameHightOffset = 1;
         this.frameWidthOffset = 0;
         this.animationImage = new Image();
         this.imageArray = ["./assets/bird_1_bluejay.png", "./assets/bird_2_white.png", "./assets/bird_3_robin.png"]
         this.randomNumberForImage = this.randomNumber(2);
         this.animationImage.src = this.imageArray[this.randomNumber(3)];
         this.animationTimer = 0;
+       
     }
 
     pickRandomImage(){

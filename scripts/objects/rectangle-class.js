@@ -23,6 +23,7 @@ export class Rectangle {
     this.frameWidthOffset = 0;
     this.frameHightOffset = 0;
     this.animationIsRunning = false;
+    this.scaling = 1;
     }
 
     get posLeft(){
@@ -111,18 +112,18 @@ export class Rectangle {
 
 
     drawAnimation(){
-        let posX = this.pos[0] - this.level.cameraPos[0] - this.size[0] - this.frameWidthOffset;
-        let posY = this.pos[1] - this.level.cameraPos[1] - (this.size[1] - this.frameHightOffset);
+        let posX = this.pos[0] - this.level.cameraPos[0] - this.size[0]  * this.scaling - this.frameWidthOffset;
+        let posY = this.pos[1] - this.level.cameraPos[1] - (this.size[1] * this.scaling - this.frameHightOffset);
         ctx.save();
         if (!this.facingLeft){
             ctx.translate(canvas.width, 0)
             ctx.scale(-1, 1);
-            posX = canvas.width - (this.pos[0] - this.level.cameraPos[0]) - (this.size[0] *2) - this.frameWidthOffset;
+            posX = canvas.width - (this.pos[0] - this.level.cameraPos[0]) - (this.size[0] * 2 * this.scaling) - this.frameWidthOffset;
         }
         if(this.crouch){
             posY -= this.frameHight * 1.5;
         }
-        ctx.drawImage(this.animationImage, this.frame.x * this.frameWidth, this.frame.y * this.frameHight, this.frameWidth, this.frameHight, posX, posY, this.frameWidth* 2, this.frameHight * 2) 
+        ctx.drawImage(this.animationImage, this.frame.x * this.frameWidth, this.frame.y * this.frameHight, this.frameWidth, this.frameHight, posX, posY, this.frameWidth* 2 * this.scaling, this.frameHight * 2 * this.scaling) 
         ctx.restore();
     }
 
