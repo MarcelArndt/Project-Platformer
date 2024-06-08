@@ -83,13 +83,16 @@ export class Level {
     update(deltaTime){
         clearCanvas();
         this.background.updateBackground(this.objectsOfType.Player);
-        this.tileset.draw(this.cameraPos);
+       
         this.updateCamera();
         this.checkWin();
         this.animateScreenshake(deltaTime, 1);
+        this.tileset.draw(this.cameraPos);
         for(let i = 0; i < this.objects.length; i++){
 
-            if(this.objects[i].animationFrames && this.objects[i].type == "Player" || this.objects[i].animationFrames && this.objects[i].type == "Enemy"){
+            if(this.objects[i].animationFrames && this.objects[i].type == "Player" || this.objects[i].animationFrames && this.objects[i].type == "Enemy"
+                || this.objects[i].animationFrames && this.objects[i].subType == "Bird" 
+            ){
                 if(Object.keys(this.objects[i].animationFrames).length > 0){
                     this.objects[i].updateFrameAnimation(deltaTime);
                 }
@@ -103,9 +106,10 @@ export class Level {
             if (this.objects[i].type == "Enemy"){
                 this.objects[i].updateEnemy(deltaTime);
             }
-
-             this.objects[i].draw();
+           
+            this.objects[i].draw();
         }
+      
     }
 
     animateScreenshake(deltaTime, speed = 1){

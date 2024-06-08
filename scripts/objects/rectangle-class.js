@@ -88,7 +88,6 @@ export class Rectangle {
 
     updateAnimationTimer(deltaTime = this.level.timer.deltaTime){
         const secDeltaTime = deltaTime / 100 * this.animationSpeed;
-     
         if(this.animationTimer >= (this.animationFrames[this.animationStatus][0].length -1) && !this.animationFrames[this.animationStatus][1]){
             this.animationTimer = this.animationFrames[this.animationStatus][0].length -1;
             this.animationIsRunning = false;
@@ -107,6 +106,7 @@ export class Rectangle {
             this.updateAnimationTimer(deltaTime, speed)
             FrameIndex = Math.floor(this.animationTimer);
             this.frame = this.animationFrames[this.animationStatus][0][FrameIndex];
+
     }
 
 

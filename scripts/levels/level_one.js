@@ -23,7 +23,7 @@ const tileset = new Tileset({
     });
 
 
-const background = new Background({});
+const background = new Background({color: "#453d4f"});
 
 let entityArrayData = [];
 let entityArray = [];
@@ -103,7 +103,7 @@ function generateEntity(){
                 case 636: entityArrayForObjects.push(new Coin({pos: [x * tileSize , y * tileSize], size: [24, 24], color: "#FFD53D" })); break;
                 case 637: entityArrayForObjects.push(new Skelett({pos: [x * tileSize , y * tileSize], size: [44, 100], color: "#FFD53D" })); break;
                 case 639: entityArrayForObjects.push(new Bird({pos: [x * tileSize , y * tileSize], size: [32, 32],})); break;
-                case 640:entityArrayForObjects.push(new Box({pos: [x * tileSize , y * tileSize], size: [36, 36], color:"brown"})); break;
+                case 640: entityArrayForObjects.push(new Box({pos: [x * tileSize , y * tileSize], size: [36, 36], color:"brown"})); break;
             }
         })); 
     });

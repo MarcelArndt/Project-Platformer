@@ -17,9 +17,6 @@ export class Entity extends Rectangle{
         return newIndex;
     }
 
-    update(deltaTime){
-    }
-
     searchAndDelete(type){
         for (let i = 0; i < this.level.objects.length; i++){
             if (this.level.objects[i].subType == type && this.level.objects[i].index == this.index){

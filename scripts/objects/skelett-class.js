@@ -21,7 +21,7 @@ export class Skelett extends Enemy{
             invincibilityTimer: options.invincibilityTimer || 575,
             type: type || "Enemy"
         });
-
+        this.subType = "Skelett";
         this.status = "idle";
         this.animationStatus = "idle";
         this.prevStatus = "idle";
