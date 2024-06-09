@@ -1,35 +1,30 @@
-import { canvas, ctx } from "./canvas.js";
-
-
-let backgroundImageLayerOne = new Image();
-backgroundImageLayerOne.src = "./assets/background/background_layer_1.png";
-
-let backgroundImageLayerTwo = new Image();
-backgroundImageLayerTwo.src = "./assets/background/background_layer_2.png";
-
-let backgroundImageLayerThree = new Image();
-backgroundImageLayerThree.src = "./assets/background/background_layer_3.png";
-
-let imageObject = [
-    { image: backgroundImageLayerOne, offset: [1.3, 0.32], offsetValues:[6, 2], heightOffset:-410, widthOffset: 0},
-    { image: backgroundImageLayerTwo, offset: [1.5, 0.64], offsetValues:[12, 8], heightOffset: -250, widthOffset: 0},
-    { image: backgroundImageLayerThree, offset: [2.5, 1.3], offsetValues:[24, 12], heightOffset: 0, widthOffset: 0}
-]
+import { canvas, ctx, canvasScalingFactor} from "./canvas.js";
+import { imageIsloadet } from "./images.js";
 
 export class Background{
-    constructor(option, type, speed){
+    constructor(option, ImagesArray, type, speed){
+        this.backgroundImageLayerOne = ImagesArray[0];
+        this.backgroundImageLayerTwo = ImagesArray[1];
+        this.backgroundImageLayerThree = ImagesArray[2];
+        this.imageObject = [
+            { image:  this.backgroundImageLayerOne, offset: [1.3, 0.32], offsetValues:[6, 2], heightOffset: 120, widthOffset: 0},
+            { image:  this.backgroundImageLayerTwo, offset: [1.5, 0.64], offsetValues:[12, 8], heightOffset: 80, widthOffset: 0},
+            { image:  this.backgroundImageLayerThree, offset: [2.5, 1.4], offsetValues:[24, 14], heightOffset: -80, widthOffset: 0}
+        ]
         this.color = option.color || "skyblue";
         this.animationSpeed = option.speed || 1;
-        this.image = imageObject
+        this.image = this.imageObject
         this.type = type || "backgroundElements"
-        this.width =  imageObject[0].image.width;
-        this.height = imageObject[0].image.height;
+        this.width =  this.imageObject[0].image.width;
+        this.height = this.imageObject[0].image.height;
         this.multiplyerX = 8;
         this.playerVel = [0,0];
         this.playerPos = [0,0];
         this.latestSpeed = 0;
         this.playerSpeed = 0;
         this.ValueIsToSlow = false;
+
+
     }
 
     updateBackground(playerArray){
@@ -55,31 +50,28 @@ export class Background{
                 backgroundImg.offset[1] = 0;
             }
             backgroundImg.widthOffset += (this.multiplyerX / 5) * backgroundImg.offsetValues[0];
-            backgroundImg.offset[1] = (this.playerPos[1] / 30) * backgroundImg.offsetValues[1];
+            backgroundImg.offset[1] = ((this.playerPos[1] / 70) * backgroundImg.offsetValues[1]) + backgroundImg.heightOffset;
         });
     }
 
-    draw(scalingFactor = 1.15, offsetForWidth = 70){
+
+    //drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
+    draw(upscaling = 2.675, offsetForWidth = 20, offsetForHeight = 125){
+        let calcOffsetWidth = 0;
+        let moduloValue = 0;
+        let  calcDoppelWidth = 0;
         ctx.fillStyle = this.color;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         this.image.forEach(backgroundImg => {
-            ctx.drawImage(backgroundImg.image, 0, 0, 
-                backgroundImg.image.width * scalingFactor, 
-                backgroundImg.image.height * scalingFactor, 
-                (-backgroundImg.widthOffset % ((-backgroundImg.image.width * 2) - (((backgroundImg.image.width / scalingFactor) - offsetForWidth) * scalingFactor) )) 
-                - 120,
-                160 + backgroundImg.heightOffset -backgroundImg.offset[1],
-                canvas.width,
-                canvas.height);
-            
-                ctx.drawImage(backgroundImg.image, 0, 0, 
-                backgroundImg.image.width * scalingFactor, 
-                backgroundImg.image.height * scalingFactor, 
-                (-backgroundImg.widthOffset % ((-backgroundImg.image.width * 2) - (((backgroundImg.image.width / scalingFactor) - offsetForWidth) * scalingFactor) ))
-                + (backgroundImg.image.width * 2) + ((backgroundImg.image.width * scalingFactor) - backgroundImg.image.width) + offsetForWidth,
-                160 + backgroundImg.heightOffset -backgroundImg.offset[1],
-                canvas.width,
-                canvas.height);
+
+            calcOffsetWidth = 0 - offsetForWidth - backgroundImg.widthOffset;
+            calcDoppelWidth = (backgroundImg.image.width * upscaling) - 1
+            moduloValue = (backgroundImg.image.width) * upscaling
+
+            ctx.drawImage(
+            backgroundImg.image, 0, 0, backgroundImg.image.width, backgroundImg.image.height, (calcOffsetWidth % moduloValue) + 0, (0 - offsetForHeight)  -backgroundImg.offset[1], backgroundImg.image.width * upscaling, backgroundImg.image.height * upscaling);
+            ctx.drawImage( 
+            backgroundImg.image, 0, 0, backgroundImg.image.width, backgroundImg.image.height, (calcOffsetWidth % moduloValue) + calcDoppelWidth, (0 - offsetForHeight)  -backgroundImg.offset[1], backgroundImg.image.width * upscaling, backgroundImg.image.height * upscaling);   
         });
     }
 }

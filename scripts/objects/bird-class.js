@@ -74,7 +74,7 @@ export class Bird extends Box {
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
-        this.applyFlyingPhsics(deltaTime);
+        this.applyFlyingPhsics();
         this.stateMachine.updateState();
     }
 
@@ -86,7 +86,7 @@ export class Bird extends Box {
         }
     }
 
-    applyFlyingPhsics(deltaTime){
+    applyFlyingPhsics(){
         if(this.isFlying){
             this.grav = this.flyGrav;
         } else if (!this.isFlying){

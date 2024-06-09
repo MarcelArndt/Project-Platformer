@@ -1,16 +1,10 @@
 import { Level } from "../level.js";
-import { Background } from "../background-class.js";
 import { Rectangle } from "../objects/rectangle-class.js";
 import { Character} from "../objects/main-character-class.js";
 
-
-let initIsLoadet = false;
 const tileSize = 36;
 const levelSizeInTiles = 130;
 const levelHeighInTiles = 35;
-
-
-const background = new Background({color: "#453d4f"});
 
 let entityArrayData = [];
 let entityArray = [];
@@ -80,7 +74,6 @@ await init();
 
 export const levelOne = new Level({
     size: [levelSizeInTiles * tileSize , levelHeighInTiles * tileSize],
-    background: background,
     objects: entityArrayForObjects,
     collisionTiles: collisonBlocks,
     entityArrayData : entityArrayData,

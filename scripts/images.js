@@ -10,6 +10,7 @@ let imageIsToLoading = {
     backgroundOne : "./assets/background/background_layer_1.png",
     backgroundTwo : "./assets/background/background_layer_2.png",
     backgroundThree : "./assets/background/background_layer_3.png",
+    backgroundMenu : "./assets/background/menu-background.png",
 }
 
 
@@ -25,6 +26,9 @@ let loadingNewImage = (receivingImgPath) => {
         }
     }));
 }
+
+
+export let percentageLoadet = 0;
 
 /**
  *  Key = Key of imageIsToLoading
@@ -43,8 +47,19 @@ export async function loadAllImages(){
         try {
             let currentImage = await loadingNewImage(imagePath);
             imageIsloadet[Object.keys(imageIsToLoading)[i]] = currentImage;
+            checkForReady();
         } catch (e){
             console.error(e);
         }
+    }
+}
+
+
+function checkForReady(){
+    let date = new Date()
+    let MaxValue = Object.keys(imageIsToLoading).length;
+    let currentValue = Object.keys(imageIsloadet).length;
+    if (currentValue > 0){
+        percentageLoadet = Math.floor(currentValue / MaxValue * 100)
     }
 }

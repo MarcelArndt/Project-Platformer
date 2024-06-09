@@ -5,7 +5,8 @@ import { Skelett } from "./objects/skelett-class.js";
 import { Character } from "./objects/main-character-class.js";
 import { imageIsloadet } from "./images.js";
 import { Tileset } from "./tileset.js";
-
+import { Background } from "./background-class.js";
+import { canvasOverlay, canvasOverlayContent } from "./game-class.js";
 
 export let camera = {
     pos: [0,0],
@@ -21,8 +22,8 @@ let status = {
 export class Level {
     constructor(option){
         this.size = option.size || [canvas.width, canvas.height];
-        this.cameraPos = option.cameraPos || [0,this.size[1] - canvas.height];
-        this.originalCameraPos = [... this.cameraPos];
+        this.cameraPos = [0, this.size[1] - canvas.height];
+        this.originalCameraPos = [0, this.size[1] - canvas.height];
         this.objects = [];
 
         this.entityArrayData = option.entityArrayData
@@ -36,7 +37,7 @@ export class Level {
 
         this.tileset = null;
 
-        this.receivingObjects = [option.objects, option.background, option.tileset,  option.collisionTiles]
+        this.receivingObjects = [option.objects, option.background, option.tileset,  option.collisionTiles, option.cameraPos]
         this.player = null;
         this.game = null;
         this.index = 0;
@@ -132,13 +133,14 @@ export class Level {
         if (randomNumber == 0){
             randomNumber = -1;
         }
+        //debugger;
         this.cameraPos[0] = Math.max(0, Math.min(this.size[0] -( canvas.width) * 0.69, this.player.posRight - canvas.width * 0.65 /2) + ((this.screenshakeValue / 1) * randomNumber));
         this.cameraPos[1] = Math.max(0, Math.min(this.size[1] - (canvas.height) * 0.69, this.player.posTop - canvas.height * 0.5 /2) + this.screenshakeValue);
     }
 
     createTileset(){
         let newTilesetImage = imageIsloadet.tileset;
-//newTilesetImage.src = "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png";
+        //newTilesetImage.src = "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png";
         this.tileset = new Tileset({
         image: newTilesetImage,
         size: this.tileSize,
@@ -147,14 +149,12 @@ export class Level {
 
 
     createTiles(){
-        let newTile = null;
         for (let i=0; i < this.tilesArrayData.length; i += this.levelSizeInTiles){
            
             this.tilesArray.push(this.tilesArrayData.slice(i, i +  this.levelSizeInTiles))
         }
         this.tilesArray.forEach((row, y) => {
             row.forEach(((tileNumber, x) => {
-                console.log(tileNumber);
                 switch (tileNumber) {
                     case 0:  break;
                     default: this.tileset.createTile(x, y, tileNumber); break;
@@ -173,7 +173,7 @@ export class Level {
             row.forEach(((tileNumber, x) => {
                 switch (tileNumber) {
                     case 0: break;
-                    case 635: newEntity = new Character({pos: [x * this.tileSize , y * this.tileSize],size: [36,67],color:'edff2b',type: "Player"}); break;
+                    case 635: newEntity = new Character({pos: [x * this.tileSize + 35 , y * this.tileSize],size: [36,67],color:'edff2b',type: "Player"}); break;
                     case 636: newEntity = new Coin({pos: [x * this.tileSize , y * this.tileSize], size: [24, 24], color: "#FFD53D" }); this.pushNewObject(newEntity); break;
                     case 637: newEntity = new Skelett({pos: [x * this.tileSize , y * this.tileSize], size: [44, 100], color: "#FFD53D" }); this.pushNewObject(newEntity); break;
                     case 639: newEntity = new Bird({pos: [x * this.tileSize , y * this.tileSize], size: [22, 22]}); this.pushNewObject(newEntity); break;
@@ -186,7 +186,6 @@ export class Level {
     pushNewObject(obj){
         let type = obj.type;
         obj.level = this;
-        console.log(obj)
         this.objects.push(obj);
         this.objectsOfType[type].push(obj);
     }
@@ -208,8 +207,8 @@ export class Level {
             Entity: [],
             Enemy: [],
         }
-
-        this.background = this.receivingObjects[1];
+        canvasOverlayContent.innerHTML = "";
+        this.background = new Background({color: "#453d4f"},[imageIsloadet.backgroundOne, imageIsloadet.backgroundTwo, imageIsloadet.backgroundThree]);
         this.tileset = this.receivingObjects[2];
         this.collisionTiles = this.receivingObjects[3];
         this.addCollisionTiles();
@@ -224,11 +223,15 @@ export class Level {
     }
 
     pause(){
-       this.status = status.pause
-       this.timer.getInPause();
+        canvasOverlayContent.innerHTML = "Press P to Resume";
+        canvasOverlay.classList.add("blackscreen");
+        this.status = status.pause
+        this.timer.getInPause();
     }
 
     resume(){
+        canvasOverlayContent.innerHTML = "";
+        canvasOverlay.classList.remove("blackscreen");
         this.status = status.running;
         this.timer.pause = false;
         this.timer.start();
