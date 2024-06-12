@@ -36,12 +36,24 @@ export class Idle {
   }
 
   behave(entity) {
-      switch (entity.pressedKeys[0]) {
-        case "d": case "a": entity.stateMachine.changeState(new Walking()); break;
-        case "w": case " ": entity.stateMachine.changeState(new Jump()); break;
-        default: entity.stopMove(); break;
-      }
-      entity.latestKey = entity.pressedKeys[0]
+    switch (entity.pressedKeys[0]) {
+      case "d":
+      case "a":
+        entity.stateMachine.changeState(new Walking());
+        break;
+      case "w":
+      case " ":
+        entity.stateMachine.changeState(new Jump());
+        break;
+      case "s":
+      case "ArrowDown":
+        entity.stateMachine.changeState(new Crouch());
+        break;
+      default:
+        entity.stopMove();
+        break;
+    }
+    entity.latestKey = entity.pressedKeys[0];
   }
 
   checkConditions(entity) {}
@@ -53,29 +65,32 @@ export class Idle {
 ////////// JUMP STATUS ////////////
 //////////////////////////////////////
 export class Jump {
-
   start(entity) {
     entity.animationStatus = "jump";
     entity.playerJump();
   }
 
   behave(entity) {
-    entity.pressedKeys.forEach(PressedKey => {
-        switch (PressedKey) {
-        case "d": case "a": entity.move(); break;
-        default: entity.stopMove(); break;
+    entity.pressedKeys.forEach((PressedKey) => {
+      switch (PressedKey) {
+        case "d":
+        case "a":
+          entity.move();
+          break;
+        default:
+          entity.stopMove();
+          break;
       }
     });
   }
 
   checkConditions(entity) {
-    if (entity.vel[1] > 0){
-      entity.stateMachine.changeState(new Fall())
+    if (entity.vel[1] > 0) {
+      entity.stateMachine.changeState(new Fall());
     }
-    if (entity.onGround && entity.vel[0] < 0.05 && entity.vel[0] > -0.05){
-      entity.stateMachine.changeState(new Idle())
+    if (entity.onGround && entity.vel[0] < 0.05 && entity.vel[0] > -0.05) {
+      entity.stateMachine.changeState(new Idle());
     }
-
   }
 
   leaveState(entity) {}
@@ -85,32 +100,42 @@ export class Jump {
 ////////// FALL STATUS ////////////
 //////////////////////////////////////
 export class Fall {
-
   start(entity) {
     entity.animationStatus = "fall";
   }
 
   behave(entity) {
-    entity.pressedKeys.forEach(PressedKey => {
+    entity.pressedKeys.forEach((PressedKey) => {
       switch (PressedKey) {
-      case "d": case "a": entity.move(); break;
-      default: entity.stopMove(); break;
-    }
-  });
+        case "d":
+        case "a":
+          entity.move();
+          break;
+        default:
+          entity.stopMove();
+          break;
+      }
+    });
 
-  switch (entity.pressedKeys[0]){
-    case "w": case " ": entity.stateMachine.changeState(new Jump()); break;
-    case "d": case "a": entity.move(); break;
-    default: entity.stopMove(); break;
+    switch (entity.pressedKeys[0]) {
+      case "w":
+      case " ":
+        entity.stateMachine.changeState(new Jump());
+        break;
+      case "d":
+      case "a":
+        entity.move();
+        break;
+      default:
+        entity.stopMove();
+        break;
+    }
   }
-  }
-  
 
   checkConditions(entity) {
-    if (entity.onGround){
-      entity.stateMachine.changeState(new Idle())
+    if (entity.onGround) {
+      entity.stateMachine.changeState(new Idle());
     }
-
   }
 
   leaveState(entity) {}
@@ -120,44 +145,82 @@ export class Fall {
 //////////// RUN STATUS //////////////
 //////////////////////////////////////
 export class Walking {
-  start(entity) {
-  }
+  start(entity) {}
 
   behave(entity) {
-    if (entity.onGround){
+    if (entity.onGround) {
       entity.animationStatus = "walking";
     }
 
-    entity.pressedKeys.forEach(PressedKey => {
+    entity.pressedKeys.forEach((PressedKey) => {
       switch (PressedKey) {
-      case "d": case "a": entity.move(); break;
-      default: entity.stopMove(); break;
-    }
+        case "d":
+        case "a":
+          entity.move();
+          break;
+        default:
+          entity.stopMove();
+          break;
+      }
     });
 
-  switch (entity.pressedKeys[0]){
-    case "w": case " ": entity.stateMachine.changeState(new Jump()); break;
-    case "d": case "a": entity.move(); break;
-    default: entity.stateMachine.changeState(new Idle()); break;
-  }
-
-  
+    switch (entity.pressedKeys[0]) {
+      case "w":
+      case " ":
+        entity.stateMachine.changeState(new Jump());
+        break;
+      case "d":
+      case "a":
+        entity.move();
+        break;
+      default:
+        entity.stateMachine.changeState(new Idle());
+        break;
+    }
   }
   checkConditions(entity) {
-    if (entity.vel[1] > 0){
-      entity.stateMachine.changeState(new Fall())
+    if (entity.vel[1] > 0) {
+      entity.stateMachine.changeState(new Fall());
     }
 
-    if (entity.vel[0] < 0.3 && entity.vel[0] > -0.3){
-      switch (entity.pressedKeys[0]){
-        case "w": case " ": entity.stateMachine.changeState(new Jump()); break;
-        case "d": case "a": entity.move(); break;
-        default: entity.stateMachine.changeState(new Idle()); break;
+    if (entity.vel[0] < 0.3 && entity.vel[0] > -0.3) {
+      switch (entity.pressedKeys[0]) {
+        case "w":
+        case " ":
+          entity.stateMachine.changeState(new Jump());
+          break;
+        case "d":
+        case "a":
+          entity.move();
+          break;
+        default:
+          entity.stateMachine.changeState(new Idle());
+          break;
       }
     }
-   
   }
 
-  leaveState(entity) 
-  {}
+  leaveState(entity) {}
+}
+
+//////////////////////////////////////
+////////// CROUCH STATUS ////////////
+//////////////////////////////////////
+export class Crouch {
+  start(entity) {
+    entity.animationStatus = "crouch";
+  }
+
+  behave(entity) {
+    entity.pressedKeys.forEach((PressedKey) => {
+      switch (PressedKey) {
+        case "s": case "ArrowDown": entity.crouch();  break;
+        default: entity.stateMachine.changeState(new Idle()); break;
+      }
+    });
+  }
+
+  checkConditions(entity) {}
+
+  leaveState(entity) {}
 }

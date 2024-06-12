@@ -64,10 +64,6 @@ export class Player extends Box {
     });
   }
 
-  reducemoving() {
-    this.acc = 0;
-  }
-
   move() {
     this.pressedKeys.forEach( (pressedKey) => {
       switch (pressedKey) {
@@ -77,6 +73,10 @@ export class Player extends Box {
       }
     });
 
+  }
+
+  crouch(){
+    console.log("crouch")
   }
 
   stopMove() {
