@@ -56,11 +56,15 @@ export class Bird extends Box {
     }
 
     flee(){
+        let randomValue = Math.random() * 3;
+        if (randomValue == 0){
+            randomValue = 1;
+        }
         let distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
         if(distance[1] >= 0 && distance[2] < 35){
-            this.walkspeed = -0.0035;
+            this.walkspeed = -0.0035 * randomValue;
         } else if(distance[1] < 0 && distance[2] < 35){
-            this.walkspeed = 0.0035;
+            this.walkspeed = 0.0035 * randomValue;
         }
         this.acc = this.walkspeed;
     }

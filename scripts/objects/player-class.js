@@ -18,7 +18,8 @@ export class Player extends Box {
     this.facingLeft = true;
     this.crouch = false;
     this.jumpseed = -1.2;
-    this.walkspeed = 0.0125;
+    this.walkspeed = 0.011;
+    this.originWalkspeed = this.walkspeed
     this.coyoteTime = 75;
     this.isCoyoteTimeReady = true;
     this.latestOnGround = 0;
@@ -28,11 +29,12 @@ export class Player extends Box {
     this.prevKeyInput = "";
     this.playerHealth = options.playerHealth || 30;
     this.stateMachine = new StateMachine(new Idle(), this);
-    this.pressedKeys = [];
+
     this.cooldown = {
       dash: false,
       dashCooldown: "",
       mainAttack: false,
+      isInMainAttack: false,
       mainCooldown: "",
       mainKeyIsPressed: false,
       mainCooldownValue: 1050,
@@ -47,40 +49,70 @@ export class Player extends Box {
       maxWalljump: 2,
       isOnWall: false,
     };
+
+    this.pressedKeys = [];
     this.addControll();
   }
 
   addControll() {
-    document.addEventListener("keypress", (event) => {
-      if (this.pressedKeys.indexOf(event.key) == -1) {
-        this.pressedKeys.unshift(event.key);
+    document.addEventListener("keypress", (e) => {
+      switch(e.key){
+        case "a": case "ArrowLeft":  this.move("left"); break;
+        case "d": case "ArrowRight": this.move("right");break;
+        case "w": case "ArrowUp": case " ": this.playerJump(); break;
+        case "s": case "ArrowDown":  this.inCrouch(); break;
+        case "f": case "Enter": this.playerAttack(); break;
       }
     });
 
-    document.addEventListener("keyup", (event) => {
-      if (this.pressedKeys.indexOf(event.key) > -1) {
-        this.pressedKeys.splice(this.pressedKeys.indexOf(event.key), 1);
+    document.addEventListener("keyup", (e) => {
+      switch(e.key){
+        case "a": case "ArrowLeft":  this.stopMove(); break;
+        case "d": case "ArrowRight": this.stopMove(); break;
+        case "s": case "ArrowDown":  this.outCrouch(); break;
+       
       }
     });
   }
 
-  move() {
-    this.pressedKeys.forEach( (pressedKey) => {
-      switch (pressedKey) {
-        case "d": this.facingLeft = true; this.acc = this.walkspeed; break;
-        case "a": this.facingLeft = false; this.acc = -this.walkspeed; break;
-        default: this.stopMove(); break;
-      }
-    });
+  checkFacingLeft(){
+    if (this.acc > 0){
+      this.facingLeft = true;
 
+    } else if(this.acc < 0){
+      this.facingLeft = false;
+    }
   }
 
-  crouch(){
-    console.log("crouch")
+  move(direction) {
+    if (direction == "left"){
+      this.acc = -this.walkspeed;
+    } else if (direction == "right"){
+      this.acc = this.walkspeed;
+    }
+    this.checkFacingLeft();
   }
 
   stopMove() {
     this.acc = 0;
+  }
+
+  inCrouch(){
+    this.stopMove(); 
+    this.vel[0] = 0;
+    if (!this.crouch){
+      this.crouch = true;
+      this.size[1] = this.size[1] / 2
+      this.setTop(this.posTop + (this.size[1]))
+    }
+  }
+
+  outCrouch(){
+    if (this.crouch){
+      this.crouch = false;
+      this.size[1] = this.size[1] * 2
+      this.setBottom(this.posBottom - (this.size[1] / 2))
+    }
   }
 
   playerJump() {
@@ -120,6 +152,7 @@ export class Player extends Box {
         }
         return false;
       },
+
       toRight: () => {
         if (box.type !== "Box") return false;
         const distance = this.posRight - box.posLeft;
@@ -141,11 +174,12 @@ export class Player extends Box {
   update(deltaTime) {
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
-    this.checkStatus();
     this.ceckCooldown();
     super.update(deltaTime);
     this.stateMachine.updateState();
   }
+
+
 
   playerAttack() {
     if (
@@ -155,8 +189,8 @@ export class Player extends Box {
     ) {
       this.vel[0] = 0;
       this.acc = 0;
+      this.cooldown.isInMainAttack = true;
       this.cooldown.mainAttack = true;
-      this.createHitbox();
       this.cooldown.mainCooldown = new Date();
     }
   }
@@ -175,9 +209,6 @@ export class Player extends Box {
     }
   }
 
-  checkStatus() {
-   
-  }
 
   checkCoyoteTime() {
     if (this.onGround && !this.isCoyoteTimeReady) {
@@ -204,19 +235,5 @@ export class Player extends Box {
     if (currentTime - this.coyoteTime >= this.currentCoyoteTime) {
       this.isCoyoteTimeReady = false;
     }
-  }
-
-  checkfacingForPos() {
-    let vector = "";
-    if (this.facingLeft) {
-      vector = this.posLeft;
-    } else {
-      vector = this.posRight - 80;
-    }
-    return vector;
-  }
-
-  createHitbox() {
-    //
   }
 }

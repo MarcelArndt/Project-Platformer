@@ -17,16 +17,6 @@ export class StateMachine {
   }
 }
 
-/**
- * Strukture of a new State:
- */
-export class State {
-  start(entity) {}
-  behave(entity) {}
-  checkConditions(entity) {}
-  leaveState(entity) {}
-}
-
 //////////////////////////////////////
 ////////// IDLE STATUS ////////////
 //////////////////////////////////////
@@ -36,27 +26,23 @@ export class Idle {
   }
 
   behave(entity) {
-    switch (entity.pressedKeys[0]) {
-      case "d":
-      case "a":
-        entity.stateMachine.changeState(new Walking());
-        break;
-      case "w":
-      case " ":
-        entity.stateMachine.changeState(new Jump());
-        break;
-      case "s":
-      case "ArrowDown":
-        entity.stateMachine.changeState(new Crouch());
-        break;
-      default:
-        entity.stopMove();
-        break;
-    }
-    entity.latestKey = entity.pressedKeys[0];
   }
 
-  checkConditions(entity) {}
+  checkConditions(entity) {
+    if (entity.crouch){
+      entity.stateMachine.changeState(new Crouch());
+    }
+    if(entity.cooldown.isInMainAttack){
+      entity.stateMachine.changeState(new Attack());
+    }
+    if (entity.vel[1] < 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Jump());
+    } else if(entity.vel[1] > 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Fall());
+    } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
+      entity.stateMachine.changeState(new Walking());
+    }
+  }
 
   leaveState(entity) {}
 }
@@ -67,29 +53,16 @@ export class Idle {
 export class Jump {
   start(entity) {
     entity.animationStatus = "jump";
-    entity.playerJump();
+
   }
 
   behave(entity) {
-    entity.pressedKeys.forEach((PressedKey) => {
-      switch (PressedKey) {
-        case "d":
-        case "a":
-          entity.move();
-          break;
-        default:
-          entity.stopMove();
-          break;
-      }
-    });
+
   }
 
   checkConditions(entity) {
-    if (entity.vel[1] > 0) {
+    if (entity.vel[1] > 0 && !entity.onGround) {
       entity.stateMachine.changeState(new Fall());
-    }
-    if (entity.onGround && entity.vel[0] < 0.05 && entity.vel[0] > -0.05) {
-      entity.stateMachine.changeState(new Idle());
     }
   }
 
@@ -105,35 +78,11 @@ export class Fall {
   }
 
   behave(entity) {
-    entity.pressedKeys.forEach((PressedKey) => {
-      switch (PressedKey) {
-        case "d":
-        case "a":
-          entity.move();
-          break;
-        default:
-          entity.stopMove();
-          break;
-      }
-    });
 
-    switch (entity.pressedKeys[0]) {
-      case "w":
-      case " ":
-        entity.stateMachine.changeState(new Jump());
-        break;
-      case "d":
-      case "a":
-        entity.move();
-        break;
-      default:
-        entity.stopMove();
-        break;
-    }
   }
 
   checkConditions(entity) {
-    if (entity.onGround) {
+    if (entity.onGround && entity.vel[1] == 0) {
       entity.stateMachine.changeState(new Idle());
     }
   }
@@ -142,61 +91,29 @@ export class Fall {
 }
 
 //////////////////////////////////////
-//////////// RUN STATUS //////////////
+////////// WALKING STATUS ///////////
 //////////////////////////////////////
 export class Walking {
-  start(entity) {}
+  start(entity) {  
+    entity.animationStatus = "walking";
+  }
 
   behave(entity) {
-    if (entity.onGround) {
-      entity.animationStatus = "walking";
+   
     }
-
-    entity.pressedKeys.forEach((PressedKey) => {
-      switch (PressedKey) {
-        case "d":
-        case "a":
-          entity.move();
-          break;
-        default:
-          entity.stopMove();
-          break;
-      }
-    });
-
-    switch (entity.pressedKeys[0]) {
-      case "w":
-      case " ":
-        entity.stateMachine.changeState(new Jump());
-        break;
-      case "d":
-      case "a":
-        entity.move();
-        break;
-      default:
-        entity.stateMachine.changeState(new Idle());
-        break;
-    }
-  }
   checkConditions(entity) {
-    if (entity.vel[1] > 0) {
-      entity.stateMachine.changeState(new Fall());
+    if (entity.crouch){
+      entity.stateMachine.changeState(new Crouch());
     }
-
-    if (entity.vel[0] < 0.3 && entity.vel[0] > -0.3) {
-      switch (entity.pressedKeys[0]) {
-        case "w":
-        case " ":
-          entity.stateMachine.changeState(new Jump());
-          break;
-        case "d":
-        case "a":
-          entity.move();
-          break;
-        default:
-          entity.stateMachine.changeState(new Idle());
-          break;
-      }
+    if(entity.cooldown.isInMainAttack){
+      entity.stateMachine.changeState(new Attack());
+    }
+    if (entity.vel[1] < 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Jump());
+    } else if(entity.vel[1] > 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Fall());
+    } else if(entity.acc < 0.005 && entity.acc > -0.005 && entity.onGround){
+      entity.stateMachine.changeState(new Idle());
     }
   }
 
@@ -212,15 +129,44 @@ export class Crouch {
   }
 
   behave(entity) {
-    entity.pressedKeys.forEach((PressedKey) => {
-      switch (PressedKey) {
-        case "s": case "ArrowDown": entity.crouch();  break;
-        default: entity.stateMachine.changeState(new Idle()); break;
-      }
-    });
   }
 
-  checkConditions(entity) {}
+  checkConditions(entity) {
+    if(!entity.crouch){
+      entity.stateMachine.changeState(new Idle());
+    }
+  }
 
   leaveState(entity) {}
+}
+
+
+//////////////////////////////////////
+////////// ATTACK STATUS ////////////
+//////////////////////////////////////
+export class Attack {
+  start(entity) {
+    entity.animationStatus = "attack";
+  }
+
+  behave(entity) {
+
+  }
+  checkConditions(entity) {
+    if(!entity.animationIsRunning){
+      entity.stateMachine.changeState(new Idle());
+    } else if(entity.crouch){
+      entity.stateMachine.changeState(new Crouch());
+    } else if (entity.vel[1] < 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Jump());
+    } else if(entity.vel[1] > 0 && !entity.onGround){
+      entity.stateMachine.changeState(new Fall());
+    } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
+      entity.stateMachine.changeState(new Walking());
+    }
+  }
+
+  leaveState(entity) {
+    entity.cooldown.isInMainAttack = false;
+  }
 }

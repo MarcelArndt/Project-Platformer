@@ -91,7 +91,7 @@ export class Box extends Rectangle{
             fromBottom: () =>{
                 if (this.getPrevPosTop() >= obj.posBottom && obj.type != "Entity"){
                     let isCollide = false;
-                    isCollide = this.collideWith(obj, [this.vel[0] * 2 * -3.5 ,0])
+                    isCollide = this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0])
                     if(isCollide){
                         this.setTop(obj.posBottom);
                         this.vel[1] = 0;
@@ -104,7 +104,7 @@ export class Box extends Rectangle{
                     if (this.pushObject(obj, this.level.objects).toRight()) {
                         return
                     }
-                    this.setRight(obj.posLeft - 2.0);
+                    this.setRight(obj.posLeft - 1.5);
                     this.vel[0] = 0;
                     if(this.type == "Enemy"){
                         this.changeDirection();
@@ -116,7 +116,7 @@ export class Box extends Rectangle{
                     if (this.pushObject(obj, this.level.objects).toLeft()){
                         return
                     }
-                    this.setLeft(obj.posRight + 2.0);
+                    this.setLeft(obj.posRight + 1.5);
                     this.vel[0] = 0;
                     if(this.type == "Enemy"){
                         this.changeDirection();

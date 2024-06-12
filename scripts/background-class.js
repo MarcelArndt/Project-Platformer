@@ -2,7 +2,7 @@ import { canvas, ctx, canvasScalingFactor } from "./canvas.js";
 import { imageIsloadet } from "./images.js";
 
 export class Background {
-  constructor(option, ImagesArray, type, speed) {
+  constructor(option, ImagesArray, type) {
     this.backgroundImageLayerOne = ImagesArray[0];
     this.backgroundImageLayerTwo = ImagesArray[1];
     this.backgroundImageLayerThree = ImagesArray[2];
