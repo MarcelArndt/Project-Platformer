@@ -10,15 +10,15 @@ export class Background {
       {
         image: this.backgroundImageLayerOne,
         offset: [1.3, 0.32],
-        offsetValues: [6, 2],
-        heightOffset: 120,
+        offsetValues: [6, 3],
+        heightOffset: 0,
         widthOffset: 0,
       },
       {
         image: this.backgroundImageLayerTwo,
         offset: [1.5, 0.64],
         offsetValues: [12, 8],
-        heightOffset: 80,
+        heightOffset: 40,
         widthOffset: 0,
       },
       {
@@ -94,6 +94,7 @@ export class Background {
         backgroundImg.image.width * upscaling,
         backgroundImg.image.height * upscaling
       );
+
       ctx.drawImage(
         backgroundImg.image,
         0,

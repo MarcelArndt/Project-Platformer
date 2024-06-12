@@ -16,19 +16,21 @@ export class Bird extends Box {
 
         this.type =  options.type || "Entity",
         this.subType =  options.subType || "Bird",
-        this.walkspeed = options.walkspeed || -0.00075;
+        this.walkspeed = options.walkspeed || -0.001;
         this.jumpspeed = options.jumpspeed || 0.005;
         this.stateMachine = new StateMachine(new Idle(), this);
         this.facingLeft = false;
         this.isFlying = false;
         this.flyGrav = 0.0003,
         this.flyspeed = this.walkspeed * 2,
-        this.originGrav =  this.grav;
+        this.originWalkspeed = options.walkspeed || -0.00075;
+        this.originGrav = this.grav;
         this.originPos = [... this.pos];
         this.isReturning = false;  
-
+        this.isJump = false;
         this.animationFrames = {
-            idle: [[{x:0, y:4}, {x:0, y:4}, {x:1, y:4}, {x:1, y:4},{x:2, y:4}, {x:2, y:4}], true],
+            idle: [[{x:0, y:4}], false],
+            jump: [[{x:0, y:4}, {x:0, y:4}, {x:1, y:4}, {x:1, y:4},{x:2, y:4}, {x:2, y:4}], true],
             flying: [[{x:0, y:0}, {x:0, y:0}, {x:1, y:0}, {x:1, y:0},{x:2, y:0}, {x:2, y:0}], true],
         }
         this.scaling = 0.7
@@ -44,38 +46,37 @@ export class Bird extends Box {
        
     }
 
-    moving(changeValue = 1){
-        let randomNumber = this.randomNumber(50);
-        let distance = this.checkDistanceToOriginPos();
-        if (distance > 100 && !this.isReturning && randomNumber == 1){
-            this.walkspeed = this.walkspeed * -changeValue 
-            this.acc = this.walkspeed;
-            this.isReturning = true
-        } else if (distance < 80 && this.isReturning){
-            this.isReturning = false
-        } else if(randomNumber == 1){
-            this.walkspeed = this.walkspeed * -changeValue 
-            this.acc = this.walkspeed;
-        } else {
-            this.acc = this.walkspeed;
-        } 
+    moving(){
+        this.checkFacingLeft();
+        this.vel[0] =  this.walkspeed * 300;
+    }
+
+    stopMoving(){
+        this.acc = 0;
     }
 
     flee(){
         let distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
-        if(distance[1] >= 0 ){
+        if(distance[1] >= 0 && distance[2] < 35){
             this.walkspeed = -0.0035;
-        } else if(distance[1] < 0 ){
+        } else if(distance[1] < 0 && distance[2] < 35){
             this.walkspeed = 0.0035;
         }
         this.acc = this.walkspeed;
     }
     
     update(deltaTime){
-        super.update(deltaTime);
+        this.prevPos = [...this.pos];
+        this.applyPhsics(deltaTime);
+        this.boundToLevel();
+        this.level.objects.forEach(obj => {
+            this.collide(obj).fromAbove();
+            this.collide(obj).fromLeft();
+            this.collide(obj).fromRight();
+        })
         this.updateFrameAnimation(deltaTime);
         this.applyFlyingPhsics();
-        this.stateMachine.updateState();
+        this.stateMachine.updateState(deltaTime);
     }
 
     checkFacingLeft(){
@@ -116,15 +117,39 @@ export class Bird extends Box {
     checkDistanceToPlayer(playerObj){
         let distanceX = (this.pos[0] - playerObj.pos[0]) * -1;
         let distanceY = (this.pos[1] - playerObj.pos[1]) * -1;
-        let distance =[Math.hypot(distanceX, distanceY), distanceX]; 
+        let distance =[Math.hypot(distanceX, distanceY), distanceX, distanceY]; 
         return distance;
     }
+    setTop(){
+    }
+
+    jump(){
+        if (this.onGround){
+                this.vel[1] = -0.4
+            }
+        }
+        
 
     checkDistanceToOriginPos(){
         let distanceX = (this.pos[0] - this.originPos[0]) * -1;
         let distanceY = (this.pos[1] - this.originPos[1]) * -1;
         let distance = Math.hypot(distanceX, distanceY); 
         return distance;
+    }
+
+    despawn(){
+        this.grav = 0;
+        this.vel = [0, 0];
+        this.acc = 0;
+        this.pos = [ -200, 900]
+        this.animationStatus = "idle";
+    }
+
+    spawn(){
+        this.grav = this.originGrav;
+        this.pos = [...this.originPos];
+        this.walkspeed =  this.originWalkspeed
+        this.stateMachine = new StateMachine(new Idle(), this);
     }
 
 }

@@ -1,14 +1,14 @@
 import { Level } from "../level.js";
 import { Rectangle } from "../objects/rectangle-class.js";
-import { Character} from "../objects/main-character-class.js";
+import { Character } from "../objects/main-character-class.js";
 
-const tileSize = 36;
-const levelSizeInTiles = 130;
-const levelHeighInTiles = 35;
+let tileSize = 0;
+let levelSizeInTiles = 0;
+let levelHeighInTiles = 0;
 
 let entityArrayData = [];
 let entityArray = [];
-let entityArrayForObjects = []
+let entityArrayForObjects = [];
 
 let tilesArrayData = [];
 
@@ -16,68 +16,79 @@ const collisonBlocks = [];
 const lvl2DCollison = [];
 let collisionArray = [];
 
-
-
-async function loadJson(){
-    let response = await fetch("./scripts/levels/level_one.json")
-    response  = await response.json()
-    entityArrayData = await response.layers[0].data
-    collisionArray = await response.layers[1].data
-    tilesArrayData =  await response.layers[2].data
+async function loadJson() {
+  let response = await fetch("./scripts/levels/level_one.json");
+  response = await response.json();
+  entityArrayData = await response.layers[0].data;
+  collisionArray = await response.layers[1].data;
+  tilesArrayData = await response.layers[2].data;
+  levelSizeInTiles = await response.width;
+  levelHeighInTiles = await response.height;
+  tileSize = await response.tileheight;
 }
 
-
-async function init(){
-        await loadJson();
-        generateCollision();
-        generateEntity();
+async function init() {
+  await loadJson();
+  generateCollision();
+  generateEntity();
 }
 
-
-function generateCollision(){
-for (let i=0; i < collisionArray.length; i += levelSizeInTiles){
-    lvl2DCollison.push(collisionArray.slice(i, i + levelSizeInTiles))
-    }
-    lvl2DCollison.forEach((row, x) => {
-        row.forEach(((tile, y) => {
-            switch (tile) {
-                case 0: break;
-                default:  collisonBlocks.push(new Rectangle({
-                          pos: [y * tileSize , x * tileSize],
-                          size: [tileSize + 0.5 ,tileSize + 0.5],
-                          color:'rgba(255,255,255,0.0)',
-                          type: "Rectangle"
-                    }));  break;
-                }
-            })); 
-        });
-}
-
-function generateEntity(){
-    for (let i=0; i < entityArrayData.length; i += levelSizeInTiles){
-        entityArray.push(entityArrayData.slice(i, i + levelSizeInTiles))
-    }
-    entityArray.forEach((row, y) => {
-        row.forEach(((tileNumber, x) => {
-            switch (tileNumber) {
-                case 0: break;
-                case 635: entityArrayForObjects.push(new Character({pos: [x * tileSize , y * tileSize],size: [36,67],color:'edff2b',type: "Player"})); break;
-            }
-        })); 
+function generateCollision() {
+  for (let i = 0; i < collisionArray.length; i += levelSizeInTiles) {
+    lvl2DCollison.push(collisionArray.slice(i, i + levelSizeInTiles));
+  }
+  lvl2DCollison.forEach((row, x) => {
+    row.forEach((tile, y) => {
+      switch (tile) {
+        case 0:
+          break;
+        default:
+          collisonBlocks.push(
+            new Rectangle({
+              pos: [y * tileSize, x * tileSize],
+              size: [tileSize + 0.5, tileSize + 0.5],
+              color: "rgba(255,255,255,0.0)",
+              type: "Rectangle",
+            })
+          );
+          break;
+      }
     });
+  });
 }
 
-
+function generateEntity() {
+  for (let i = 0; i < entityArrayData.length; i += levelSizeInTiles) {
+    entityArray.push(entityArrayData.slice(i, i + levelSizeInTiles));
+  }
+  entityArray.forEach((row, y) => {
+    row.forEach((tileNumber, x) => {
+      switch (tileNumber) {
+        case 0:
+          break;
+        case 635:
+          entityArrayForObjects.push(
+            new Character({
+              pos: [x * tileSize, y * tileSize],
+              size: [36, 67],
+              color: "edff2b",
+              type: "Player",
+            })
+          );
+          break;
+      }
+    });
+  });
+}
 
 await init();
 
-
 export const levelOne = new Level({
-    size: [levelSizeInTiles * tileSize , levelHeighInTiles * tileSize],
-    objects: entityArrayForObjects,
-    collisionTiles: collisonBlocks,
-    entityArrayData : entityArrayData,
-    levelSizeInTiles : levelSizeInTiles,
-    tilesArrayData : tilesArrayData,
-    tileSize : tileSize
+  size: [levelSizeInTiles * tileSize, levelHeighInTiles * tileSize],
+  objects: entityArrayForObjects,
+  collisionTiles: collisonBlocks,
+  entityArrayData: entityArrayData,
+  levelSizeInTiles: levelSizeInTiles,
+  tilesArrayData: tilesArrayData,
+  tileSize: tileSize,
 });
