@@ -14,8 +14,8 @@ export class Rectangle {
     this.facingLeft = false;
     this.status = "";
     this.animationStatus = "idle";
-    this.animationFrames = false;
     this.frame = {x:0, y:0};
+    this.animationFrames = {};
     this.animationTimer = 0;
     this.animationSpeed = 1;
     this.frameWidth = 16;
@@ -67,6 +67,7 @@ export class Rectangle {
     }
 
     draw(){
+        
         if(Object.keys(this.animationFrames).length > 0){
             this.drawAnimation();
         }  else {

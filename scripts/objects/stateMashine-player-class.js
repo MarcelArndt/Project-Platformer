@@ -146,11 +146,19 @@ export class Crouch {
 //////////////////////////////////////
 export class Attack {
   start(entity) {
+    entity.animationTimer = 0;
+    this.startAttack = true
     entity.animationStatus = "attack";
   }
 
   behave(entity) {
-
+    if(Math.floor(entity.animationTimer) == 5){
+      if(entity.facingLeft){
+        entity.activateHitbox(1);
+      } else{
+        entity.activateHitbox(0);
+      }
+    }
   }
   checkConditions(entity) {
     if(!entity.animationIsRunning){
@@ -168,5 +176,11 @@ export class Attack {
 
   leaveState(entity) {
     entity.cooldown.isInMainAttack = false;
+    entity.disableHitbox(0,true);
+    entity.animationStatus = "idle";
+    entity.cooldown.mainAttack = false;
+    entity.cooldown.isInMainAttack =  false;
+    entity.cooldown.mainCooldown =  "";
+    entity.cooldown.mainKeyIsPressed = false;
   }
 }

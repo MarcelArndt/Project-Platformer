@@ -1,4 +1,5 @@
 import { Box } from "./box-class.js";
+import { Hitbox } from "./hitbox-class.js";
 import { StateMachine, Idle } from "./stateMashine-player-class.js";
 
 export class Player extends Box {
@@ -49,9 +50,10 @@ export class Player extends Box {
       maxWalljump: 2,
       isOnWall: false,
     };
-
     this.pressedKeys = [];
     this.addControll();
+    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, color: "rgba(255,75,0,0.25)"},this,)
+    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, forceToLeft: false, color: "rgba(255,75,0,0.25)"}, this,)
   }
 
   addControll() {
@@ -70,10 +72,10 @@ export class Player extends Box {
         case "a": case "ArrowLeft":  this.stopMove(); break;
         case "d": case "ArrowRight": this.stopMove(); break;
         case "s": case "ArrowDown":  this.outCrouch(); break;
-       
       }
     });
   }
+
 
   checkFacingLeft(){
     if (this.acc > 0){
@@ -236,4 +238,7 @@ export class Player extends Box {
       this.isCoyoteTimeReady = false;
     }
   }
+
+
+
 }

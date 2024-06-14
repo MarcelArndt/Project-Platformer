@@ -30,7 +30,6 @@ async function loadJson() {
 async function init() {
   await loadJson();
   generateCollision();
-  generateEntity();
 }
 
 function generateCollision() {
@@ -57,38 +56,21 @@ function generateCollision() {
   });
 }
 
-function generateEntity() {
-  for (let i = 0; i < entityArrayData.length; i += levelSizeInTiles) {
-    entityArray.push(entityArrayData.slice(i, i + levelSizeInTiles));
-  }
-  entityArray.forEach((row, y) => {
-    row.forEach((tileNumber, x) => {
-      switch (tileNumber) {
-        case 0:
-          break;
-        case 635:
-          entityArrayForObjects.push(
-            new Character({
-              pos: [x * tileSize, y * tileSize],
-              size: [36, 67],
-              color: "edff2b",
-              type: "Player",
-            })
-          );
-          break;
-      }
-    });
-  });
-}
-
 await init();
 
 export const levelOne = new Level({
   size: [levelSizeInTiles * tileSize, levelHeighInTiles * tileSize],
-  objects: entityArrayForObjects,
   collisionTiles: collisonBlocks,
   entityArrayData: entityArrayData,
   levelSizeInTiles: levelSizeInTiles,
   tilesArrayData: tilesArrayData,
   tileSize: tileSize,
+  objectofType: {
+    Rectangle: [],
+    Box: [],
+    Player: [],
+    Goal: [],
+    Entity: [],
+    Enemy: [],
+  }
 });

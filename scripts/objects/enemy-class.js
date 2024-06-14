@@ -258,7 +258,6 @@ export class Enemy extends Box {
 
 
     checkIsLevelSizeNear(willCollide, offset){
-  
         if(this.posRight + offset[0] >= this.level.size[0]){
             willCollide[0] = true;
             willCollide[1] = true;

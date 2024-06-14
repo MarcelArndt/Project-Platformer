@@ -51,7 +51,14 @@ export class Level {
     this.status = status.ready;
     this.levelIsWon = false;
     this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
-    this.objectsOfType = null;
+    this.objectsOfType = {
+      Rectangle: [],
+      Box: [],
+      Player: [],
+      Goal: [],
+      Entity: [],
+      Enemy: [],
+    };
     this.deleteObjects = [];
     this.screenshakeValue = 0;
     this.screenshake = false;
@@ -59,6 +66,7 @@ export class Level {
     this.screenAnimationTimer = 0;
     this.screenEffektTimer = 0;
     this.keyFuncRef = (e) => this.keyFunction(e);
+
   }
 
   addControll() {
@@ -101,15 +109,29 @@ export class Level {
   }
 
   update(deltaTime) {
-    clearCanvas();
-    this.updateCamera();
-    this.checkWin();
-    this.animateScreenshake(deltaTime, 1);
-    this.background.updateBackground(this.objectsOfType.Player);
-    this.tileset.draw(this.cameraPos);
-    for (let i = 0; i < this.objects.length; i++) {
-      this.objects[i].update(deltaTime);
-      this.objects[i].draw();
+      this.createPlayer();
+      clearCanvas();
+      this.updateCamera();
+      this.checkWin();
+      this.animateScreenshake(deltaTime, 1);
+      this.background.updateBackground(this.objectsOfType.Player);
+      this.tileset.draw(this.cameraPos);
+      for (let i = 0; i < this.objects.length; i++) {
+        this.objects[i].update(deltaTime);
+        this.objects[i].draw();
+      }
+  }
+  
+
+  createPlayer(){
+    if (this.player == null){
+      this.objectsOfType.Player.push(new Character({pos: [0, 0], size: [36, 67], color: "edff2b", type: "Player",}));
+      this.player = this.objectsOfType.Player[0];
+      console.log(this.player.demageBoxes)
+      this.player.demageBoxes.forEach((box) => {
+        box.level = this;
+        box.enableUpdateBox = true;
+      })
     }
   }
 
@@ -140,7 +162,6 @@ export class Level {
     if (randomNumber == 0) {
       randomNumber = -1;
     }
-    //debugger;
     this.cameraPos[0] = Math.max(
       0,
       Math.min(
@@ -204,53 +225,22 @@ export class Level {
     this.entityArray.forEach((row, y) => {
       row.forEach((tileNumber, x) => {
         switch (tileNumber) {
-          case 0:
-            break;
-          case 635:
-            newEntity = new Character({
-              pos: [x * this.tileSize + 35, y * this.tileSize],
-              size: [36, 67],
-              color: "edff2b",
-              type: "Player",
-            });
-            break;
-          case 636:
-            newEntity = new Coin({
-              pos: [x * this.tileSize, y * this.tileSize],
-              size: [24, 24],
-              color: "#FFD53D",
-            });
-            this.pushNewObject(newEntity);
-            break;
-          case 637:
-            newEntity = new Skelett({
-              pos: [x * this.tileSize, y * this.tileSize],
-              size: [44, 100],
-              color: "#FFD53D",
-            });
-            this.pushNewObject(newEntity);
-            break;
-          case 639:
-            newEntity = new Bird({
-              pos: [x * this.tileSize, y * this.tileSize],
-              size: [22, 22],
-            });
-            this.pushNewObject(newEntity);
-            break;
-          case 640:
-            newEntity = new Box({
-              pos: [x * this.tileSize, y * this.tileSize],
-              size: [36, 36],
-              color: "brown",
-            });
-            this.pushNewObject(newEntity);
-            break;
+          case 0: break;
+          case 636: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D", }); this.pushNewObject(newEntity); break;
+          case 637: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [44, 100], color: "#FFD53D",}); this.pushNewObject(newEntity); break;
+          case 635: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 67], color: "edff2b", type: "Player", });  this.pushNewObject(newEntity); break;;
+          case 639: newEntity = new Bird({ pos: [x * this.tileSize, y * this.tileSize], size: [22, 22],}); this.pushNewObject(newEntity);break;
+          case 640: newEntity = new Box({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 36], color: "brown",}); this.pushNewObject(newEntity); break;
         }
       });
     });
   }
 
   pushNewObject(obj) {
+    if(obj.type == "Player"){
+      obj.level = this;
+      this.Player = obj;
+    }
     let type = obj.type;
     obj.level = this;
     this.objects.push(obj);
@@ -266,14 +256,6 @@ export class Level {
   }
 
   start() {
-    this.objectsOfType = {
-      Rectangle: [],
-      Box: [],
-      Player: [],
-      Goal: [],
-      Entity: [],
-      Enemy: [],
-    };
     canvasOverlayContent.innerHTML = "";
     this.background = new Background({ color: "#453d4f" }, [
       imageIsloadet.backgroundOne,
@@ -283,8 +265,6 @@ export class Level {
     this.tileset = this.receivingObjects[2];
     this.collisionTiles = this.receivingObjects[3];
     this.addCollisionTiles();
-    this.addObjects(this.receivingObjects[0] || []);
-    this.player = this.objectsOfType.Player[0];
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();

@@ -1,4 +1,5 @@
 import {Rectangle} from "./rectangle-class.js";
+import { Hitbox } from "./hitbox-class.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -10,7 +11,9 @@ export class Box extends Rectangle{
         this.acc = 0;
         this.onGround = false;
         this.prevPos = [...this.pos];
-        this.type = type || "Box"
+        this.type = type || "Box";
+        this.enableUpdateBox = false;
+            this.demageBoxes = []
     }
 
     checkCollideWithObjects(){
@@ -70,6 +73,7 @@ export class Box extends Rectangle{
             this.collide(obj).fromLeft();
             this.collide(obj).fromRight();
         })
+        this.updateHitboxs();
     }
 
 
@@ -184,4 +188,43 @@ export class Box extends Rectangle{
     changeDirection(){
         //
     }
+
+    createHitBox(pos, size, manualOffset, options, obj){
+        let newBox = new Hitbox({
+          pos: [pos[0], pos[1]],
+          size: [size[0], size[1]],
+          offset: [manualOffset[0], manualOffset[1]],
+          forceToLeft: options.forceToLeft || true,
+          demage: options.demage || 10,
+          demageFlag: options.demageFlag || "Player",
+          isAktiv: options.isAktiv || false,
+          lifespan: options.lifespan || 6,
+          color: options.color || "rgba(255,125,0,0.55)",
+          object : obj,
+        })
+        this.demageBoxes.push(newBox);
+      }
+    
+      activateHitbox(HitboxNumber = 0){
+        this.demageBoxes[HitboxNumber].isAktiv = true;
+      }
+    
+      disableHitbox(HitboxNumber = 0, disableAll = false){
+       switch(disableAll){
+        case true: this.demageBoxes.forEach((box) => { box.isAktiv = false;}); break;
+        case false: this.demageBoxes[HitboxNumber].isAktiv = false; break;
+       }
+      }
+    
+      updateHitboxs(){
+        if (this.updateHitboxs){
+          this.demageBoxes.forEach((box) => {
+            box.pos[0] = this.pos[0] + box.setOffset[0];
+            box.pos[1] = this.pos[1] + box.setOffset[1];
+            if(box.isAktiv){
+              box.draw();
+            }
+          });
+        }
+      }
 }
