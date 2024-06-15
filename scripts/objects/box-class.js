@@ -97,18 +97,24 @@ export class Box extends Rectangle{
         return {
             fromAbove: () =>{
                 if (this.getPrevPosBottom() <= obj.posTop && obj.type != "Entity" && this.collideWith(obj)){
-                    this.setBottom(obj.posTop);
-                    this.vel[1] = 0;
-                    this.onGround = true;
+                    if (obj.subType == "SemiSolidBlock" && this.crouch){
+                        return;
+                    } else{
+                        this.setBottom(obj.posTop);
+                        this.vel[1] = 0;
+                        this.onGround = true;
+                    }
+                       
                     if (obj.type == "Player"){
                         obj.jump.currentPressingKey = false;
                         obj.jump.alreadyInJump = false
                     }
+
                     return this.onGround;
             }
             },
             fromBottom: () =>{
-                if (this.getPrevPosTop() >= obj.posBottom && obj.type != "Entity"){
+                if (this.getPrevPosTop() >= obj.posBottom && obj.subType != "SemiSolidBlock" && obj.type != "Entity"){
                     let isCollide = false;
                     isCollide = this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0])
                     if(isCollide){
@@ -119,27 +125,21 @@ export class Box extends Rectangle{
             },
 
             fromRight: () =>{
-                if ( this.getPrevPosRight() <= obj.posLeft && obj.type != "Entity" && this.collideWith(obj)){
+                if ( this.getPrevPosRight() <= obj.posLeft && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
                     if (this.pushObject(obj, this.level.objects).toRight()) {
                         return
                     }
                     this.setRight(obj.posLeft - 1.5);
                     this.vel[0] = 0;
-                    if(this.type == "Enemy"){
-                        this.changeDirection();
-                    }
             }
             },
             fromLeft: () =>{
-                if ( this.getPrevPosLeft() >= obj.posRight && obj.type != "Entity" && this.collideWith(obj)){
+                if ( this.getPrevPosLeft() >= obj.posRight && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
                     if (this.pushObject(obj, this.level.objects).toLeft()){
                         return
                     }
                     this.setLeft(obj.posRight + 1.5);
                     this.vel[0] = 0;
-                    if(this.type == "Enemy"){
-                        this.changeDirection();
-                    }
                 }
             }
         }
@@ -162,15 +162,9 @@ export class Box extends Rectangle{
         if (this.posLeft <= 0){
             this.setLeft(0);
             this.vel[0] = 0;
-            if (this.type == "Enemy"){
-                this.changeDirection();
-            }
         } else if (this.posRight >= this.level.size[0]){
             this.vel[0] = 0;
             this.setRight(this.level.size[0]);
-            if (this.type == "Enemy"){
-                this.changeDirection();
-            }
         }
     }
 

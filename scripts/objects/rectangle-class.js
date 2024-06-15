@@ -129,7 +129,6 @@ export class Rectangle {
     }
 
     update(){
-        // in Main
     }
 
     reset(){

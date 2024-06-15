@@ -61,7 +61,7 @@ export class Player extends Box {
 
   addControll() {
     document.addEventListener("keypress", (e) => {
-      if(!this.gethit){
+      if(!this.gethit && !this.crouch){
         switch(e.key){
           case "a": case "ArrowLeft":  this.move("left"); break;
           case "d": case "ArrowRight": this.move("right");break;

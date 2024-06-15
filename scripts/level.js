@@ -7,6 +7,8 @@ import { imageIsloadet } from "./images.js";
 import { Tileset } from "./tileset.js";
 import { Background } from "./background-class.js";
 import { canvasOverlay, canvasOverlayContent } from "./game-class.js";
+import { Rectangle } from "./objects/rectangle-class.js";
+import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 
 export let camera = {
   pos: [0, 0],
@@ -92,14 +94,6 @@ export class Level {
     }
   }
 
-  addCollisionTiles() {
-    this.collisionTiles.forEach((tile) => {
-      tile.level = this;
-      this.objects.push(tile);
-      this.objectsOfType[tile.type].push(tile);
-    });
-  }
-
   addObjects(obj) {
     for (let i = 0; i < obj.length; i++) {
       const type = obj[i].type;
@@ -138,6 +132,7 @@ export class Level {
       this.screenAnimationTimer = 0;
     }
   }
+  
 
   drawObjects() {
     for (let i = 0; i < this.objects.length; i++) {
@@ -172,6 +167,30 @@ export class Level {
     this.tileset = new Tileset({
       image: newTilesetImage,
       size: this.tileSize,
+    });
+  }
+
+  createCollision() {
+    let slicedCollisonBlock = [];
+    for (let i = 0; i < this.collisionArray.length; i += this.levelSizeInTiles) {
+      slicedCollisonBlock.push( this.collisionArray.slice(i, i + this.levelSizeInTiles));
+    }
+    slicedCollisonBlock.forEach((row, x) => {
+      row.forEach((tile, y) => {
+        let newCollisionBlock = null;
+        switch (tile) {
+          case 0: break;
+          case 631: newCollisionBlock  = 
+          new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)", type: "Rectangle",});
+          this.pushNewObject(newCollisionBlock)
+          break;
+
+          case 638: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)"}, "Rectangle");
+          this.pushNewObject(newCollisionBlock);
+
+          default: break;
+        }
+      });
     });
   }
 
@@ -249,12 +268,13 @@ export class Level {
       imageIsloadet.backgroundTwo,
       imageIsloadet.backgroundThree,
     ]);
+    this.collisionArray = this.receivingObjects[3];
     this.tileset = this.receivingObjects[2];
     this.collisionTiles = this.receivingObjects[3];
-    this.addCollisionTiles();
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();
+    this.createCollision()
     this.createTileset();
     this.createTiles();
     this.createEntity();

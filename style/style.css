@@ -20,6 +20,7 @@ body,html{
 }
 
 body{
+  height: 100%;
   font-family: OpenSans;
   font-weight: 400;
   margin:0px;
@@ -30,7 +31,7 @@ body{
 
 header{
   background: var(--second_background_color);
-  padding: 64px 24px;
+  padding: 12px 24px;
 }
 
 section{
@@ -40,7 +41,8 @@ section{
 footer{
   background: var(--footer_color);
   color:var(--brighter_text_color);
-  padding: 64px 24px;
+  padding: 12px 24px;
+  flex-grow: 1;
 }
 
 h1{
@@ -111,11 +113,14 @@ p{
   max-width: 1440px;
 }
 
-.fgrow{
-  flex-grow:1;
+.mainSection{
+  height: 100%;
   display: flex;
+  justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
+
 
 .button{
   cursor: pointer;

@@ -39,18 +39,8 @@ function generateCollision() {
   lvl2DCollison.forEach((row, x) => {
     row.forEach((tile, y) => {
       switch (tile) {
-        case 0:
-          break;
-        default:
-          collisonBlocks.push(
-            new Rectangle({
-              pos: [y * tileSize, x * tileSize],
-              size: [tileSize + 0.5, tileSize + 0.5],
-              color: "rgba(255,255,255,0.0)",
-              type: "Rectangle",
-            })
-          );
-          break;
+        case 0: break;
+        default: collisonBlocks.push(  new Rectangle({ pos: [y * tileSize, x * tileSize], size: [tileSize + 0.5, tileSize + 0.5], color: "rgba(255,255,255,0.0)", type: "Rectangle",})); break;
       }
     });
   });
@@ -60,7 +50,7 @@ await init();
 
 export const levelOne = new Level({
   size: [levelSizeInTiles * tileSize, levelHeighInTiles * tileSize],
-  collisionTiles: collisonBlocks,
+  collisionTiles: collisionArray,
   entityArrayData: entityArrayData,
   levelSizeInTiles: levelSizeInTiles,
   tilesArrayData: tilesArrayData,
