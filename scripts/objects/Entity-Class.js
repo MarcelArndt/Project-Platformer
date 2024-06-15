@@ -17,23 +17,6 @@ export class Entity extends Rectangle{
         return newIndex;
     }
 
-    searchAndDelete(type){
-        for (let i = 0; i < this.level.objects.length; i++){
-            if (this.level.objects[i].subType == type && this.level.objects[i].index == this.index){
-                if(this.subType != "Hitbox"){
-                    this.level.deleteObjects.push(this)
-                }
-                this.level.objects.splice([i],1)
-                console.log(this.level.deleteObjects);
-            } 
-        }
-        for (let i = 0; i < this.level.obectsOfType.Entity.length; i++){
-            if (this.level.obectsOfType.Entity[i].subType == type && this.level.obectsOfType.Entity[i].index == this.index){
-                this.level.obectsOfType.Entity.splice([i],1)
-            } 
-        }
-    }
-
     update(deltaTime){
         super.update(deltaTime);
         

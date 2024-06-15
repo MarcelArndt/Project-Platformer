@@ -1,6 +1,6 @@
-import { Entity} from "./entity-class.js";
-import { ctx, clearCanvas } from "../canvas.js";
-import { imageIsloadet } from "../images.js";
+import { Entity } from "./entity-class.js"
+import { ctx } from "../canvas.js";
+
 export class Hitbox extends Entity{
     constructor(options, type){
         const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, offset, object} = options

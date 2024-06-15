@@ -236,4 +236,11 @@ export class Box extends Rectangle{
           });
         }
       }
+
+      screenShakeEnable(frameValue = 10){
+        this.level.screenAnimationTime = 0;
+        this.level.screenAnimationMaxTimer = frameValue
+        this.level.screenshakeToggle = true;
+        this.screenshakeAnimationRunning = true;
+    }
 }

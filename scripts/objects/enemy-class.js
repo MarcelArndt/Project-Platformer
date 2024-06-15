@@ -107,7 +107,6 @@ export class Enemy extends Box {
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
-        this.screenShake();
         this.checkIsHit();
         this.checkPlayerPosition();
         this.checkMaxSpeed();
@@ -258,20 +257,4 @@ export class Enemy extends Box {
         this.HitPoints = this.originalStats.HitPoints;
         this.isCoyoteTimeReady = this.originalStats.isCoyoteTimeReady;
     }
-
-    screenShake(timeout = 2){
-        let deltaTimeSec = 1 / 60;
-        this.level.screenEffektTimer += deltaTimeSec;
-
-        if (this.level.screenEffektTimer >= 10 && !this.screenshake){
-            this.level.screenEffektTimer = 0;
-        }
-
-        if (this.level.screenEffektTimer > timeout && this.screenshake){
-            this.level.screenshake = false;
-            this.level.screenEffektTimer = 0;
-        }
-
-    }
-    
 }

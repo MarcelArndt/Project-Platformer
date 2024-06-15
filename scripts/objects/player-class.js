@@ -1,5 +1,4 @@
 import { Box } from "./box-class.js";
-import { Hitbox } from "./hitbox-class.js";
 import { StateMachine, Idle } from "./stateMashine-player-class.js";
 
 export class Player extends Box {
@@ -111,7 +110,6 @@ export class Player extends Box {
       let secDeltaTime = deltaTime / 100;
       this.cooldown.getHurt += secDeltaTime;
       if(Math.floor(this.cooldown.getHurt) >= 4 && this.onGround) {
-        console.log("reset")
         this.gethit = false;
       }
     }

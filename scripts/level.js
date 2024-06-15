@@ -61,12 +61,15 @@ export class Level {
       Entity: [],
       Enemy: [],
     };
+    this.originPlayerSize = 0;
     this.demageBoxes = {};
     this.deleteObjects = [];
     this.screenshakeValue = 0;
-    this.screenshake = false;
-    this.screenshakeMaxRange = 24;
+    this.screenshakeMaxValue = 35;
+    this.screenshakeToggle = false;
+    this.screenshakeAnimationRunning = false;
     this.screenAnimationTimer = 0;
+    this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
     this.keyFuncRef = (e) => this.keyFunction(e);
 
@@ -107,7 +110,8 @@ export class Level {
       clearCanvas();
       this.updateCamera();
       this.checkWin();
-      this.animateScreenshake(deltaTime, 1);
+      this.checkScreenshakeTime(deltaTime, 1);
+      this.calculateScreenshakeValue(deltaTime);
       this.background.updateBackground(this.objectsOfType.Player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
@@ -117,49 +121,67 @@ export class Level {
   }
 
 
-  animateScreenshake(deltaTime, speed = 1) {
-    const secDeltaTime = (deltaTime / 100) * speed;
-    this.screenAnimationTimer += secDeltaTime;
-    let randomDivider = Math.floor(Math.random() * 10);
-    if (
-      this.screenshake &&
-      this.screenAnimationTimer >= 1.5 &&
-      this.screenAnimationTimer < 3
-    ) {
-      this.screenshakeValue = randomDivider;
-    } else if (this.screenshake && this.screenAnimationTimer >= 3) {
-      this.screenshakeValue = -randomDivider;
-      this.screenAnimationTimer = 0;
+  checkScreenshakeTime(deltaTime, speed = 1) {
+    const secDeltaTime = (deltaTime / 10) * speed;
+    if(this.screenshakeToggle){
+      if(this.screenshakeAnimationRunning){
+        this.screenshakeValue = -this.screenshakeMaxValue;
+        this.screenshakeAnimationRunning = false;
+      }
+      this.screenAnimationTimer += secDeltaTime;
+
+      if (Math.floor(this.screenAnimationTimer) >= this.screenAnimationMaxTimer) { 
+        this.screenshakeToggle = false;
+
+      }
     }
   }
+
+  calculateScreenshakeValue(deltaTime){ 
+    let secDeltaTime = deltaTime / 10;
+    this.screenEffektTimer += secDeltaTime;
+    if(Math.floor(this.screenEffektTimer) >= 2 && this.screenshakeToggle){
+        if(Math.floor(this.screenshakeValue) <= this.screenshakeMaxValue && this.screenshakeToggle){
+          this.screenshakeValue += (secDeltaTime * 2)
+        } else if(Math.floor(this.screenshakeValue) >= this.screenshakeMaxValue && this.screenshakeToggle){
+          this.screenshakeValue -= (secDeltaTime * 2)
+        }
+        this.screenEffektTimer = 0;
+      } else if(!this.screenshakeToggle){
+        this.screenEffektTimer = 0;
+        this.screenAnimationTimer = 0;
+        this.switchBackValueToZero(secDeltaTime);
+      }
+   
+    }
+
+    switchBackValueToZero(secDeltaTime){
+      if(!this.screenshakeToggle){
+        this.screenEffektTimer += secDeltaTime;
+      }
+      if(Math.floor(this.screenEffektTimer )>= 3 && !this.screenshakeToggle){
+        if(this.screenshakeValue > 0.003 && !this.screenshakeToggle || this.screenshakeValue < 0.003){
+          this.screenshakeValue *= 0.15
+          console.log(this.screenshakeValue);
+        } else if(!this.screenshakeToggle){
+          console.log("set to zero");
+          this.screenshakeValue = 0;
+        }
+        this.screenEffektTimer = 0;
+      }
+      
+    }
   
+
+  updateCamera() {
+    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.69, this.player.posRight - (canvas.width * 0.65) / 2 ) + this.screenshakeValue);
+    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.69, this.player.posTop - (canvas.height * 0.5) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
+  }
 
   drawObjects() {
     for (let i = 0; i < this.objects.length; i++) {
       this.objects[i].draw();
     }
-  }
-
-  updateCamera() {
-    let randomNumber = Math.random();
-    if (randomNumber == 0) {
-      randomNumber = -1;
-    }
-    this.cameraPos[0] = Math.max(
-      0,
-      Math.min(
-        this.size[0] - canvas.width * 0.69,
-        this.player.posRight - (canvas.width * 0.65) / 2
-      ) +
-        (this.screenshakeValue / 1) * randomNumber
-    );
-    this.cameraPos[1] = Math.max(
-      0,
-      Math.min(
-        this.size[1] - canvas.height * 0.69,
-        this.player.posTop - (canvas.height * 0.5) / 2
-      ) + this.screenshakeValue
-    );
   }
 
   createTileset() {
@@ -280,6 +302,7 @@ export class Level {
     this.createEntity();
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
+    this.originPlayerSize = [... this.player.size];
   }
 
   pause() {

@@ -210,6 +210,8 @@ export class Attack {
 //////////////////////////////////////
 export class GetHit {
   start(entity) {
+    entity.animationSpeed = 1.5;
+    entity.screenShakeEnable(55);
     entity.animationStatus = "getHit";
     entity.vel[1] = -1;
     this.onGround = false;
@@ -230,5 +232,7 @@ export class GetHit {
     }
   }
 
-  leaveState(entity) {}
+  leaveState(entity) {
+    entity.animationSpeed = 1;
+  }
 }
