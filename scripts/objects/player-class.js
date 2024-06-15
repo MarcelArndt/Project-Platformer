@@ -26,12 +26,15 @@ export class Player extends Box {
     this.latestOnGround = 0;
     this.currentCoyoteTime = null;
     this.status = "idle";
+    this.getHit = false;
+    this.getHitLeft = false;
     this.prevStatus = "";
     this.prevKeyInput = "";
     this.playerHealth = options.playerHealth || 30;
     this.stateMachine = new StateMachine(new Idle(), this);
 
     this.cooldown = {
+      getHurt : 0,
       dash: false,
       dashCooldown: "",
       mainAttack: false,
@@ -52,30 +55,31 @@ export class Player extends Box {
     };
     this.pressedKeys = [];
     this.addControll();
-    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, color: "rgba(255,75,0,0.25)"},this,)
-    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, forceToLeft: false, color: "rgba(255,75,0,0.25)"}, this,)
+    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
+    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
   }
 
   addControll() {
     document.addEventListener("keypress", (e) => {
-      switch(e.key){
-        case "a": case "ArrowLeft":  this.move("left"); break;
-        case "d": case "ArrowRight": this.move("right");break;
-        case "w": case "ArrowUp": case " ": this.playerJump(); break;
-        case "s": case "ArrowDown":  this.inCrouch(); break;
-        case "f": case "Enter": this.playerAttack(); break;
-      }
+      if(!this.gethit){
+        switch(e.key){
+          case "a": case "ArrowLeft":  this.move("left"); break;
+          case "d": case "ArrowRight": this.move("right");break;
+          case "w": case "ArrowUp": case " ": this.playerJump(); break;
+          case "s": case "ArrowDown": if(this.onGround){this.inCrouch()} ; break;
+          case "f": case "Enter": this.playerAttack(); break;
+        }
+      };
     });
 
     document.addEventListener("keyup", (e) => {
-      switch(e.key){
-        case "a": case "ArrowLeft":  this.stopMove(); break;
-        case "d": case "ArrowRight": this.stopMove(); break;
-        case "s": case "ArrowDown":  this.outCrouch(); break;
-      }
+        switch(e.key){
+          case "a": case "ArrowLeft":  this.stopMove(); break;
+          case "d": case "ArrowRight": this.stopMove(); break;
+          case "s": case "ArrowDown":  this.outCrouch(); break;
+        }
     });
   }
-
 
   checkFacingLeft(){
     if (this.acc > 0){
@@ -84,6 +88,37 @@ export class Player extends Box {
     } else if(this.acc < 0){
       this.facingLeft = false;
     }
+  }
+
+  checkIsHit(){
+    for (let i = 0; i < Object.keys(this.level.demageBoxes).length; i++){
+        this.level.demageBoxes[Object.keys(this.level.demageBoxes)[i]].forEach((Hitbox) => {
+            if(this.collideWith(Hitbox) && !this.gethit && Hitbox.isAktiv && Hitbox.demageFlag == "Player"){
+                switch (Hitbox.forceToLeft){
+                    case true: this.getHitLeft = true; break;
+                    case false: this.getHitLeft = false; break;
+                }
+                this.gethit = true;
+                this.cooldown.getHurt = 0;
+                this.reduceHealth(Hitbox.demage);
+            }
+        })
+    }
+}
+
+  checkInvincibilityTimer(deltaTime){
+    if(this.gethit){
+      let secDeltaTime = deltaTime / 100;
+      this.cooldown.getHurt += secDeltaTime;
+      if(Math.floor(this.cooldown.getHurt) >= 4 && this.onGround) {
+        console.log("reset")
+        this.gethit = false;
+      }
+    }
+  }
+
+  reduceHealth(Value){
+    this.playerHealth -= Value
   }
 
   move(direction) {
@@ -129,7 +164,6 @@ export class Player extends Box {
       clearTimeout(this.currentCoyoteTime);
     }
   }
-
   checkKeyPressedTime(keyIsPressedTime) {
     if (keyIsPressedTime - 1000 >= this.jump.latestJump) {
       return false;
@@ -174,14 +208,14 @@ export class Player extends Box {
   }
 
   update(deltaTime) {
+    super.update(deltaTime);
+    this.checkIsHit()
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
     this.ceckCooldown();
-    super.update(deltaTime);
+    this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
   }
-
-
 
   playerAttack() {
     if (
@@ -211,7 +245,6 @@ export class Player extends Box {
     }
   }
 
-
   checkCoyoteTime() {
     if (this.onGround && !this.isCoyoteTimeReady) {
       this.isCoyoteTimeReady = true;
@@ -238,7 +271,4 @@ export class Player extends Box {
       this.isCoyoteTimeReady = false;
     }
   }
-
-
-
 }

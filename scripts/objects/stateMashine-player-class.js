@@ -42,6 +42,9 @@ export class Idle {
     } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
       entity.stateMachine.changeState(new Walking());
     }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
+    }
   }
 
   leaveState(entity) {}
@@ -64,6 +67,9 @@ export class Jump {
     if (entity.vel[1] > 0 && !entity.onGround) {
       entity.stateMachine.changeState(new Fall());
     }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
+    }
   }
 
   leaveState(entity) {}
@@ -84,6 +90,9 @@ export class Fall {
   checkConditions(entity) {
     if (entity.onGround && entity.vel[1] == 0) {
       entity.stateMachine.changeState(new Idle());
+    }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
     }
   }
 
@@ -115,6 +124,9 @@ export class Walking {
     } else if(entity.acc < 0.005 && entity.acc > -0.005 && entity.onGround){
       entity.stateMachine.changeState(new Idle());
     }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
+    }
   }
 
   leaveState(entity) {}
@@ -135,6 +147,9 @@ export class Crouch {
     if(!entity.crouch){
       entity.stateMachine.changeState(new Idle());
     }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
+    }
   }
 
   leaveState(entity) {}
@@ -154,10 +169,12 @@ export class Attack {
   behave(entity) {
     if(Math.floor(entity.animationTimer) == 5){
       if(entity.facingLeft){
-        entity.activateHitbox(1);
+        entity.activateHitbox(entity.index , 1);
       } else{
-        entity.activateHitbox(0);
+        entity.activateHitbox(entity.index , 0);
       }
+    } else if(Math.floor(entity.animationTimer) == 10){
+      entity.disableHitbox(entity.index, 0, true);
     }
   }
   checkConditions(entity) {
@@ -172,15 +189,46 @@ export class Attack {
     } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
       entity.stateMachine.changeState(new Walking());
     }
+    if(entity.gethit){
+      entity.stateMachine.changeState(new GetHit());    
+    }
   }
 
   leaveState(entity) {
     entity.cooldown.isInMainAttack = false;
-    entity.disableHitbox(0,true);
+    entity.disableHitbox(entity.index, 0, true);
     entity.animationStatus = "idle";
     entity.cooldown.mainAttack = false;
     entity.cooldown.isInMainAttack =  false;
     entity.cooldown.mainCooldown =  "";
     entity.cooldown.mainKeyIsPressed = false;
   }
+}
+
+//////////////////////////////////////
+////////// GETHIT STATUS ////////////
+//////////////////////////////////////
+export class GetHit {
+  start(entity) {
+    entity.animationStatus = "getHit";
+    entity.vel[1] = -1;
+    this.onGround = false;
+    entity.acc = 0;
+  }
+
+  behave(entity) {
+    if (entity.getHitLeft && entity.vel[1] < 0){
+      entity.vel[0] = 1
+  } else if (!entity.getHitLeft && entity.vel[1] < 0) {
+      entity.vel[0] = -1
+  }
+  }
+
+  checkConditions(entity) {
+    if(!entity.gethit){
+      entity.stateMachine.changeState(new Idle());
+    }
+  }
+
+  leaveState(entity) {}
 }

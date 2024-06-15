@@ -20,6 +20,7 @@ export class Character extends Player {
             jump: [[{x:0, y:5}, {x:1, y:5}, {x:2, y:5}], true],
             fall: [[{x:0, y:4}, {x:1, y:4}, {x:2, y:4}], true],
             crouch: [[{x:0, y:6}, {x:1, y:6}, {x:2, y:6}, {x:3, y:6}], true],
+            getHit: [[{x:0, y:7}, {x:1, y:7}, {x:2, y:7}, {x:3, y:7}], true],
         }
         this.frameWidth = 64;
         this.frameHight = 44;
@@ -44,28 +45,4 @@ export class Character extends Player {
         ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
     }
   */
- 
-    createHitbox(){
-        this.mainCurrentFiringSetTimer = setTimeout(() => {
-                let newPos = [this.checkfacingForPos(), this.posBottom - 67]
-                let level = this.level;
-                let newObject = {
-                    level: level,
-                    pos: newPos,
-                    size: [90, 55],
-                    color: "grey",
-                    lifespan : 600,
-                    demage : 10,
-                    forceToLeft: this.facingLeft
-                }
-                if (this.onGround){
-                    this.vel[0] = 0;
-                }
-                
-                this.level.objects.push(
-                    new Hitbox (newObject)
-                );
-        }, 500);
-        this.animationTimer = 0;
-    }  
 }

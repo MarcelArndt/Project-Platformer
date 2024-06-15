@@ -167,25 +167,35 @@ export class Attack{
         if(!entity.animationIsRunning){
             entity.animationStatus = "idle";
         } 
-        if(entity.animationIsRunning && entity.animationStatus == "idle" &&  entity.animationTimer >= 3){
+        if(entity.animationIsRunning && entity.animationStatus == "idle" && entity.animationTimer >= 3){
             entity.animationStatus = "attack" 
             entity.animationTimer = 0;
         }
+
         if (distance[0] <= 0){
             entity.facingLeft = false;
         } else if(distance[0] > 0){
             entity.facingLeft = true;
+        }
+
+        if(entity.animationStatus == "attack" && entity.animationIsRunning)
+            switch(entity.facingLeft){
+                case true: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 1)}; break;
+                case false: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 0)}; break;
+        }
+
+        if(entity.animationStatus == "attack" && entity.animationTimer >= 7){
+            entity.disableHitbox(entity.index, 0, true);
         }
     }
 
     checkConditions(entity){
         entity.checkIsPlayerinAggro();
         if(!entity.PlayerInAggro[1]){
-            this.leaveState(entity);  
-            entity.stateMachine.changeState(new Walking());   
+            entity.stateMachine.changeState(new Walking()); 
+
         }
         if(entity.gethit){
-            this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
         
@@ -194,6 +204,7 @@ export class Attack{
     leaveState(entity){ 
         entity.walkspeed = entity.backupOption.walkspeed;
         entity.acc = entity.walkspeed;
+        entity.disableHitbox(entity.index, 0, true);
     }
 }
 

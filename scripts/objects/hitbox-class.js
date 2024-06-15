@@ -3,9 +3,8 @@ import { ctx, clearCanvas } from "../canvas.js";
 import { imageIsloadet } from "../images.js";
 export class Hitbox extends Entity{
     constructor(options, type){
-        const {pos, size, color, subType, level, lifespan, forceToLeft, demage, demageFlag, isAktiv, offset, object} = options
-        super({pos, size, color}, type || "Entity");
-        this.subType = subType || "Hitbox";
+        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, offset, object} = options
+        super({pos, size, color}, type || "Hitbox");
         this.lifespan = lifespan || 3;
         this.forceToLeft = forceToLeft || false;
         this.demage = demage ||0;
@@ -15,12 +14,12 @@ export class Hitbox extends Entity{
         this.setOffset = offset || [0,0];
         this.stickToObject = object || null
         this.frameCounter = 0;
-        this.lifespan = lifespan || 10
+        this.lifespan = lifespan || 10;
     }
 
     update(deltaTime){
         this.drawbox()
-        this.updatePosition(this.stickToObject)
+        this.updatePosition(this.stickToObject);
         this.updateCounter(deltaTime);
     }
 
@@ -35,7 +34,7 @@ export class Hitbox extends Entity{
         ctx.fillRect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
     }
 
-    aktivateCounter(){
+    aktivateCounter(objId, id){
         this.isAktiv = true;
     }
 

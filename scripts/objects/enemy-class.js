@@ -18,10 +18,6 @@ export class Enemy extends Box {
         this.walkspeed = options.walkspeed || 0.00125;
         this.aggroRange = options.aggroRange || 725;
         this.smallAggroRange = options.smallAggroRange || 30;
-        this.coyoteTime = 75;
-        this.isCoyoteTimeReady = true;
-        this.latestOnGround = 0;
-        this.currentCoyoteTime = null;
         this.playerLocation = [];
         this.distanceToPlayer = [];
         this.gethit = false;
@@ -36,22 +32,16 @@ export class Enemy extends Box {
         this.start = false;
         this.backupOption = {grav: this.grav, walkspeed: options.walkspeed || 0.00125, jumpspeed:  options.jumpspeed || -1.025, color: this.color, hitPoints: options.HitPoints || 30};
         this.originalStats = {pos: options.pos, facingLeft: this.facingLeft, vel: this.vel,acc: this.acc, HitPoints: this.HitPoints, isCoyoteTimeReady: this.isCoyoteTimeReady, walkspeed: options.walkspeed || 0.00125,}
-        this.Id = this.genIndex();
         this.status = "idle";
         this.animationStatus = "idle";
         this.prevStatus = "idle";
+        this.demageBoxes = [];
         this.stateMachine = new StateMachine(new Idle(), this);
+        this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
+        this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+
     }
 
-    genIndex(){
-        let newIndex = "";
-        let subIndex = "";
-        for (let i = 0; i < 24;i++){
-            subIndex = Math.floor(Math.random()* 9).toString();
-            newIndex += subIndex;
-        }
-        return newIndex;
-    }
 
     delete(type = this.type){
         for (let i = 0; i < this.level.objects.length; i++){
@@ -105,18 +95,6 @@ export class Enemy extends Box {
         }
     }
 
-    startCoyoteTime(){
-        this.latestOnGround = new Date();
-        this.currentCoyoteTime = setTimeout(() => {this.isCoyoteTimeOver()}, this.coyoteTime);
-    }
-
-    isCoyoteTimeOver(){
-        let currentTime = new Date();
-        if (currentTime - this.coyoteTime >= this.currentCoyoteTime){
-            this.isCoyoteTimeReady = false;
-        }
-    }
-
     checkPlayerPosition(){
         let currentPosRight = this.level.objectsOfType.Player[0].posRight
         let currentPosLeft = this.level.objectsOfType.Player[0].posLeft
@@ -130,11 +108,6 @@ export class Enemy extends Box {
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
         this.screenShake();
-        if (this.onGround && !this.isCoyoteTimeReady){
-            this.isCoyoteTimeReady = true;
-        } else if(!this.onGround && this.isCoyoteTimeReady){
-            this.startCoyoteTime();
-        }
         this.checkIsHit();
         this.checkPlayerPosition();
         this.checkMaxSpeed();
@@ -171,27 +144,23 @@ export class Enemy extends Box {
 
 
     checkIsHit(){
-        let leftForce = false;
-        this.level.objects.forEach(obj => {
-            if (obj.subType == "Hitbox"){
-                leftForce = obj.forceToLeft;
-                if(this.collideWith(obj) && !this.gethit){
-                    if(leftForce){
-                        this.getHitLeft = true;
-                    } else if(!leftForce){
-                        this.getHitLeft = false;
+        for (let i = 0; i < Object.keys(this.level.demageBoxes).length; i++){
+            this.level.demageBoxes[Object.keys(this.level.demageBoxes)[i]].forEach((Hitbox) => {
+                if(this.collideWith(Hitbox) && !this.gethit && Hitbox.isAktiv && Hitbox.demageFlag == "Enemy"){
+                    switch (Hitbox.forceToLeft){
+                        case true: this.getHitLeft = true; break;
+                        case false: this.getHitLeft = false; break;
                     }
-                    this.color = "grey";
                     this.gethit = true;
                     this.activeInvincibility = new Date();
-                    this.reduceHealth(obj);
+                    this.reduceHealth(Hitbox.demage);
                 }
-            }
-        });
+            })
+        }
     }
 
-    reduceHealth(obj){
-        this.HitPoints -= obj.demage;
+    reduceHealth(value){
+        this.HitPoints -= value;
     }
 
 

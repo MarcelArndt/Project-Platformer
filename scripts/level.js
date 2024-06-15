@@ -59,6 +59,7 @@ export class Level {
       Entity: [],
       Enemy: [],
     };
+    this.demageBoxes = {};
     this.deleteObjects = [];
     this.screenshakeValue = 0;
     this.screenshake = false;
@@ -109,7 +110,6 @@ export class Level {
   }
 
   update(deltaTime) {
-      this.createPlayer();
       clearCanvas();
       this.updateCamera();
       this.checkWin();
@@ -121,19 +121,7 @@ export class Level {
         this.objects[i].draw();
       }
   }
-  
 
-  createPlayer(){
-    if (this.player == null){
-      this.objectsOfType.Player.push(new Character({pos: [0, 0], size: [36, 67], color: "edff2b", type: "Player",}));
-      this.player = this.objectsOfType.Player[0];
-      console.log(this.player.demageBoxes)
-      this.player.demageBoxes.forEach((box) => {
-        box.level = this;
-        box.enableUpdateBox = true;
-      })
-    }
-  }
 
   animateScreenshake(deltaTime, speed = 1) {
     const secDeltaTime = (deltaTime / 100) * speed;
@@ -181,7 +169,6 @@ export class Level {
 
   createTileset() {
     let newTilesetImage = imageIsloadet.tileset;
-    //newTilesetImage.src = "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png";
     this.tileset = new Tileset({
       image: newTilesetImage,
       size: this.tileSize,
@@ -189,23 +176,12 @@ export class Level {
   }
 
   createTiles() {
-    for (
-      let i = 0;
-      i < this.tilesArrayData.length;
-      i += this.levelSizeInTiles
-    ) {
-      this.tilesArray.push(
-        this.tilesArrayData.slice(i, i + this.levelSizeInTiles)
-      );
+    for ( let i = 0; i < this.tilesArrayData.length; i += this.levelSizeInTiles) {
+      this.tilesArray.push( this.tilesArrayData.slice(i, i + this.levelSizeInTiles));
     }
-    this.tilesArray.forEach((row, y) => {
-      row.forEach((tileNumber, x) => {
+    this.tilesArray.forEach((row, y) => {row.forEach((tileNumber, x) => {
         switch (tileNumber) {
-          case 0:
-            break;
-          default:
-            this.tileset.createTile(x, y, tileNumber);
-            break;
+          case 0: break; default: this.tileset.createTile(x, y, tileNumber); break;
         }
       });
     });
@@ -213,14 +189,8 @@ export class Level {
 
   createEntity() {
     let newEntity = null;
-    for (
-      let i = 0;
-      i < this.entityArrayData.length;
-      i += this.levelSizeInTiles
-    ) {
-      this.entityArray.push(
-        this.entityArrayData.slice(i, i + this.levelSizeInTiles)
-      );
+    for ( let i = 0; i < this.entityArrayData.length; i += this.levelSizeInTiles) {
+      this.entityArray.push( this.entityArrayData.slice(i, i + this.levelSizeInTiles));
     }
     this.entityArray.forEach((row, y) => {
       row.forEach((tileNumber, x) => {
@@ -255,6 +225,23 @@ export class Level {
     this.game.switchToNextLevel();
   }
 
+  createDemageboxes(){
+    this.objects.forEach((obj) => {
+      let HitboxArray = [];
+      switch(obj.demageBoxes){
+        case null: case []: case 0: case undefined: break;
+        default: for (let i = 0; i < obj.demageBoxes.length; i++){
+          obj.demageBoxes[i].level = this;
+          HitboxArray.push(obj.demageBoxes[i]);
+        } break;
+      }
+      switch(HitboxArray.length){
+        case null: case []: case 0: case undefined: break;
+        default: this.demageBoxes[obj.index] = HitboxArray; break;
+      }
+    });
+  }
+
   start() {
     canvasOverlayContent.innerHTML = "";
     this.background = new Background({ color: "#453d4f" }, [
@@ -271,6 +258,8 @@ export class Level {
     this.createTileset();
     this.createTiles();
     this.createEntity();
+    this.createDemageboxes();
+    this.player = this.objectsOfType.Player[0];
   }
 
   pause() {

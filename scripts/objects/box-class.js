@@ -13,7 +13,20 @@ export class Box extends Rectangle{
         this.prevPos = [...this.pos];
         this.type = type || "Box";
         this.enableUpdateBox = false;
-            this.demageBoxes = []
+        this.index = 0;
+        this.demageBoxes = []
+        this.index = this.genEntityIndex();  
+    }
+
+
+    genEntityIndex(){
+        let newIndex = "";
+        let subIndex = "";
+        for (let i = 0; i < 24;i++){
+            subIndex = Math.floor(Math.random()* 9).toString();
+            newIndex += subIndex;
+        }
+        return newIndex;
     }
 
     checkCollideWithObjects(){
@@ -62,6 +75,8 @@ export class Box extends Rectangle{
         
         this.onGround = false
     }
+
+    
 
     update(deltaTime){
         this.prevPos = [...this.pos];
@@ -194,31 +209,31 @@ export class Box extends Rectangle{
           pos: [pos[0], pos[1]],
           size: [size[0], size[1]],
           offset: [manualOffset[0], manualOffset[1]],
-          forceToLeft: options.forceToLeft || true,
+          forceToLeft: options.forceToLeft || false,
           demage: options.demage || 10,
           demageFlag: options.demageFlag || "Player",
           isAktiv: options.isAktiv || false,
           lifespan: options.lifespan || 6,
-          color: options.color || "rgba(255,125,0,0.55)",
+          color: options.color || "rgba(255,125,0,0.25)",
           object : obj,
         })
         this.demageBoxes.push(newBox);
       }
     
-      activateHitbox(HitboxNumber = 0){
-        this.demageBoxes[HitboxNumber].isAktiv = true;
+      activateHitbox(ObjId, id = 0){
+        this.level.demageBoxes[ObjId][id].isAktiv = true;
       }
     
-      disableHitbox(HitboxNumber = 0, disableAll = false){
+      disableHitbox(ObjId, id = 0, disableAll = false){
        switch(disableAll){
-        case true: this.demageBoxes.forEach((box) => { box.isAktiv = false;}); break;
-        case false: this.demageBoxes[HitboxNumber].isAktiv = false; break;
+        case true: this.level.demageBoxes[ObjId].forEach((box) => { box.isAktiv = false;}); break;
+        case false: this.level.demageBoxes[ObjId][id].isAktiv = false; break;
        }
       }
     
       updateHitboxs(){
         if (this.updateHitboxs){
-          this.demageBoxes.forEach((box) => {
+          this.level.demageBoxes[this.index].forEach((box) => {
             box.pos[0] = this.pos[0] + box.setOffset[0];
             box.pos[1] = this.pos[1] + box.setOffset[1];
             if(box.isAktiv){
