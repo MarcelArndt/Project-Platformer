@@ -2,6 +2,9 @@ import { Box} from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-bird-class.js";
 import { imageIsloadet } from "../images.js";
 
+let soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"]
+let SoundOne = new Audio("./assets/sound/entity/flying-001.mp3");
+
 export class Bird extends Box {
     constructor(options, type){
         const {walkspeed, jumpspeed, subType} = options
@@ -29,6 +32,7 @@ export class Bird extends Box {
         this.isReturning = false;  
         this.isJump = false;
         this.animationFrames = {
+            ghosting: [[{x:4, y:1}], false],
             idle: [[{x:0, y:4}], false],
             jump: [[{x:0, y:4}, {x:0, y:4}, {x:1, y:4}, {x:1, y:4},{x:2, y:4}, {x:2, y:4}], true],
             flying: [[{x:0, y:0}, {x:0, y:0}, {x:1, y:0}, {x:1, y:0},{x:2, y:0}, {x:2, y:0}], true],
@@ -39,6 +43,10 @@ export class Bird extends Box {
         this.frameHightOffset = 1;
         this.frameWidthOffset = 0;
         this.imageArray = [imageIsloadet.whiteBird, imageIsloadet.bluejayBird, imageIsloadet.robinBird]
+        this.soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"];
+        this.soundFrameTimer = 0;
+        this.SoundDelay = 35;
+        this.toggleSound = false
 
         this.animationImage = new Image();
         this.animationImage = this.imageArray[this.randomNumber(3)];
@@ -56,7 +64,7 @@ export class Bird extends Box {
     }
 
     flee(){
-        let randomValue = Math.random() * 3;
+        let randomValue = Math.floor(Math.random() * 3);
         if (randomValue == 0){
             randomValue = 1;
         }
@@ -67,6 +75,51 @@ export class Bird extends Box {
             this.walkspeed = 0.0035 * randomValue;
         }
         this.acc = this.walkspeed;
+        this.enableSound();
+    }
+    
+    enableSound(){
+        if(!this.toggleSound){
+            this.toggleSound = true;
+        }
+    }
+
+    disableSound(){
+        if(this.toggleSound){
+            this.toggleSound = false;
+        }
+    }
+
+    playFlappingSound(deltaTime){
+        let distance = 0;
+        const secDeltaTime = deltaTime / 10;
+        const randomValue = Math.floor(Math.random() * 3);
+        let sound = null;
+        if(this.toggleSound){
+            this.soundFrameTimer += secDeltaTime;
+            if(Math.floor(this.soundFrameTimer) >= this.SoundDelay){
+                distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
+                sound = new Audio(this.soundArray[randomValue]);
+                sound.volume = this.checkVolume(distance[0], 1000);
+                sound.play();
+                this.soundFrameTimer = 0;
+                this.disableSound();
+            }
+        }
+    }
+
+    checkVolume(value, divider = 1000){
+        let soundVolume = 0.01
+        let totalValue =((1000) -  value) / divider;
+        if( totalValue < 0.9){
+            soundVolume = (totalValue / 50) 
+        } else {
+            soundVolume = 1 / 50
+        }
+        if(soundVolume < 0) {
+            soundVolume = 0;
+        }
+        return soundVolume
     }
     
     update(deltaTime){
@@ -81,6 +134,7 @@ export class Bird extends Box {
         this.updateFrameAnimation(deltaTime);
         this.applyFlyingPhsics();
         this.stateMachine.updateState(deltaTime);
+        this.playFlappingSound(deltaTime)
     }
 
     checkFacingLeft(){
@@ -145,8 +199,8 @@ export class Bird extends Box {
         this.grav = 0;
         this.vel = [0, 0];
         this.acc = 0;
-        this.pos = [ -200, 900]
-        this.animationStatus = "idle";
+        this.pos = [-1000, 0]
+        this.animationStatus = "ghosting";
     }
 
     spawn(){
