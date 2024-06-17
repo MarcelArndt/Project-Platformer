@@ -243,4 +243,9 @@ export class Box extends Rectangle{
         this.level.screenshakeToggle = true;
         this.screenshakeAnimationRunning = true;
     }
+
+    chooseRandomSound(soundArray = []){
+        let randomNumber = Math.floor(Math.random() * soundArray.length);
+        soundArray[randomNumber].play();
+      }
 }

@@ -1,3 +1,5 @@
+import { soundIsloadet } from "../assets.js";
+
 export class StateMachine {
     constructor(state, entity){
         this.currentState = state;
@@ -178,11 +180,17 @@ export class Attack{
             entity.facingLeft = true;
         }
 
-        if(entity.animationStatus == "attack" && entity.animationIsRunning)
+        if(entity.animationStatus == "attack" && entity.animationIsRunning){ 
             switch(entity.facingLeft){
-                case true: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 1)}; break;
-                case false: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 0)}; break;
+            case true: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 1)}; break;
+            case false: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 0)}; break;
+            }
+            if(entity.animationTimer == 5){
+             entity.chooseRandomSound([soundIsloadet.heavySwordOne, soundIsloadet.heavySwordTwo, soundIsloadet.heavySwordThree]);
+            }
+           
         }
+           
 
         if(entity.animationStatus == "attack" && entity.animationTimer >= 7){
             entity.disableHitbox(entity.index, 0, true);

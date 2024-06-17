@@ -3,7 +3,7 @@ import { Timer } from "./timer.js";
 import { Bird } from "./objects/bird-class.js";
 import { Skelett } from "./objects/skelett-class.js";
 import { Character } from "./objects/main-character-class.js";
-import { imageIsloadet, canvasOverlay, canvasOverlayContent  } from "./assets.js";
+import { imageIsloadet, canvasOverlay, canvasOverlayContent, soundIsloadet  } from "./assets.js";
 import { Tileset } from "./tileset.js";
 import { Background } from "./background-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
@@ -45,6 +45,13 @@ export class Level {
       option.collisionTiles,
       option.cameraPos,
     ];
+
+    this.currentLevelMusic = option.currentLevelMusic;
+    this.currentAmbient = option.currentAmbient;
+
+    this.currentLevelMusic.loop = true;
+    this.currentAmbient.loop = true;
+
     this.player = null;
     this.game = null;
     this.index = 0;
@@ -71,7 +78,6 @@ export class Level {
     this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
     this.keyFuncRef = (e) => this.keyFunction(e);
-
   }
 
   addControll() {
@@ -163,7 +169,6 @@ export class Level {
           this.screenshakeValue *= 0.15
           console.log(this.screenshakeValue);
         } else if(!this.screenshakeToggle){
-          console.log("set to zero");
           this.screenshakeValue = 0;
         }
         this.screenEffektTimer = 0;
@@ -302,9 +307,15 @@ export class Level {
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
     this.originPlayerSize = [... this.player.size];
+    this.currentLevelMusic.play()
+    this.currentLevelMusic.volume = 0.35
+    this.currentAmbient.play()
+    this.currentAmbient.volume = 0.7
   }
 
   pause() {
+    this.currentAmbient.pause();
+    this.currentLevelMusic.pause();
     canvasOverlayContent.innerHTML = "Press P to Resume";
     canvasOverlay.classList.add("blackscreen");
     this.status = status.pause;
@@ -312,6 +323,8 @@ export class Level {
   }
 
   resume() {
+    this.currentLevelMusic.play();
+    this.currentAmbient.play();
     canvasOverlayContent.innerHTML = "";
     canvasOverlay.classList.remove("blackscreen");
     this.status = status.running;

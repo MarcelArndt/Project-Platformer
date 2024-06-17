@@ -269,4 +269,6 @@ export class Player extends Box {
       this.isCoyoteTimeReady = false;
     }
   }
+  
 }
+

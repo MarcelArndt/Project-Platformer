@@ -1,3 +1,5 @@
+import { soundIsloadet } from "../assets.js";
+
 export class StateMachine {
   constructor(state, entity) {
     this.currentState = state;
@@ -56,7 +58,7 @@ export class Idle {
 export class Jump {
   start(entity) {
     entity.animationStatus = "jump";
-
+    entity.chooseRandomSound([soundIsloadet.playerJumpOne, soundIsloadet.playerJumpTwo]);
   }
 
   behave(entity) {
@@ -96,19 +98,28 @@ export class Fall {
     }
   }
 
-  leaveState(entity) {}
+  leaveState(entity) {
+    if(entity.onGround && entity.vel[1] == 0){
+      entity.chooseRandomSound([soundIsloadet.LightStepsOne, soundIsloadet.LightStepsTwo, soundIsloadet.LightStepsThree]);
+    }
+  }
 }
 
 //////////////////////////////////////
 ////////// WALKING STATUS ///////////
 //////////////////////////////////////
 export class Walking {
+
   start(entity) {  
     entity.animationStatus = "walking";
   }
 
   behave(entity) {
-   
+    if(Math.floor(entity.animationTimer) == 1  ||  Math.floor(entity.animationTimer) == 5 ){
+      entity.chooseRandomSound([soundIsloadet.playerStepsOne]);
+      this.soundIsAlreadyPlayed = true
+    }
+
     }
   checkConditions(entity) {
     if (entity.crouch){
@@ -138,6 +149,7 @@ export class Walking {
 export class Crouch {
   start(entity) {
     entity.animationStatus = "crouch";
+    entity.chooseRandomSound([soundIsloadet.playerStepsThree, soundIsloadet.playerStepsTwo]);
   }
 
   behave(entity) {
@@ -152,7 +164,8 @@ export class Crouch {
     }
   }
 
-  leaveState(entity) {}
+  leaveState(entity) {
+  }
 }
 
 
@@ -173,6 +186,7 @@ export class Attack {
       } else{
         entity.activateHitbox(entity.index , 0);
       }
+      entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
     } else if(Math.floor(entity.animationTimer) == 10){
       entity.disableHitbox(entity.index, 0, true);
     }
@@ -234,5 +248,8 @@ export class GetHit {
 
   leaveState(entity) {
     entity.animationSpeed = 1;
+    if(entity.onGround && entity.vel[1] == 0){
+      entity.chooseRandomSound([soundIsloadet.LightStepsOne, soundIsloadet.LightStepsTwo, soundIsloadet.LightStepsThree]);
+    }
   }
 }

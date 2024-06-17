@@ -1,6 +1,6 @@
-import { Level } from "../level.js";
+import {soundIsloadet} from "../assets.js";
 import { Rectangle } from "../objects/rectangle-class.js";
-import { Character } from "../objects/main-character-class.js";
+import { Level } from "../level.js";
 
 let tileSize = 0;
 let levelSizeInTiles = 0;
@@ -11,6 +11,9 @@ let entityArray = [];
 let entityArrayForObjects = [];
 
 let tilesArrayData = [];
+
+let ambientMusic = soundIsloadet.forestAmbient;
+let levelMusic = soundIsloadet.WhisperstheWoods;
 
 const collisonBlocks = [];
 const lvl2DCollison = [];
@@ -55,6 +58,8 @@ export const levelOne = new Level({
   levelSizeInTiles: levelSizeInTiles,
   tilesArrayData: tilesArrayData,
   tileSize: tileSize,
+  currentLevelMusic: levelMusic,
+  currentAmbient: ambientMusic,
   objectofType: {
     Rectangle: [],
     Box: [],

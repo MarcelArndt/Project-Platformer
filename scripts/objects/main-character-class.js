@@ -1,6 +1,5 @@
 import { Player} from "./player-class.js";
-
-import { imageIsloadet } from "../assets.js";
+import {imageIsloadet} from "../assets.js";
 
 
 
@@ -30,6 +29,8 @@ export class Character extends Player {
         this.walkspeed = 0.0132;
       
     }
+
+
 
   /**
      * Just enable for debug purposes only
