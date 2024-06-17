@@ -1,5 +1,5 @@
 import { canvas, ctx, canvasScalingFactor } from "./canvas.js";
-import { imageIsloadet } from "./images.js";
+import { imageIsloadet } from "./assets.js";
 
 export class Background {
   constructor(option, ImagesArray, type) {

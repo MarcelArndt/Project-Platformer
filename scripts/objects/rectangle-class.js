@@ -67,15 +67,17 @@ export class Rectangle {
     }
 
     draw(){
-        
-        if(Object.keys(this.animationFrames).length > 0){
-            this.drawAnimation();
-        }  else {
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
-        }
-        
-       
+       // this.pos[0] < this.level.cameraPos[0] + (canvas.width / 1.5) 
+        if (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width){
+            
+            if(Object.keys(this.animationFrames).length > 0){
+                this.drawAnimation();
+            }  else {
+                ctx.fillStyle = this.color;
+                
+                ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
+            }
+        } 
     }
 
     collideWith(objectRectangle, VectorOffest = [0,0]){

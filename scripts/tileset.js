@@ -1,4 +1,4 @@
-import { ctx } from "./canvas.js";
+import { canvas, ctx } from "./canvas.js";
 
 export class Tileset {
   constructor(option) {
@@ -19,18 +19,20 @@ export class Tileset {
   }
 
   draw(cameraPos) {
-    this.tileArray.forEach((tile) => {
-      ctx.drawImage(
-        this.image,
-        tile.tilePos[0],
-        tile.tilePos[1],
-        this.tilesize,
-        this.tilesize,
-        tile.inGamePos[0] - cameraPos[0],
-        tile.inGamePos[1] - cameraPos[1],
-        this.tilesize + 0.5,
-        this.tilesize + 0.5
-      );
-    });
+      this.tileArray.forEach((tile) => {
+        if(tile.inGamePos[0] < cameraPos[0] + canvas.width && tile.inGamePos[0] > cameraPos[0] - (canvas.width / 10)){
+        ctx.drawImage(
+          this.image,
+          tile.tilePos[0],
+          tile.tilePos[1],
+          this.tilesize,
+          this.tilesize,
+          tile.inGamePos[0] - cameraPos[0],
+          tile.inGamePos[1] - cameraPos[1],
+          this.tilesize + 0.5,
+          this.tilesize + 0.5
+        );
+      }
+      });
   }
 }

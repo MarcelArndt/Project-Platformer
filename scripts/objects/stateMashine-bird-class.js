@@ -87,7 +87,7 @@ export class Flying{
     }
 
     checkConditions(entity, deltaTime){
-        if (entity.pos[1] < entity.level.cameraPos[1] - (canvas.height / 2)){
+        if (entity.pos[1] < entity.level.cameraPos[1] - 350){
             entity.stateMachine.changeState(new Despawn());
         }
     }

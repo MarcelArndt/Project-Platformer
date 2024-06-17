@@ -1,11 +1,8 @@
-import { percentageLoadet } from "./images.js";
+import { percentageLoadet,  } from "./assets.js";
 import { ctx, clearCanvas, canvasScalingFactor } from "./canvas.js";
-import { imageIsloadet } from "./images.js";
+import { imageIsloadet } from "./assets.js";
 
-export let canvasOverlay = document.getElementById("canvasOverlay");
-export let canvasOverlayContent = document.getElementById(
-  "canvasOverlayContent"
-);
+
 
 export class Game {
   constructor(levelList) {
@@ -26,16 +23,6 @@ export class Game {
     }
   }
 
-  checkForLoadings() {
-    let menuImage = null;
-    this.fillLoadingBar();
-    if (percentageLoadet == 100) {
-      menuImage = imageIsloadet.backgroundMenu;
-      ctx.drawImage(menuImage, 0, 0);
-      this.startLevel();
-    }
-  }
-
   startLevel() {
     if (this.levelList.length === 0) return "No Level in levelList";
     canvasOverlayContent.innerHTML = "Press P to Start Game";
@@ -50,28 +37,7 @@ export class Game {
     }
     this.currentLevel.drawObjects();
     this.currentLevel.start();
-    this.startLevel();
   }
 
-  fillLoadingBar() {
-    clearCanvas();
-    let screenWidth = (canvas.width / 145) * 100;
-    let screenHeight = (canvas.height / 145) * 100;
-    let maxlenght = (canvas.width / (canvasScalingFactor * 100)) * 100 * 0.8;
-    let maxheight = (canvas.height / (canvasScalingFactor * 100)) * 100 * 0.05;
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(
-      (screenWidth - maxlenght) / 2,
-      (screenHeight - maxheight) / 2,
-      maxlenght,
-      maxheight
-    );
-    ctx.fillStyle = "skyblue";
-    ctx.fillRect(
-      (screenWidth - maxlenght) / 2,
-      (screenHeight - maxheight) / 2,
-      (maxlenght / 100) * percentageLoadet,
-      maxheight
-    );
-  }
+  
 }

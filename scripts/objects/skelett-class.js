@@ -1,6 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
-import { imageIsloadet } from "../images.js";
+import { imageIsloadet } from "../assets.js";
 
 let animationImage = new Image();
     animationImage.src = "./assets/skelet-animation-atlas.png";

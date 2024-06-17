@@ -1,22 +1,20 @@
 
 
-import { loadAllImages } from "./images.js";
+import { loadAllAssests } from "./assets.js";
 let myGame = null;
 const Game = null;
 const level_One = null;
 window.onload = () => {
 
-  loadAllImages().then(() => {
-    console.log("All Images are loaded");
+  loadAllAssests().then(() => {
     Promise.all([
       import("./levels/level_one.js"),
       import("./game-class.js")
   ]).then(([levelModule, gameModule]) => {
       const levelOne = levelModule.levelOne;
       const Game = gameModule.Game;
-      console.log("After all Images are loaded -> Loading modules was also successfull.");
       let myGame = new Game([levelOne]);
-      myGame.checkForLoadings();
+      myGame.startLevel();;
 
 
   }).catch(err => {

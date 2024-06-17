@@ -3,10 +3,9 @@ import { Timer } from "./timer.js";
 import { Bird } from "./objects/bird-class.js";
 import { Skelett } from "./objects/skelett-class.js";
 import { Character } from "./objects/main-character-class.js";
-import { imageIsloadet } from "./images.js";
+import { imageIsloadet, canvasOverlay, canvasOverlayContent  } from "./assets.js";
 import { Tileset } from "./tileset.js";
 import { Background } from "./background-class.js";
-import { canvasOverlay, canvasOverlayContent } from "./game-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 

@@ -1,6 +1,6 @@
 import { Box} from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-bird-class.js";
-import { imageIsloadet } from "../images.js";
+import { imageIsloadet, soundIsloadet } from "../assets.js";
 
 let soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"]
 let SoundOne = new Audio("./assets/sound/entity/flying-001.mp3");
@@ -43,7 +43,7 @@ export class Bird extends Box {
         this.frameHightOffset = 1;
         this.frameWidthOffset = 0;
         this.imageArray = [imageIsloadet.whiteBird, imageIsloadet.bluejayBird, imageIsloadet.robinBird]
-        this.soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"];
+        this.soundArray = [soundIsloadet.flyingOne, soundIsloadet.flyingTwo, soundIsloadet.flyingThree];
         this.soundFrameTimer = 0;
         this.SoundDelay = 35;
         this.toggleSound = false
@@ -99,7 +99,7 @@ export class Bird extends Box {
             this.soundFrameTimer += secDeltaTime;
             if(Math.floor(this.soundFrameTimer) >= this.SoundDelay){
                 distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
-                sound = new Audio(this.soundArray[randomValue]);
+                sound = this.soundArray[randomValue];
                 sound.volume = this.checkVolume(distance[0], 1000);
                 sound.play();
                 this.soundFrameTimer = 0;
