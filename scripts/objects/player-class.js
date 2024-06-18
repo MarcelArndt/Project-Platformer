@@ -64,7 +64,7 @@ export class Player extends Box {
         switch(e.key){
           case "a": case "ArrowLeft":  this.move("left"); break;
           case "d": case "ArrowRight": this.move("right");break;
-          case "w": case "ArrowUp": case " ": this.playerJump(); break;
+          case "w": case "ArrowUp": case " ": this.playerJump();  e.stopPropagation(); e.preventDefault(); break;
           case "s": case "ArrowDown": if(this.onGround){this.inCrouch()} ; break;
           case "f": case "Enter": this.playerAttack(); break;
         }
