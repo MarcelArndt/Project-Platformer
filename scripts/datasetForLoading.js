@@ -9,6 +9,8 @@ export let imageIsToLoading = {
     backgroundTwo: "./assets/background/background_layer_2.png",
     backgroundThree: "./assets/background/background_layer_3.png",
     backgroundMenu: "./assets/background/menu-background.png",
+    backgroundMenuTwo: "./assets/background/00135.jpg",
+    menuBackgroundBook: "./assets/menu/buch.png",
   };
   
   export let soundsIsToLoading = {

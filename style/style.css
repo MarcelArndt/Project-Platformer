@@ -20,6 +20,7 @@ body,html{
 }
 
 body{
+  width: 100%;
   height: 100%;
   font-family: OpenSans;
   font-weight: 400;
@@ -31,7 +32,7 @@ body{
 
 header{
   background: var(--second_background_color);
-  padding: 12px 24px;
+  padding: 36px 24px;
 }
 
 section{
@@ -96,7 +97,7 @@ p{
 }
 
 #canvas{
-  background-color: #ffffff;
+  background-color: #1B1316;
 }
 
 .main_wrapper{
@@ -107,6 +108,8 @@ p{
 }
 
 .content_wrapper{
+  top: calc(50% - 360px);
+  position: absolute;
   width: 75%;
   margin-left: auto;
   margin-right: auto;
@@ -115,29 +118,84 @@ p{
 
 .mainSection{
   height: 100%;
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 
 .button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  position: relative;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 17px;
+  min-height: 56px;
   cursor: pointer;
   max-width: 200px;
-  border-radius: 8px;
-  font-weight: 600;
+  min-width: 200px;
+  font-weight: 100;
   text-align: center;
-  background-color: var(--main_color);
-  padding: 8px 16px;
-  color: white;
-  transition: transform 0.25ms ease-in-out;
+  background-image: url("../img/button.png");
+  background-repeat: no-repeat;
+  padding: 6px 32px;
+  color: #ffffff;
 }
 
 .button:hover{
-  text-decoration: underline;
-  transform: scale(1.05);
-  transition: transform 0.25ms ease-in-out;
+  color: #ffffff;
+}
+
+.button:hover::before{
+  content: "";
+  position: absolute;
+  background-image: url("../img/klammer-left.png");
+  background-repeat: no-repeat;
+  width: 15px;
+  left: 6px;
+  top:3px;
+  height: 100%;
+  text-decoration: none;
+  color: #a63676;
+}
+
+.button:hover::after{
+  content: "";
+  position: absolute;
+  background-image: url("../img/kammer-right.png");
+  background-repeat: no-repeat;
+  width: 15px;
+  right: 8px;
+  top:3px;
+  height: 100%;
+  text-decoration: none;
+  color: #a63676;
+}
+
+.background{
+  position: absolute;
+  top: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  background-color: #1B1112;
+}
+
+.background img{
+  width: 100%;
+  max-width: 3440px;
+  justify-content: center;
+  align-items: center;
 }
 
 .toCenterBox{
@@ -189,9 +247,109 @@ p{
   position: absolute;
   width: 1240;
   height: 720;
-  -webkit-text-stroke-color: #533112;
-  -webkit-text-stroke-width: 1px;
+
 }
+
+.GameMenu {
+  top:0px;
+  position: relative;
+  width: 100%;
+  font-size: 32px;
+  display: flex;
+  flex-direction: column;
+  color: #DEA67E;
+}
+
+.GameMenu nav {
+  position: absolute;
+  top: -160px;
+  left: 240px;
+}
+
+.GameMenu h1 {
+  font-size: 42px;
+  position: absolute;
+  bottom: 160px;
+  left: 255px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #DEA67E;
+}
+
+.infoContainer{
+  -webkit-text-stroke-width: 0px;
+  max-width: 200px;
+  font-size: 18px;
+  color: #fff;
+  text-align: left;
+}
+
+.controllPanel h2{
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #DEA67E;
+}
+.sidePanel{
+  top: 100px;
+  right: 153px;
+  position: absolute;
+  width: 100%;
+  max-width: 450px;
+  height: 100%;
+  max-height: 440px;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.controllPanel{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  max-height: 380px;
+}
+
+.panelOne{
+  display: flex;
+  padding-top: 24px;
+  padding-left: 11px;
+  align-items: center;
+  width: 100%;
+  max-width: 410px;
+  display: flex;
+  gap: 27px;
+}
+
+.panelOne span, .panelTwo span{
+  color: rgb(228, 133, 73);
+}
+
+.panelOne .woman{
+  color: rgb(226, 42, 186);
+}
+
+.panelTwo{
+  display: flex;
+  padding-top: 24px;
+  padding-left: 11px;
+  align-items: center;
+  width: 100%;
+  max-width: 430px;
+  display: flex;
+  gap: 27px;
+}
+
+.imageContainer{
+  width: 180px;
+  height: auto;
+}
+
+.imageContainer img{
+  width: 100%;
+  height: auto;
+}
+
 
 .canvasOverlayContent{
   justify-content: center;

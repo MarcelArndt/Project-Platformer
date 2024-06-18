@@ -1,4 +1,4 @@
-import { percentageLoadet,  } from "./assets.js";
+import { percentageLoadet,  } from "./loading-screen.js";
 import { ctx, clearCanvas, canvasScalingFactor } from "./canvas.js";
 import { imageIsloadet } from "./assets.js";
 

@@ -1,8 +1,9 @@
 import { ctx, clearCanvas, canvasScalingFactor } from "./canvas.js";
 import { imageIsToLoading, soundsIsToLoading } from "./datasetForLoading.js";
+import { checkCurrentStatus } from "./loading-screen.js";
 export let canvasOverlay = document.getElementById("canvasOverlay");
 export let canvasOverlayContent = document.getElementById("canvasOverlayContent");
-export let percentageLoadet = 0;
+
 
 /**
  *  Key = Key of imageIsToLoading
@@ -24,8 +25,7 @@ async function loadAllImages(){
     try {
       let currentImage = await loadingNewImage(imagePath);
       imageIsloadet[Object.keys(imageIsToLoading)[i]] = currentImage;
-      checkForReady();
-      checkForLoadings();
+      checkCurrentStatus();
     } catch (e) {
     }
   }
@@ -37,8 +37,7 @@ async function loadAllSounds(){
     try {
       let currentSound = await loadingNewSound(soundPath);
       soundIsloadet[Object.keys(soundsIsToLoading)[i]] = currentSound;
-      checkForReady();
-      checkForLoadings();
+      checkCurrentStatus();
     } catch (e) {
     }
   }
@@ -71,42 +70,44 @@ let loadingNewSound = (receivingSoundPath) => {
 };
 
 function checkForReady() {
-  //let MaxValue = (Object.keys(imageIsToLoading).length) + (Object.keys(soundsIsToLoading).length);
-  //let currentValue = (Object.keys(imageIsloadet).length) + (Object.keys(soundIsloadet).length);
-  let MaxValue = (Object.keys(imageIsToLoading).length) ;
-  let currentValue = (Object.keys(imageIsloadet).length) ;
+  let MaxValue = (Object.keys(imageIsToLoading).length) + (Object.keys(soundsIsToLoading).length);
+  let currentValue = (Object.keys(imageIsloadet).length) + (Object.keys(soundIsloadet).length);
   if (currentValue > 0) {
     percentageLoadet = Math.floor((currentValue / MaxValue) * 100);
   }
 }
 
+
 function fillLoadingBar() {
   clearCanvas();
   let screenWidth = (canvas.width / 145) * 100;
-  let screenHeight = (canvas.height / 145) * 100;
+  let screenHeight = (canvas.height / 145) * 100 ;
   let maxlenght = (canvas.width / (canvasScalingFactor * 100)) * 100 * 0.8;
-  let maxheight = (canvas.height / (canvasScalingFactor * 100)) * 100 * 0.05;
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
-  ctx.fillRect(
-    (screenWidth - maxlenght) / 2,
-    (screenHeight - maxheight) / 2,
-    maxlenght,
-    maxheight
-  );
-  ctx.fillStyle = "skyblue";
-  ctx.fillRect(
-    (screenWidth - maxlenght) / 2,
-    (screenHeight - maxheight) / 2,
-    (maxlenght / 100) * percentageLoadet,
-    maxheight
-  );
+  let maxheight = (canvas.height / (canvasScalingFactor * 100)) * 100 * 0.01;
+  drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight);
 }
+
+
+function drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight){
+  ctx.fillStyle = "#1B1316";
+  ctx.fillRect(0, 0, screenWidth, screenHeight)
+
+  ctx.fillStyle = "grey";
+  ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, maxlenght, maxheight); 
+
+  ctx.font = "18px PixelifySans"
+  ctx.fillText(`Game is loading - ${percentageLoadet}%`, (screenWidth - maxlenght) / 2, ((screenHeight - maxheight) / 2) - 8)
+
+  ctx.fillStyle = "#d8ad56"; 
+  ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, (maxlenght / 100) * percentageLoadet, maxheight);
+}
+
 
 function checkForLoadings() {
   let menuImage = null;
   fillLoadingBar();
   if (percentageLoadet == 100) {
-    menuImage = imageIsloadet.backgroundMenu;
+    menuImage = imageIsloadet.backgroundMenuTwo;
     ctx.drawImage(menuImage, 0, 0);
   }
 }

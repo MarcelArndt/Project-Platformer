@@ -1,6 +1,7 @@
 
 
 import { loadAllAssests } from "./assets.js";
+import { menuInit, InitMainMenu} from "./menuScript.js";
 let myGame = null;
 const Game = null;
 const level_One = null;
@@ -13,14 +14,16 @@ window.onload = () => {
       const levelOne = levelModule.levelOne;
       const Game = gameModule.Game;
       let myGame = new Game([levelOne]);
-      myGame.startLevel();;
-  }).catch(err => {
-      console.error('Failed to load modules:', err);
+      InitMainMenu(myGame, levelOne);
+  }).catch((e) => {
+      console.error('Failed to load modules:', e);
   });
-}).catch(err => {
-  console.error('Image preloading failed:', err);
+}).catch((e) => {
+  console.error('Image preloading failed:', e);
 });
 }
+
+
 
 
 
