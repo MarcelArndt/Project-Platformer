@@ -3,11 +3,14 @@ import { Timer } from "./timer.js";
 import { Bird } from "./objects/bird-class.js";
 import { Skelett } from "./objects/skelett-class.js";
 import { Character } from "./objects/main-character-class.js";
-import { imageIsloadet, canvasOverlay, canvasOverlayContent, soundIsloadet  } from "./assets.js";
+import { imageIsloadet, canvasOverlay, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Tileset } from "./tileset.js";
 import { Background } from "./background-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
+import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume,} from "./menuScript.js";
+import { ctx } from "./canvas.js";
+
 
 export let camera = {
   pos: [0, 0],
@@ -77,6 +80,9 @@ export class Level {
     this.screenAnimationTimer = 0;
     this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
+    this.globalVolume = globalVolume || 0;
+    this.savedGlobalVolume = this.globalVolume;
+
     this.keyFuncRef = (e) => this.keyFunction(e);
   }
 
@@ -113,6 +119,7 @@ export class Level {
 
   update(deltaTime) {
       clearCanvas();
+      this.checkForVolume();
       this.updateCamera();
       this.checkWin();
       this.checkScreenshakeTime(deltaTime, 1);
@@ -123,6 +130,12 @@ export class Level {
         this.objects[i].update(deltaTime);
         this.objects[i].draw();
       }
+  }
+
+  checkForVolume(){
+    this.globalVolume = globalVolume;
+    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
+    this.currentAmbient.volume = 0.7 * this.globalVolume;
   }
 
 
@@ -297,28 +310,37 @@ export class Level {
     this.player = this.objectsOfType.Player[0];
     this.originPlayerSize = [... this.player.size];
     this.currentLevelMusic.play()
-    this.currentLevelMusic.volume = 0.35
+    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
     this.currentAmbient.play()
-    this.currentAmbient.volume = 0.7
+    this.currentAmbient.volume = 0.7 * this.globalVolume;
+    pullIngameGui();
   }
 
   pause() {
     this.currentAmbient.pause();
     this.currentLevelMusic.pause();
-    canvasOverlayContent.innerHTML = "Press P to Resume";
-    canvasOverlay.classList.add("blackscreen");
+    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0);
+    pullPauseMenu();
     this.status = status.pause;
     this.timer.getInPause();
+    this.savedGlobalVolume = this.globalVolume;
+    this.globalVolume = 0;
+    console.log(this.savedGlobalVolume)
   }
 
   resume() {
+    console.log(this.savedGlobalVolume)
+    this.globalVolume = this.savedGlobalVolume;
     this.currentLevelMusic.play();
     this.currentAmbient.play();
     canvasOverlayContent.innerHTML = "";
-    canvasOverlay.classList.remove("blackscreen");
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();
+    pullIngameGui();
+    checkForVolume();
   }
 
   resetLevel() {

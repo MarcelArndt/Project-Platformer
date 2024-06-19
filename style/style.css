@@ -300,6 +300,28 @@ p{
   max-height: 440px;
   overflow: hidden;
   overflow-y: scroll;
+  font-size: 18px;
+  font-weight: 100;
+}
+.sidePanel a{
+  color: #db371a;
+}
+
+
+.sidePanel strong{
+  color: rgb(228, 133, 73);
+  margin-bottom: 32px;
+}
+.alightText {
+  text-align: left;
+  padding: 0px 0px 0px 0px;
+  right: 183px;
+  max-width: 400px;
+}
+
+.sidePanel h1{
+  font-size: 36px;
+  color: #DEA67E;
 }
 
 .controllPanel{
@@ -362,6 +384,72 @@ p{
   animation-name: fadeInOut;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+
+.menu-container{
+  position: absolute;
+  top: 0px;
+  right: 72px;
+  width: 76px;
+  height: 163px;
+  
+}
+
+.banner-red{
+  position: relative;
+  right: 0px;
+  width: 76px;
+  height: 163px;
+  user-select: none;
+}
+
+.iconContainer{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 10px;
+  display: flex;
+  gap: 26px;
+  left: 26px;
+  flex-direction: column;
+}
+
+.plusIcon{
+  display: flex;
+  justify-content: center;
+  width: 18px;
+  height: 19px;
+
+}
+
+.volumneIcon{
+  display: flex;
+  justify-content: center;
+  width: 25px;
+  height: 26px;
+
+}
+
+.minusIcon{
+  display: flex;
+  justify-content: center;
+  width: 19px;
+  height: 4px;
+
+}
+
+.opacity{
+  opacity: 0.2;
+}
+
+
+.hover{
+  user-select: none;
+}
+
+.hover:hover {
+  cursor: pointer;
 }
 
 @keyframes fadeInOut{

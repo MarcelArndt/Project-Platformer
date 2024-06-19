@@ -39,5 +39,8 @@ export class Game {
     this.currentLevel.start();
   }
 
-  
+  resume(){
+    this.currentLevel.resume();
+  }
+
 }

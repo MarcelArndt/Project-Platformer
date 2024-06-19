@@ -246,6 +246,7 @@ export class Box extends Rectangle{
 
     chooseRandomSound(soundArray = []){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
+        soundArray[randomNumber].volume = this.level.globalVolume
         soundArray[randomNumber].play();
       }
 }

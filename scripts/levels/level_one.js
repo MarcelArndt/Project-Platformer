@@ -13,7 +13,7 @@ let entityArrayForObjects = [];
 let tilesArrayData = [];
 
 let ambientMusic = soundIsloadet.forestAmbient;
-let levelMusic = soundIsloadet.WhisperstheWoods;
+let levelMusic = soundIsloadet.musicPixelDayDream;
 
 const collisonBlocks = [];
 const lvl2DCollison = [];

@@ -101,7 +101,7 @@ export class Bird extends Box {
                 distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
                 sound = this.soundArray[randomValue];
                 //sound.volume = this.checkVolume(distance[0], 1000);
-                sound.volume = 0.7;
+                sound.volume = 0.7 * this.level.globalVolume;
                 sound.play();
                 this.soundFrameTimer = 0;
                 this.disableSound();
