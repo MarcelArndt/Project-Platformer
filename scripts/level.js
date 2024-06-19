@@ -157,7 +157,6 @@ export class Level {
         this.screenAnimationTimer = 0;
         this.switchBackValueToZero(secDeltaTime);
       }
-   
     }
 
     switchBackValueToZero(secDeltaTime){
@@ -206,14 +205,8 @@ export class Level {
         let newCollisionBlock = null;
         switch (tile) {
           case 0: break;
-          case 631: newCollisionBlock  = 
-          new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)", type: "Rectangle",});
-          this.pushNewObject(newCollisionBlock)
-          break;
-
-          case 638: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)"}, "Rectangle");
-          this.pushNewObject(newCollisionBlock);
-
+          case 631: newCollisionBlock  = new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.pushNewObject(newCollisionBlock); break;
+          case 638: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)"}, "Rectangle"); this.pushNewObject(newCollisionBlock);
           default: break;
         }
       });
@@ -273,16 +266,12 @@ export class Level {
   createDemageboxes(){
     this.objects.forEach((obj) => {
       let HitboxArray = [];
-      switch(obj.demageBoxes){
-        case null: case []: case 0: case undefined: break;
-        default: for (let i = 0; i < obj.demageBoxes.length; i++){
+      if(obj.demageBoxes != undefined && obj.demageBoxes.length > 0){
+        for (let i = 0; i < obj.demageBoxes.length; i++){
           obj.demageBoxes[i].level = this;
           HitboxArray.push(obj.demageBoxes[i]);
-        } break;
-      }
-      switch(HitboxArray.length){
-        case null: case []: case 0: case undefined: break;
-        default: this.demageBoxes[obj.index] = HitboxArray; break;
+        }
+        this.demageBoxes[obj.index] = HitboxArray
       }
     });
   }

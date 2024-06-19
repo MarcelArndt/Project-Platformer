@@ -156,9 +156,8 @@ export class Bird extends Box {
 
     fly(){
         let flyAgain = this.randomNumber(3);
-       if(this.pos[1] <= 0) {
-        this.setTop = 0;
-        this.vel[1] = 0.05
+       if(this.pos[1] <= 150) {
+        this.despawn()
        } else if (this.pos[1] > 200 && flyAgain == 1){
         this.vel[1] = -0.375
         flyAgain = this.randomNumber(5);

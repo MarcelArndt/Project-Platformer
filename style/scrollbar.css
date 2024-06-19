@@ -1,0 +1,31 @@
+::-webkit-scrollbar-thumb {
+    background: #3A0B25; 
+    border-radius: 12px;
+    position: relative;
+    border: 2px solid #FFE0BC;
+  }
+    
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--join-blue); 
+  }
+    
+  ::-webkit-scrollbar {
+      width: 17px;
+  }
+    
+  ::-webkit-scrollbar-track {
+      border-left: 1px solid #FFE0BC;
+      background: #FFE0BC; 
+  }
+
+
+  .sidePanel::-webkit-scrollbar-thumb {
+    background: #3A0B25; 
+    border-radius: 12px;
+    position: relative;
+    border: 5px solid #FAC08A;
+  }
+
+  .sidePanel::-webkit-scrollbar-track{
+    display: none;
+  }
