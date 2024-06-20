@@ -13,14 +13,16 @@ export class Tileset {
     this.tileSize = option.size;
     this.tileArray = [];
     this.amountOfElementsInRow = this.image.width / this.tileSize;
-    this.entityArray = [];
+
     this.levelSizeInTiles = option.levelSizeInTiles;
     this.entityArrayData = option.entityArrayData;
-    this.level = null;
     this.tilesArrayData = option.tilesArrayData;
-    this.tilesArray = [];
     this.collisionArray = option.collisionArray;
+
+    this.entityArray = [];
+    this.tilesArray = [];
     this.slicedCollisonBlock = [];
+    this.level = null;
   }
 
   translateTileMap(inGamePosX, inGamePosY, tileNumber) {
@@ -95,6 +97,19 @@ export class Tileset {
 
   generateLevel(level){
     this.level = level;
+    this.level.objectsOfType = {
+      Rectangle: [],
+      Box: [],
+      Player: [],
+      Goal: [],
+      Entity: [],
+      Enemy: [],
+    };
+    this.level.player = null;
+    this.level.objects = [];
+    this.entityArray = [];
+    this.tilesArray = [];
+    this.slicedCollisonBlock = [];
     this.createCollision();
     this.createTiles();
     this.createEntity();

@@ -53,7 +53,6 @@ export class Level {
     this.screenEffektTimer = 0;
     this.globalVolume = globalVolume || 0;
     this.savedGlobalVolume = this.globalVolume;
-
     this.keyFuncRef = (e) => this.keyFunction(e);
   }
 
@@ -67,14 +66,14 @@ export class Level {
 
   keyFunction(e) {
     if (e.key == "p" || e.key == "enter") {
-      if (this.status === status.ready) {
+      if (this.status == status.ready) {
         this.start();
-      } else if (this.status === status.running) {
+      } else if (this.status == status.running) {
         this.pause();
-      } else if (this.status === status.pause) {
+      } else if (this.status == status.pause) {
         this.resume();
       }
-    } else if (e.key == "r" && this.status === status.running) {
+    } else if (e.key == "r" && this.status == status.running) {
       this.resetLevel();
     }
   }
@@ -186,6 +185,7 @@ export class Level {
   }
 
   createDemageboxes(){
+    this.demageBoxes = {};
     this.objects.forEach((obj) => {
       let HitboxArray = [];
       if(obj.demageBoxes != undefined && obj.demageBoxes.length > 0){
@@ -236,6 +236,18 @@ export class Level {
     this.globalVolume = 0;
   }
 
+  gameOver() {
+    this.savedGlobalVolume = this.globalVolume;
+    this.removeControll();
+    this.timer.getInPause();
+    this.currentAmbient.pause();
+    this.currentLevelMusic.pause();
+    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0);
+    pullPauseMenu();
+  }
+
   resume() {
     this.globalVolume = this.savedGlobalVolume;
     this.playBackgoundmusic();
@@ -247,9 +259,38 @@ export class Level {
     checkForVolume();
   }
 
-  resetLevel() {
-    this.status = status.ready;
-    this.objects.forEach((obj) => obj.reset());
-    this.cameraPos = [...this.originalCameraPos];
+  resetLevel() {  
+    this.status = status.pause;
+    this.timer.getInPause();
+    this.cleanUpLevel();
+    this.rebuildLevel();
+  }
+
+  cleanUpLevel(){
+    this.savedGlobalVolume = this.globalVolume;
+    this.demageBoxes = null;
+    this.screenshakeToggle = false;
+    this.objectsOfType = null;
+    this.player = null;
+    this.objects =  null;
+  }
+
+  rebuildLevel(){
+    this.background = null;
+    this.background = new Background({ color: "#453d4f" }, [
+      imageIsloadet.backgroundOne,
+      imageIsloadet.backgroundTwo,
+      imageIsloadet.backgroundThree,
+    ]);
+    this.globalVolume = this.savedGlobalVolume;
+    canvasOverlayContent.innerHTML = "";
+    this.tileset.generateLevel(this);
+    this.createDemageboxes();
+    this.player =  this.objectsOfType.Player[0];
+    this.status = status.running;
+    this.timer.pause = false;
+    this.timer.start();
+    this.playBackgoundmusic();
+    pullIngameGui();
   }
 }
