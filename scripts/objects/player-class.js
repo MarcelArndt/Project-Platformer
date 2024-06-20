@@ -1,5 +1,7 @@
 import { Box } from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-player-class.js";
+import { StatusBar } from "./statusBar-class.js";
+import { imageIsloadet } from "../assets.js";
 
 export class Player extends Box {
   constructor(options, type) {
@@ -54,6 +56,7 @@ export class Player extends Box {
     };
     this.pressedKeys = [];
     this.addControll();
+    this.statusbar = new StatusBar( options.playerHealth || 30, this.playerHealth, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [0,0] )
     this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
     this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
   }
@@ -116,7 +119,8 @@ export class Player extends Box {
   }
 
   reduceHealth(Value){
-    this.playerHealth -= Value
+    this.playerHealth += -Value;
+    this.statusbar.refreshValue(this.playerHealth);
   }
 
   move(direction) {
@@ -213,6 +217,7 @@ export class Player extends Box {
     this.ceckCooldown();
     this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
+    this.statusbar.update(this.playerHealth);
   }
 
   playerAttack() {
@@ -269,6 +274,4 @@ export class Player extends Box {
       this.isCoyoteTimeReady = false;
     }
   }
-  
 }
-

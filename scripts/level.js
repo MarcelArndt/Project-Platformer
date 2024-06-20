@@ -1,17 +1,9 @@
 import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
-import { Bird } from "./objects/bird-class.js";
-import { Skelett } from "./objects/skelett-class.js";
-import { Character } from "./objects/main-character-class.js";
-import { imageIsloadet, canvasOverlay, canvasOverlayContent, soundIsloadet} from "./assets.js";
-import { Tileset } from "./tileset.js";
+import { imageIsloadet, canvasOverlayContent,} from "./assets.js";
 import { Background } from "./background-class.js";
-import { Rectangle } from "./objects/rectangle-class.js";
-import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume,} from "./menuScript.js";
 import { ctx } from "./canvas.js";
-
-
 export let camera = {
   pos: [0, 0],
 };
@@ -29,32 +21,11 @@ export class Level {
     this.cameraPos = [0, this.size[1] - canvas.height];
     this.originalCameraPos = [0, this.size[1] - canvas.height];
     this.objects = [];
-
-    this.entityArrayData = option.entityArrayData;
-    this.entityArray = [];
-
-    this.tilesArrayData = option.tilesArrayData;
-    this.tilesArray = [];
-
-    this.tileSize = option.tileSize;
-    this.levelSizeInTiles = option.levelSizeInTiles;
-
-    this.tileset = null;
-
-    this.receivingObjects = [
-      option.objects,
-      option.background,
-      option.tileset,
-      option.collisionTiles,
-      option.cameraPos,
-    ];
-
+    this.tileset = option.tileset;
     this.currentLevelMusic = option.currentLevelMusic;
     this.currentAmbient = option.currentAmbient;
-
     this.currentLevelMusic.loop = true;
     this.currentAmbient.loop = true;
-
     this.player = null;
     this.game = null;
     this.index = 0;
@@ -108,13 +79,20 @@ export class Level {
     }
   }
 
-  addObjects(obj) {
-    for (let i = 0; i < obj.length; i++) {
-      const type = obj[i].type;
-      obj[i].level = this;
-      this.objects.push(obj[i]);
-      this.objectsOfType[type].push(obj[i]);
+
+    /**
+   * @param obj -> adds Obj to current level level
+   */
+  
+  pushNewObject(obj) {
+    if(obj.type == "Player"){
+      obj.level = this;
+      this.Player = obj;
     }
+    let type = obj.type;
+    obj.level = this;
+    this.objects.push(obj);
+    this.objectsOfType[type].push(obj);
   }
 
   update(deltaTime) {
@@ -124,7 +102,7 @@ export class Level {
       this.checkWin();
       this.checkScreenshakeTime(deltaTime, 1);
       this.calculateScreenshakeValue(deltaTime);
-      this.background.updateBackground(this.objectsOfType.Player);
+      this.background.updateBackground(this.player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
         this.objects[i].update(deltaTime);
@@ -185,7 +163,6 @@ export class Level {
         }
         this.screenEffektTimer = 0;
       }
-      
     }
   
 
@@ -198,74 +175,6 @@ export class Level {
     for (let i = 0; i < this.objects.length; i++) {
       this.objects[i].draw();
     }
-  }
-
-  createTileset() {
-    let newTilesetImage = imageIsloadet.tileset;
-    this.tileset = new Tileset({
-      image: newTilesetImage,
-      size: this.tileSize,
-    });
-  }
-
-  createCollision() {
-    let slicedCollisonBlock = [];
-    for (let i = 0; i < this.collisionArray.length; i += this.levelSizeInTiles) {
-      slicedCollisonBlock.push( this.collisionArray.slice(i, i + this.levelSizeInTiles));
-    }
-    slicedCollisonBlock.forEach((row, x) => {
-      row.forEach((tile, y) => {
-        let newCollisionBlock = null;
-        switch (tile) {
-          case 0: break;
-          case 631: newCollisionBlock  = new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.pushNewObject(newCollisionBlock); break;
-          case 638: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize + 0.5, this.tileSize + 0.5], color: "rgba(255,255,255,0.0)"}, "Rectangle"); this.pushNewObject(newCollisionBlock);
-          default: break;
-        }
-      });
-    });
-  }
-
-  createTiles() {
-    for ( let i = 0; i < this.tilesArrayData.length; i += this.levelSizeInTiles) {
-      this.tilesArray.push( this.tilesArrayData.slice(i, i + this.levelSizeInTiles));
-    }
-    this.tilesArray.forEach((row, y) => {row.forEach((tileNumber, x) => {
-        switch (tileNumber) {
-          case 0: break; default: this.tileset.createTile(x, y, tileNumber); break;
-        }
-      });
-    });
-  }
-
-  createEntity() {
-    let newEntity = null;
-    for ( let i = 0; i < this.entityArrayData.length; i += this.levelSizeInTiles) {
-      this.entityArray.push( this.entityArrayData.slice(i, i + this.levelSizeInTiles));
-    }
-    this.entityArray.forEach((row, y) => {
-      row.forEach((tileNumber, x) => {
-        switch (tileNumber) {
-          case 0: break;
-          case 636: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D", }); this.pushNewObject(newEntity); break;
-          case 637: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [44, 100], color: "#FFD53D",}); this.pushNewObject(newEntity); break;
-          case 635: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 67], color: "edff2b", type: "Player", });  this.pushNewObject(newEntity); break;;
-          case 639: newEntity = new Bird({ pos: [x * this.tileSize, y * this.tileSize], size: [22, 22],}); this.pushNewObject(newEntity);break;
-          case 640: newEntity = new Box({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 36], color: "brown",}); this.pushNewObject(newEntity); break;
-        }
-      });
-    });
-  }
-
-  pushNewObject(obj) {
-    if(obj.type == "Player"){
-      obj.level = this;
-      this.Player = obj;
-    }
-    let type = obj.type;
-    obj.level = this;
-    this.objects.push(obj);
-    this.objectsOfType[type].push(obj);
   }
 
   checkWin() {
@@ -289,6 +198,13 @@ export class Level {
     });
   }
 
+  playBackgoundmusic(){
+    this.currentLevelMusic.play()
+    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
+    this.currentAmbient.play()
+    this.currentAmbient.volume = 0.7 * this.globalVolume;
+  }
+
   start() {
     canvasOverlayContent.innerHTML = "";
     this.background = new Background({ color: "#453d4f" }, [
@@ -296,23 +212,14 @@ export class Level {
       imageIsloadet.backgroundTwo,
       imageIsloadet.backgroundThree,
     ]);
-    this.collisionArray = this.receivingObjects[3];
-    this.tileset = this.receivingObjects[2];
-    this.collisionTiles = this.receivingObjects[3];
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();
-    this.createCollision()
-    this.createTileset();
-    this.createTiles();
-    this.createEntity();
+    this.tileset.generateLevel(this);
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
     this.originPlayerSize = [... this.player.size];
-    this.currentLevelMusic.play()
-    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
-    this.currentAmbient.play()
-    this.currentAmbient.volume = 0.7 * this.globalVolume;
+    this.playBackgoundmusic();
     pullIngameGui();
   }
 
@@ -327,14 +234,11 @@ export class Level {
     this.timer.getInPause();
     this.savedGlobalVolume = this.globalVolume;
     this.globalVolume = 0;
-    console.log(this.savedGlobalVolume)
   }
 
   resume() {
-    console.log(this.savedGlobalVolume)
     this.globalVolume = this.savedGlobalVolume;
-    this.currentLevelMusic.play();
-    this.currentAmbient.play();
+    this.playBackgoundmusic();
     canvasOverlayContent.innerHTML = "";
     this.status = status.running;
     this.timer.pause = false;
@@ -347,7 +251,5 @@ export class Level {
     this.status = status.ready;
     this.objects.forEach((obj) => obj.reset());
     this.cameraPos = [...this.originalCameraPos];
-    this.addObjects(this.deleteObjects || []);
-    this.deleteObjects = [];
   }
 }

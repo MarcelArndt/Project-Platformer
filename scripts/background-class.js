@@ -50,9 +50,9 @@ export class Background {
   }
 
   checkPlayerSpeed(PlayerArray) {
-    this.playerVel = PlayerArray[0].vel;
-    this.playerPos = PlayerArray[0].pos;
-    this.playerSpeed = PlayerArray[0].walkspeed;
+    this.playerVel = PlayerArray.vel;
+    this.playerPos = PlayerArray.pos;
+    this.playerSpeed = PlayerArray.walkspeed;
   }
 
   calcOffset() {

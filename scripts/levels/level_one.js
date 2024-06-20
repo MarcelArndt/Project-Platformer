@@ -1,20 +1,23 @@
-import {soundIsloadet} from "../assets.js";
+import {soundIsloadet, imageIsloadet} from "../assets.js";
 import { Rectangle } from "../objects/rectangle-class.js";
 import { Level } from "../level.js";
+import { Tileset } from "../tileset.js";
 
-let tileSize = 0;
-let levelSizeInTiles = 0;
-let levelHeighInTiles = 0;
 
-let entityArrayData = [];
-let entityArray = [];
-let entityArrayForObjects = [];
 
-let tilesArrayData = [];
+
 
 let ambientMusic = soundIsloadet.forestAmbient;
 let levelMusic = soundIsloadet.musicPixelDayDream;
+let tileSetImage = imageIsloadet.tileset;
 
+
+let tileset = null
+let tileSize = 0;
+let levelSizeInTiles = 0;
+let levelHeighInTiles = 0;
+let entityArrayData = [];
+let tilesArrayData = [];
 const collisonBlocks = [];
 const lvl2DCollison = [];
 let collisionArray = [];
@@ -33,6 +36,20 @@ async function loadJson() {
 async function init() {
   await loadJson();
   generateCollision();
+  generateTileset();
+}
+
+
+function generateTileset(){
+  tileset = new Tileset({
+    image: tileSetImage,
+    size: tileSize,
+    levelSizeInTiles: levelSizeInTiles,
+    entityArrayData: entityArrayData,
+    tilesArrayData: tilesArrayData,
+    collisionArray: collisionArray,
+  });
+
 }
 
 function generateCollision() {
@@ -53,6 +70,7 @@ await init();
 
 export const levelOne = new Level({
   size: [levelSizeInTiles * tileSize, levelHeighInTiles * tileSize],
+  tileset: tileset,
   collisionTiles: collisionArray,
   entityArrayData: entityArrayData,
   levelSizeInTiles: levelSizeInTiles,

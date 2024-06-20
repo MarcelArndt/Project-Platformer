@@ -1,7 +1,5 @@
-
-
 import { loadAllAssests } from "./assets.js";
-import { menuInit, InitMainMenu} from "./menuScript.js";
+import { InitMainMenu} from "./menuScript.js";
 let myGame = null;
 const Game = null;
 const level_One = null;
@@ -22,10 +20,3 @@ window.onload = () => {
   console.error('Image preloading failed:', e);
 });
 }
-
-
-
-
-
-
-

@@ -17,8 +17,7 @@ export class Box extends Rectangle{
         this.demageBoxes = []
         this.index = this.genEntityIndex();  
     }
-
-
+    
     genEntityIndex(){
         let newIndex = "";
         let subIndex = "";
@@ -47,8 +46,6 @@ export class Box extends Rectangle{
         return fildertObjects.every(obj => !this.collideWith(obj, VectorOffest));
     }
 
-
-
     getPrevPosLeft(){
         return this.prevPos[0];
     }
@@ -76,8 +73,6 @@ export class Box extends Rectangle{
         this.onGround = false
     }
 
-    
-
     update(deltaTime){
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
@@ -90,8 +85,6 @@ export class Box extends Rectangle{
         })
         this.updateHitboxs();
     }
-
-
 
     collide(obj){
         return {
@@ -194,10 +187,6 @@ export class Box extends Rectangle{
         return distance 
     }
 
-    changeDirection(){
-        //
-    }
-
     createHitBox(pos, size, manualOffset, options, obj){
         let newBox = new Hitbox({
           pos: [pos[0], pos[1]],
@@ -226,7 +215,7 @@ export class Box extends Rectangle{
       }
     
       updateHitboxs(){
-        if (this.updateHitboxs){
+        if (this.demageBoxes.length > 0){
           this.level.demageBoxes[this.index].forEach((box) => {
             box.pos[0] = this.pos[0] + box.setOffset[0];
             box.pos[1] = this.pos[1] + box.setOffset[1];

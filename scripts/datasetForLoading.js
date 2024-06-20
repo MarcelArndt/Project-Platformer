@@ -4,6 +4,7 @@ export let imageIsToLoading = {
     whiteBird: "./assets/bird_2_white.png",
     robinBird: "./assets/bird_3_robin.png",
     skeleton: "./assets/skelet-animation-atlas.png",
+    mushroom: "./assets/mushroom-atlas.png",
     tileset: "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png",
     backgroundOne: "./assets/background/background_layer_1.png",
     backgroundTwo: "./assets/background/background_layer_2.png",
@@ -11,6 +12,8 @@ export let imageIsToLoading = {
     backgroundMenu: "./assets/background/menu-background.png",
     backgroundMenuTwo: "./assets/background/00135.jpg",
     menuBackgroundBook: "./assets/menu/buch.png",
+    liveBarImageFull: "./assets/bar/livebar-full.png",
+    liveBarImageEmpty: "./assets/bar/livebar-empty.png",
   };
   
   export let soundsIsToLoading = {
