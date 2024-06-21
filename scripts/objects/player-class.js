@@ -31,6 +31,7 @@ export class Player extends Box {
     this.getHitLeft = false;
     this.prevStatus = "";
     this.prevKeyInput = "";
+    this.maxHealth = options.health || 50;
     this.health = options.health || 50;
     this.stateMachine = new StateMachine(new Idle(), this);
 

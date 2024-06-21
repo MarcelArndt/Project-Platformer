@@ -90,13 +90,13 @@ export class Box extends Rectangle{
 
 
 
-    checkCollideWithSemiSolidBlock(obj){
-        return (obj.subType == "SemiSolidBlock" && this.crouch);
+    checkCollideWithSemiSolidBlock(obj, direction){
+        return (obj.subType == "SemiSolidBlock" && this.crouch && direction == "above" || obj.subType == "SemiSolidBlock" && direction != "above" );
     }
 
 
-    checkCollideWithMushroom(obj){
-        if(obj.subType == "Mushroom" && this.type == "Player"){
+    checkCollideWithMushroom(obj, direction){
+        if(obj.subType == "Mushroom" && this.type == "Player" && direction == "above"){
             this.stateMachine.changeState(new Jump());
             this.chooseRandomSound([soundIsloadet.bounce02]), false;
             this.vel[1] = -1.5;
@@ -116,76 +116,79 @@ export class Box extends Rectangle{
         return false;
     }
 
-    checkCollideWithDeadlySolidBlock(obj){
-        if(obj.subType == "deadlySolidBlock" && this.type == "Player"){
+    checkCollideWithDeadlySolidBlock(obj, direction){
+        if(obj.subType == "deadlySolidBlock" && this.type == "Player" && direction == "above" || obj.subType == "deadlySolidBlock" && this.type == "Enemy" && direction == "above"){
             this.health = 0;
-            return  true;
+            return true;
         }
         return false
     }
 
     checkCollideWithDeath(obj){
-        if(this.type == "Death" && obj.type != "Rectangle"){
+        if(obj.type == "Death"){
             return  true;
         }
         return false
     }
 
-    
+    checkIsEntity(obj){
+        if(obj.type == "Entity" && obj.subType == "Bird"){
+            return  true;
+        } else if(obj.type == "Entity" && obj.subType == "Item"){
+            obj.activateItem();
+            return  true;
+        }
+        return false
+    }
+
+    checkAll(obj, direction){
+        return (
+            !this.checkCollideWithSemiSolidBlock(obj, direction)
+            && !this.checkCollideWithEnemy(obj) 
+            && !this.checkCollideWithMushroom(obj, direction)
+            && !this.checkCollideWithDeadlySolidBlock(obj, direction)
+            && !this.checkCollideWithDeath(obj)
+            && !this.checkIsEntity(obj)
+        );
+    }
+
 
     collide(obj){
         return {
             fromAbove: () =>{
-                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj)){
-
-                  if(!this.checkCollideWithSemiSolidBlock(obj) && !this.checkCollideWithEnemy(obj) && !this.checkCollideWithMushroom(obj) && !this.checkCollideWithDeadlySolidBlock(obj) && !this.checkCollideWithDeath(obj) ) {
+                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj) && this.checkAll(obj, "above")){
                     this.setBottom(obj.posTop);
                     this.vel[1] = 0;
                     this.onGround = true;
-                    } else{
-                        this.jump.currentPressingKey = false;
-                        this.jump.alreadyInJump = false
-                    }
-                    return this.onGround;
-            }
+                } else {
+                    this.jump.currentPressingKey = false;
+                    this.jump.alreadyInJump = false
+                }
+                return this.onGround;
             },
+            
             fromBottom: () =>{
-                if (this.getPrevPosTop() >= obj.posBottom && obj.subType != "SemiSolidBlock"){
-                    if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
-                        return;
-                    }
-
-                    let isCollide = false;
-                    isCollide = this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0])
-                    if(isCollide){
+                if (this.getPrevPosTop() >= obj.posBottom && obj.subType && this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0]) && this.checkAll(obj, "below")){
                         this.setTop(obj.posBottom);
                         this.vel[1] = 0;
-                    }
-            }
+                }
             },
 
             fromRight: () =>{
-                if ( this.getPrevPosRight() <= obj.posLeft && obj.subType != "SemiSolidBlock" && this.collideWith(obj)){
-                    if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
-                        return;
-                    }
-                    if (this.pushObject(obj, this.level.objects).toRight()) {
-                        return
-                    }
+                if ( this.getPrevPosRight() <= obj.posLeft && this.collideWith(obj) && this.checkAll(obj, "right")){
                     this.setRight(obj.posLeft - 1.5);
                     this.vel[0] = 0;
-            }
+                } else if(this.pushObject(obj, this.level.objects).toRight()){
+                    return;
+                } 
             },
+
             fromLeft: () =>{
-                if ( this.getPrevPosLeft() >= obj.posRight && obj.subType != "SemiSolidBlock" && this.collideWith(obj)){
-                    if (obj.subType == "SemiSolidBlock"|| obj.type == "Death"){
-                        return;
-                    }
-                    if (this.pushObject(obj, this.level.objects).toLeft()){
-                        return
-                    }
+                if ( this.getPrevPosLeft() >= obj.posRight && this.collideWith(obj) && this.checkAll(obj, "left")){
                     this.setLeft(obj.posRight + 1.5);
                     this.vel[0] = 0;
+                } else if(this.pushObject(obj, this.level.objects).toLeft()) {
+                    return;
                 }
             }
         }
