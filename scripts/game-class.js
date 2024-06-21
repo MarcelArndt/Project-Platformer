@@ -1,3 +1,4 @@
+import { pullGameReady } from "./menuScript.js";
 export class Game {
   constructor(levelList) {
     this.levelList = [];
@@ -19,7 +20,7 @@ export class Game {
 
   startLevel() {
     if (this.levelList.length === 0) return "No Level in levelList";
-    canvasOverlayContent.innerHTML = "Press P to Start Game";
+    pullGameReady ();
     this.currentLevel.drawObjects();
     this.currentLevel.addControll();
   }

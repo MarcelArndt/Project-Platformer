@@ -1,6 +1,6 @@
 
 
-import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu} from "./template.js";
+import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
 export let currentGame = null;
 export let currentLevelOne = null;
@@ -38,6 +38,9 @@ export function pullPauseMenu(){
     canvasOverlayContent.innerHTML = renderPauseMenu();
 }
 
+export function pullGameReady(){
+    canvasOverlayContent.innerHTML =  renderGameReady();
+}
 
 function pullControllPanel(){
     sidePanel = document.getElementById("renderSidePanel");

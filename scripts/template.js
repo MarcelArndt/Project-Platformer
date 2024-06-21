@@ -10,6 +10,16 @@ export function renderMainMenu(){
             <div id="renderSidePanel">
             </div>`
 }
+
+export function renderGameReady(){
+  return `<div class="GameMenu">        
+          </div>
+          <div id="renderSidePanel">
+          <div class="gameReady flickContent"><img src ="./img/button-play.png"></div>
+          <div class="gameReady"> Game is Ready <br> press 'P' to start the Game.</div>
+          </div>`
+}
+
 export function renderControllPanel(){
   return ` 
     <div class="sidePanel">

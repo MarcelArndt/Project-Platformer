@@ -386,6 +386,25 @@ p{
   animation-direction: alternate;
 }
 
+.gameReady{
+  top: 390px;
+  left: 200px;
+  position: absolute;
+  width: 390px;
+  color: #ffffff;
+  font-size: 36px;
+}
+
+.gameReady img{
+  position: absolute;
+  top: -170px;
+  left: 90px;
+  height: 130px;
+  width: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
 
 .menu-container{
   position: absolute;

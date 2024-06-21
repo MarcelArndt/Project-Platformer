@@ -266,6 +266,7 @@ export class Death{
         entity.animationStatus = "getHit";
         entity.animationSpeed = 1;
         entity.type = "Death";
+        entity.subType = "Death";
     }
 
     behave(entity){

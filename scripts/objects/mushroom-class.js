@@ -69,11 +69,16 @@ export class Mushroom extends Enemy{
         super.update(deltaTime);
         this.draw();
     }
-   
-    draw(){
+    /**
+     * 
+     *  Only for Debug;
+     * 
+         draw(){
         super.draw();
         ctx.strokeStyle = "yellow";
         ctx.strokeRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
     }
+     */
+
 
 }
