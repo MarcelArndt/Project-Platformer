@@ -1,7 +1,7 @@
 import { ctx } from "../canvas.js";
 
 export class StatusBar{
-    constructor(maxValue, currentValue, posOnCanvas, fullBarImage, emptyBarImage,){
+    constructor(maxValue, currentValue, posOnCanvas, fullBarImage, emptyBarImage, offset){
         this.maxValue = maxValue;
         this.currentValue = currentValue;
         this.posOnCanvas = posOnCanvas;
@@ -10,6 +10,8 @@ export class StatusBar{
         this.imageWidth = this.fullBarImage.width;
         this.imageHeight = this.fullBarImage.height;
         this.currentWidthPercentage = 0;
+        this.offset = offset || [0,0];
+
     }
 
     update(currentValue){
@@ -20,7 +22,7 @@ export class StatusBar{
 
     draw(){
         ctx.drawImage(this.emptyBarImage, this.posOnCanvas[0], this.posOnCanvas[1])
-        ctx.drawImage(this.fullBarImage, 0, 0, this.imageWidth * this.currentWidthPercentage, this.imageHeight, this.posOnCanvas[0], this.posOnCanvas[1], this.imageWidth * this.currentWidthPercentage, this.imageHeight)
+        ctx.drawImage(this.fullBarImage, 0, 0, this.imageWidth * this.currentWidthPercentage, this.imageHeight, this.posOnCanvas[0] + this.offset[0], this.posOnCanvas[1], this.imageWidth * this.currentWidthPercentage, this.imageHeight)
     }
 
     refreshValue(currentValue){

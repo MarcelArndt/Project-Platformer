@@ -1,4 +1,5 @@
-import { pullGameReady } from "./menuScript.js";
+import { pullGameReady, playSound} from "./menuScript.js";
+
 export class Game {
   constructor(levelList) {
     this.levelList = [];
@@ -20,6 +21,7 @@ export class Game {
 
   startLevel() {
     if (this.levelList.length === 0) return "No Level in levelList";
+    playSound("success16");
     pullGameReady ();
     this.currentLevel.drawObjects();
     this.currentLevel.addControll();

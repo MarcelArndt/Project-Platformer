@@ -22,9 +22,9 @@ export let imageIsToLoading = {
     flyingTwo: "./assets/sound/entity/flying-002.mp3",
     flyingThree: "./assets/sound/entity/flying-003.mp3",
   
-    lightswordOne: "./assets/sound/character/light_sword_001.mp3",
-    lightswordTwo: "./assets/sound/character/light_sword_002.mp3",
-    lightswordThree: "./assets/sound/character/light_sword_003.mp3",
+    lightswordOne: "./assets/sound/character/clang01.ogg",
+    lightswordTwo: "./assets/sound/character/clang02.ogg",
+    lightswordThree: "./assets/sound/character/clang03.ogg",
 
     playerStepsOne: "./assets/sound/character/steps001.mp3",
     playerStepsTwo: "./assets/sound/character/steps002.mp3",
@@ -34,8 +34,34 @@ export let imageIsToLoading = {
     LightStepsTwo: "./assets/sound/misc/steps002.mp3",
     LightStepsThree: "./assets/sound/misc/steps003.mp3",
 
+    footsteps01: "./assets/sound/enemy/footsteps01.mp3",
+    footsteps02: "./assets/sound/enemy/footsteps02.mp3",
+    footsteps03: "./assets/sound/enemy/footsteps03.mp3",
+
     playerJumpOne: "./assets/sound/character/jump-1.mp3",
     playerJumpTwo: "./assets/sound/character/jump-2.mp3",
+
+    bounce02: "./assets/sound/misc/bounce02.ogg",
+    success16: "./assets/sound/misc/success16.ogg",
+    success12: "./assets/sound/misc/success12.ogg",
+    success07: "./assets/sound/misc/success07.ogg",
+    tone09: "./assets/sound/misc/tone09.ogg",
+    tone07: "./assets/sound/misc/tone07.ogg",
+    success11: "./assets/sound/misc/success11.ogg",
+    success09: "./assets/sound/misc/success09.ogg",
+
+    slurp04: "./assets/sound/enemy/slurp04.ogg",
+    swipe4: "./assets/sound/enemy/swipe4.ogg",
+    swipe03: "./assets/sound/enemy/swipe03.ogg",
+    swipe02: "./assets/sound/enemy/swipe02.ogg",
+    footsteps06: "./assets/sound/enemy/footsteps06.ogg",
+
+    whoosh02: "./assets/sound/enemy/whoosh02.ogg",
+    whoosh03: "./assets/sound/enemy/whoosh03.ogg",
+    whoosh04: "./assets/sound/enemy/whoosh04.ogg",
+
+    hit09: "./assets/sound/enemy/hit09.ogg",
+    hit03: "./assets/sound/enemy/hit03.ogg",
   
     heavySwordOne: "./assets/sound/enemy/heavy_sword_001.mp3",
     heavySwordTwo: "./assets/sound/enemy/heavy_sword_002.mp3",
@@ -44,5 +70,4 @@ export let imageIsToLoading = {
     musicPixelDayDream: "./assets/sound/music/pixelated_daydream.mp3",
     WhisperstheWoods: "./assets/sound/music/WhisperstheWoods.mp3",
     forestAmbient: "./assets/sound/music/forest-ambient.mp3",
-    
     }

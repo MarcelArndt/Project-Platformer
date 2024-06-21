@@ -1,6 +1,6 @@
 import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
-import { imageIsloadet, canvasOverlayContent,} from "./assets.js";
+import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
 import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume,} from "./menuScript.js";
 import { ctx } from "./canvas.js";
@@ -223,6 +223,8 @@ export class Level {
   }
 
   pause() {
+    soundIsloadet.tone07.volume = 1 * this.globalVolume;
+    soundIsloadet.tone07.play();
     this.currentAmbient.pause();
     this.currentLevelMusic.pause();
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
@@ -236,6 +238,7 @@ export class Level {
   }
 
   gameOver() {
+
     this.savedGlobalVolume = this.globalVolume;
     this.removeControll();
     this.timer.getInPause();
@@ -248,6 +251,8 @@ export class Level {
   }
 
   resume() {
+    soundIsloadet.tone09.volume = 1 * this.globalVolume;
+    soundIsloadet.tone09.play();
     this.globalVolume = this.savedGlobalVolume;
     this.playBackgoundmusic();
     canvasOverlayContent.innerHTML = "";

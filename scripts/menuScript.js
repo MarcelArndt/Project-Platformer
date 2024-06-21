@@ -2,6 +2,7 @@
 
 import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
+import { soundIsloadet } from "./assets.js";
 export let currentGame = null;
 export let currentLevelOne = null;
 export let globalVolume = 0.6;
@@ -39,25 +40,28 @@ export function pullPauseMenu(){
 }
 
 export function pullGameReady(){
+    playSound("success09");
     canvasOverlayContent.innerHTML =  renderGameReady();
 }
 
 function pullControllPanel(){
+    playSound("success09");
     sidePanel = document.getElementById("renderSidePanel");
     sidePanel.innerHTML = renderControllPanel();
 }
 function pullControllImpressum(){
+    playSound("success09");
     sidePanel = document.getElementById("renderSidePanel");
     sidePanel.innerHTML = renderImpressum();
 }
 
 export function pullIngameGui(){
+    playSound("success09");
     canvasOverlayContent.innerHTML = renderIngameGui();
 }
 
 export function checkForVolume(methode = ""){
     if( methode == "plus" && globalVolume < 0.8){
-        console.log("here");
         globalVolume += 0.20;
     } else if(methode == "plus" && globalVolume >= 0.8){
         globalVolume = 0.99; 
@@ -70,6 +74,7 @@ export function checkForVolume(methode = ""){
     } 
      checkVolumeButtons();
 }
+
 //  toggelAttributeValue (current, SwitchTo, setclass, removeClass, src)
 function checkVolumeButtons(){
     if( globalVolume >= 0.9){
@@ -86,6 +91,16 @@ function checkVolumeButtons(){
         toggelAttributeValue("volumneSelfDisable", "volumneSelf",  [], [], "./img/volumne-full.png")
         toggelAttributeValue("volumneMinusDisable", "volumneMinus", ["hover"], ["opacity"]);
         toggelAttributeValue("volumnePlusDisable", "volumnePlus", ["hover"], ["opacity"]);
+    }
+}
+
+export function playSound(sound){
+    if(!soundIsloadet[sound].paused){
+        soundIsloadet[sound].pause();
+        soundIsloadet[sound].currentTime = 0;
+    } else {
+        soundIsloadet[sound].volume = 1 * globalVolume;
+        soundIsloadet[sound].play();
     }
 }
 

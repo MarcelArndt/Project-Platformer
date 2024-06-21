@@ -126,7 +126,7 @@ export class Walking {
 
   behave(entity) {
     if(Math.floor(entity.animationTimer) == 1  ||  Math.floor(entity.animationTimer) == 5 ){
-      entity.chooseRandomSound([soundIsloadet.playerStepsOne]);
+      entity.chooseRandomSound([soundIsloadet.playerStepsOne], false);
       this.soundIsAlreadyPlayed = true
     }
 
@@ -204,9 +204,11 @@ export class Attack {
       } else{
         entity.activateHitbox(entity.index , 0);
       }
-      entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
     } else if(Math.floor(entity.animationTimer) == 10){
       entity.disableHitbox(entity.index, 0, true);
+    }
+    if(Math.floor(entity.animationTimer) == 3){
+      entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
     }
   }
   checkConditions(entity) {

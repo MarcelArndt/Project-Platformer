@@ -57,7 +57,7 @@ export class Player extends Box {
     this.pressedKeys = [];
     this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
-    this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [0,0] )
+    this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [43,0] )
     this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
     this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
     this.addControll();

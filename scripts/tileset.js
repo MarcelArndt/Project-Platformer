@@ -7,6 +7,7 @@ import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { Box } from "./objects/box-class.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
+import { Potion } from "./objects/potion-class.js";
 
 export class Tileset {
   constructor(option) {
@@ -55,6 +56,7 @@ export class Tileset {
       row.forEach((tileNumber, x) => {
         switch (tileNumber) {
           case 0: break;
+          case 971: newEntity = new Potion ({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D",}); this.level.pushNewObject(newEntity);break;
           //case 636: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D", }); this.level.pushNewObject(newEntity); break;
           case 967: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [44, 100], color: "#FFD53D",}); this.level.pushNewObject(newEntity); break;
           case 970: newEntity = new Mushroom({ pos: [x * this.tileSize, y * this.tileSize], size: [34, 71], color: "#FFD53D",jumpspeed: -1.07 }); this.level.pushNewObject(newEntity); break;

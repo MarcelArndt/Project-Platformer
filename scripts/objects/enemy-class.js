@@ -186,11 +186,9 @@ export class Enemy extends Box {
         for (let i = 0; i < posArray; i++){
             posArray[i] = posArray[i] / 2;
         }
-        distanceX = posArray[2] - posArray[0];
-        distanceX = distanceX * -1;
-        distanceY = posArray[3] - posArray[1];
-        distanceY = distanceY * -1;
-        return [distanceX, distanceY]
+        distanceX = (posArray[2] - posArray[0]) * -1;
+        distanceY = (posArray[3] - posArray[1]) * -1;
+        return [distanceX, distanceY, Math.hypot(distanceX, distanceY)]
     }
 
     jump(jumpspeed = this.jumpspeed){

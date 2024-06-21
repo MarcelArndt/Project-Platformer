@@ -1,6 +1,7 @@
 import {Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
 import { Jump, GetHit  } from "./stateMashine-player-class.js";
+import { soundIsloadet } from "../assets.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -97,6 +98,7 @@ export class Box extends Rectangle{
     checkCollideWithMushroom(obj){
         if(obj.subType == "Mushroom" && this.type == "Player"){
             this.stateMachine.changeState(new Jump());
+            this.chooseRandomSound([soundIsloadet.bounce02]), false;
             this.vel[1] = -1.5;
             return true;
         }
@@ -129,10 +131,12 @@ export class Box extends Rectangle{
         return false
     }
 
+    
+
     collide(obj){
         return {
             fromAbove: () =>{
-                if (this.getPrevPosBottom() <= obj.posTop && obj.type != "Entity" && this.collideWith(obj)){
+                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj)){
 
                   if(!this.checkCollideWithSemiSolidBlock(obj) && !this.checkCollideWithEnemy(obj) && !this.checkCollideWithMushroom(obj) && !this.checkCollideWithDeadlySolidBlock(obj) && !this.checkCollideWithDeath(obj) ) {
                     this.setBottom(obj.posTop);
@@ -146,7 +150,7 @@ export class Box extends Rectangle{
             }
             },
             fromBottom: () =>{
-                if (this.getPrevPosTop() >= obj.posBottom && obj.subType != "SemiSolidBlock" && obj.type != "Entity"){
+                if (this.getPrevPosTop() >= obj.posBottom && obj.subType != "SemiSolidBlock"){
                     if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
                         return;
                     }
@@ -161,7 +165,7 @@ export class Box extends Rectangle{
             },
 
             fromRight: () =>{
-                if ( this.getPrevPosRight() <= obj.posLeft && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
+                if ( this.getPrevPosRight() <= obj.posLeft && obj.subType != "SemiSolidBlock" && this.collideWith(obj)){
                     if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
                         return;
                     }
@@ -173,7 +177,7 @@ export class Box extends Rectangle{
             }
             },
             fromLeft: () =>{
-                if ( this.getPrevPosLeft() >= obj.posRight && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
+                if ( this.getPrevPosLeft() >= obj.posRight && obj.subType != "SemiSolidBlock" && this.collideWith(obj)){
                     if (obj.subType == "SemiSolidBlock"|| obj.type == "Death"){
                         return;
                     }
@@ -282,9 +286,26 @@ export class Box extends Rectangle{
         this.screenshakeAnimationRunning = true;
     }
 
-    chooseRandomSound(soundArray = []){
+    chooseRandomSound(soundArray = [], toInterrupt = true){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
-        soundArray[randomNumber].volume = this.level.globalVolume
-        soundArray[randomNumber].play();
+        if(!soundArray[randomNumber].paused && toInterrupt){
+            soundArray[randomNumber].pause();
+            soundArray[randomNumber].currentTime = 0;
+        } else if(this.checkThisOnScreen()){
+            soundArray[randomNumber].volume = 1 * this.level.globalVolume;
+            soundArray[randomNumber].play();
+        }
       }
+    stopPlayingSound(soundArray){
+        soundArray.forEach((sound => {
+            if(!soundIsloadet[sound].paused){
+                soundIsloadet[sound].pause();
+                soundIsloadet[sound].currentTime = 0;
+            }
+        }));
+    }
+
+    checkThisOnScreen(){
+        return (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width);
+    }
 }

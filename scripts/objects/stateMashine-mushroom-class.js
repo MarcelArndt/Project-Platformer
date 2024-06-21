@@ -90,6 +90,10 @@ export class Walking{
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
+
+        if(Math.floor(entity.animationTimer) == 1 && entity.checkThisOnScreen() || Math.floor(entity.animationTimer) == 5){
+            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03], false);
+        }
       
     }
     
@@ -122,6 +126,9 @@ export class Chasing{
         entity.acc = entity.walkspeed;
         if (willCollide[0]){
             entity.jump();
+        }
+        if(Math.floor(entity.animationTimer) == 1 || Math.floor(entity.animationTimer) == 3 || Math.floor(entity.animationTimer) == 6){
+            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03], false);
         }
 
     }
@@ -188,10 +195,9 @@ export class Attack{
             case false: if(Math.floor(entity.animationTimer) == 6){entity.activateHitbox(entity.index, 0)}; break;
             }
             if(Math.floor(entity.animationTimer) == 5){
-             entity.chooseRandomSound([soundIsloadet.heavySwordOne, soundIsloadet.heavySwordTwo, soundIsloadet.heavySwordThree]);
+             entity.chooseRandomSound([soundIsloadet.whoosh02, soundIsloadet.whoosh03, soundIsloadet.whoosh04]);
             }
         }
-           
 
         if(entity.animationStatus == "attack" && entity.animationTimer >= 7){
             entity.disableHitbox(entity.index, 0, true);
@@ -202,9 +208,13 @@ export class Attack{
         entity.checkIsPlayerinAggro();
         if(!entity.PlayerInAggro[1]){
             entity.stateMachine.changeState(new Walking()); 
-
+            if(!entity.PlayerInAggro[0]){
+                entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);
+            }
         }
+
         if(entity.gethit){
+            entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);
             entity.stateMachine.changeState(new GetHit());    
         }
         
@@ -225,6 +235,7 @@ export class Attack{
 export class GetHit{
 
     start(entity){
+        entity.chooseRandomSound([soundIsloadet.slurp04]);
         entity.animationStatus = "getHit";
         entity.jump(-1);
         entity.getPushBack = true;
@@ -261,6 +272,7 @@ export class GetHit{
 export class Death{
 
     start(entity){
+        entity.chooseRandomSound([soundIsloadet.hit03]);
         entity.walkspeed = 0;
         entity.acc = 0;
         entity.animationStatus = "getHit";

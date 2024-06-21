@@ -224,6 +224,7 @@ export class Attack{
 export class GetHit{
 
     start(entity){
+        entity.chooseRandomSound([soundIsloadet.hit09]);
         entity.animationStatus = "getHit";
         entity.jump(-1);
         entity.getPushBack = true;
