@@ -114,6 +114,7 @@ export class Tileset {
     this.entityArray = [];
     this.tilesArray = [];
     this.slicedCollisonBlock = [];
+    this.tileArray = [];
     this.createCollision();
     this.createTiles();
     this.createEntity();
