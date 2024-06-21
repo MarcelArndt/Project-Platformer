@@ -9,7 +9,8 @@ export class Character extends Player {
             pos: options.pos,
             size: options.size,
             color: options.color || "blue",
-            type: "Player"
+            type: "Player",
+            health : options.health
         },);  
         this.animationFrames = {
             idle: [[{x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:4, y:0}, {x:5, y:0}], true],

@@ -156,7 +156,6 @@ export class Level {
       if(Math.floor(this.screenEffektTimer )>= 3 && !this.screenshakeToggle){
         if(this.screenshakeValue > 0.003 && !this.screenshakeToggle || this.screenshakeValue < 0.003){
           this.screenshakeValue *= 0.15
-          console.log(this.screenshakeValue);
         } else if(!this.screenshakeToggle){
           this.screenshakeValue = 0;
         }
@@ -286,11 +285,12 @@ export class Level {
     canvasOverlayContent.innerHTML = "";
     this.tileset.generateLevel(this);
     this.createDemageboxes();
-    this.player =  this.objectsOfType.Player[0];
+    this.player = this.objectsOfType.Player[0];
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();
     this.playBackgoundmusic();
     pullIngameGui();
+    checkForVolume();
   }
 }

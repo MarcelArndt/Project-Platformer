@@ -25,9 +25,9 @@ let collisionArray = [];
 async function loadJson() {
   let response = await fetch("./scripts/levels/level_one.json");
   response = await response.json();
-  entityArrayData = await response.layers[0].data;
+  entityArrayData = await response.layers[2].data;
   collisionArray = await response.layers[1].data;
-  tilesArrayData = await response.layers[2].data;
+  tilesArrayData = await response.layers[0].data;
   levelSizeInTiles = await response.width;
   levelHeighInTiles = await response.height;
   tileSize = await response.tileheight;

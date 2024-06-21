@@ -47,6 +47,9 @@ export class Idle {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
   }
 
   leaveState(entity) {}
@@ -72,6 +75,9 @@ export class Jump {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
   }
 
   leaveState(entity) {}
@@ -96,6 +102,10 @@ export class Fall {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
+
   }
 
   leaveState(entity) {
@@ -138,6 +148,10 @@ export class Walking {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
+
   }
 
   leaveState(entity) {}
@@ -162,6 +176,10 @@ export class Crouch {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
+
   }
 
   leaveState(entity) {
@@ -206,6 +224,9 @@ export class Attack {
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
   }
 
   leaveState(entity) {
@@ -244,6 +265,9 @@ export class GetHit {
     if(!entity.gethit){
       entity.stateMachine.changeState(new Idle());
     }
+    if(entity.health <= 0){
+      entity.stateMachine.changeState(new Death());
+    }
   }
 
   leaveState(entity) {
@@ -251,5 +275,36 @@ export class GetHit {
     if(entity.onGround && entity.vel[1] == 0){
       entity.chooseRandomSound([soundIsloadet.LightStepsOne, soundIsloadet.LightStepsTwo, soundIsloadet.LightStepsThree]);
     }
+  }
+}
+
+//////////////////////////////////////
+////////// DEATH STATUS ////////////
+//////////////////////////////////////
+class Death {
+  start(entity) {
+    entity.animationStatus = "death";
+    entity.chooseRandomSound([soundIsloadet.playerStepsThree, soundIsloadet.playerStepsTwo]);
+    entity. removeControll();
+    entity.type = "Death";
+    entity.acc = 0;
+    this.countDown = 0;
+  }
+
+  behave(entity) {
+    if(!entity.animationIsRunning){
+      this.countDown ++;
+      if(this.countDown >= 50){      
+        entity.level.resetLevel();
+      }
+    }
+  }
+
+  checkConditions(entity) {
+    
+  }
+
+  leaveState(entity) {
+    
   }
 }

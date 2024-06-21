@@ -3,7 +3,7 @@ import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
 
 export class Enemy extends Box {
     constructor(options, type){
-        const {walkspeed, jumpspeed, aggroRange, HitPoints, invincibilityTimer, smallAggroRange} = options
+        const {walkspeed, jumpspeed, aggroRange, health, invincibilityTimer, smallAggroRange} = options
         super({
             pos: options.pos,
             size: options.size,
@@ -23,22 +23,21 @@ export class Enemy extends Box {
         this.gethit = false;
         this.getPushBack = false;
         this.getHitLeft = "";
-        this.HitPoints = options.HitPoints || 30;
+        this.health = options.health || 30;
         this.activeInvincibility = 0;
         this.invincibilityTimer = options.invincibilityTimer || 500;
         this.onChasing = false;
         this.PlayerInAggro = [false,false];
         this.fall = false;
         this.start = false;
-        this.backupOption = {grav: this.grav, walkspeed: options.walkspeed || 0.00125, jumpspeed:  options.jumpspeed || -1.025, color: this.color, hitPoints: options.HitPoints || 30};
-        this.originalStats = {pos: options.pos, facingLeft: this.facingLeft, vel: this.vel,acc: this.acc, HitPoints: this.HitPoints, isCoyoteTimeReady: this.isCoyoteTimeReady, walkspeed: options.walkspeed || 0.00125,}
+        this.backupOption = {grav: this.grav, walkspeed: options.walkspeed || 0.00125, jumpspeed:  options.jumpspeed || -1.025, color: this.color, health: options.health || 30};
+        this.originalStats = {pos: options.pos, facingLeft: this.facingLeft, vel: this.vel,acc: this.acc, health: this.health, isCoyoteTimeReady: this.isCoyoteTimeReady, walkspeed: options.walkspeed || 0.00125,}
         this.status = "idle";
         this.animationStatus = "idle";
         this.prevStatus = "idle";
         this.demageBoxes = [];
         this.stateMachine = new StateMachine(new Idle(), this);
-        this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
-        this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+     
 
     }
 
@@ -47,7 +46,7 @@ export class Enemy extends Box {
         for (let i = 0; i < this.level.objects.length; i++){
             if (this.level.objects[i].type == type && this.level.objects[i].index == this.index){
                 if(this.subType != "Hitbox"){
-                    this.HitPoints = this.backupOption.hitPoints;
+                    this.health = this.backupOption.health;
                     this.level.deleteObjects.push(this);
                 }
                 this.level.objects.splice([i],1)
@@ -159,7 +158,7 @@ export class Enemy extends Box {
     }
 
     reduceHealth(value){
-        this.HitPoints -= value;
+        this.health -= value;
     }
 
 
@@ -247,14 +246,5 @@ export class Enemy extends Box {
         if (this.vel[0] <= -0.2 && !this.gethit){
             this.vel[0] = -0.2;
         }
-    }
-
-    reset(){
-        this.pos = this.originalStats.pos;
-        this.facingLeft = this.originalStats.facingLeft;
-        this.vel = this.originalStats.vel;
-        this.acc = this.originalStats.acc;
-        this.HitPoints = this.originalStats.HitPoints;
-        this.isCoyoteTimeReady = this.originalStats.isCoyoteTimeReady;
     }
 }

@@ -159,12 +159,13 @@ export class Attack{
         entity.walkspeed = 0;
         entity.acc = 0;
         entity.animationStatus = "attack"
-     
+        entity.animationTimer = 0;
     }
 
     behave(entity){
         entity.vel[0] = 0;
         entity.acc = 0;
+        
         let distance = entity.checkDistanceToPlayer();
         if(!entity.animationIsRunning){
             entity.animationStatus = "idle";
@@ -242,7 +243,7 @@ export class GetHit{
         if(!entity.gethit){
             entity.stateMachine.changeState(new Chasing());     
         }
-        if(entity.HitPoints <= 0){
+        if(entity.health <= 0){
             entity.stateMachine.changeState(new Death());     
         }
     }
@@ -261,21 +262,18 @@ export class Death{
     start(entity){
         entity.walkspeed = 0;
         entity.acc = 0;
-        entity.animationStatus = "getHit"
-        entity.animationSpeed = 1
-
+        entity.animationStatus = "getHit";
+        entity.animationSpeed = 1;
+        entity.type = "Death";
     }
 
     behave(entity){
         if(!entity.onGround){
-            entity.animationStatus = "death"
+            entity.animationStatus = "death";
         } else if (entity.onGround){
-            entity.size[1] = 0
-            entity.setBottom(entity.posBottom - 100);
             entity.acc = 0;
-            entity.animationStatus = "death"
+            entity.animationStatus = "death";
             entity.animationTimer = 4;
-            entity.grav = 0;
             setTimeout(() => {
                 entity.delete();
             }, 1500);

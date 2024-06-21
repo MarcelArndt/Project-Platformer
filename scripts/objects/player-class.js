@@ -12,7 +12,7 @@ export class Player extends Box {
         color: options.color || "blue",
         grav: 0.005,
         friction: 0.2,
-        playerHealth: options.playerHealth || 3,
+        health: options.health || 3,
       },
       type || "Player"
     );
@@ -31,7 +31,7 @@ export class Player extends Box {
     this.getHitLeft = false;
     this.prevStatus = "";
     this.prevKeyInput = "";
-    this.playerHealth = options.playerHealth || 30;
+    this.health = options.health || 50;
     this.stateMachine = new StateMachine(new Idle(), this);
 
     this.cooldown = {
@@ -55,32 +55,42 @@ export class Player extends Box {
       isOnWall: false,
     };
     this.pressedKeys = [];
-    this.addControll();
-    this.statusbar = new StatusBar( options.playerHealth || 30, this.playerHealth, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [0,0] )
+    this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
+    this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
+    this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [0,0] )
     this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
     this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+    this.addControll();
   }
 
-  addControll() {
-    document.addEventListener("keypress", (e) => {
-      if(!this.gethit && !this.crouch){
-        switch(e.key){
-          case "a": case "ArrowLeft":  this.move("left"); break;
+  keyPressedFunction(event){
+    if(!this.gethit && !this.crouch){
+      switch(event.key){
+        case "a": case "ArrowLeft":  this.move("left"); break;
           case "d": case "ArrowRight": this.move("right");break;
-          case "w": case "ArrowUp": case " ": this.playerJump();  e.stopPropagation(); e.preventDefault(); break;
+          case "w": case "ArrowUp": case " ": this.playerJump();  event.stopPropagation(); event.preventDefault(); break;
           case "s": case "ArrowDown": if(this.onGround){this.inCrouch()} ; break;
           case "f": case "Enter": this.playerAttack(); break;
-        }
-      };
-    });
+      }
+    }
+  }
 
-    document.addEventListener("keyup", (e) => {
-        switch(e.key){
-          case "a": case "ArrowLeft":  this.stopMove(); break;
-          case "d": case "ArrowRight": this.stopMove(); break;
-          case "s": case "ArrowDown":  this.outCrouch(); break;
-        }
-    });
+    keyUpFunction(event){
+      switch(event.key){
+        case "a": case "ArrowLeft":  this.stopMove(); break;
+        case "d": case "ArrowRight": this.stopMove(); break;
+        case "s": case "ArrowDown":  this.outCrouch(); break;
+      }
+    }
+
+  addControll() {
+    document.addEventListener("keypress", this.keyfunctionPressRef);
+    document.addEventListener("keyup", this.keyfunctionUpRef);
+  }
+
+  removeControll() {
+    document.removeEventListener("keypress", this.keyfunctionPressRef);
+    document.removeEventListener("keyup", this.keyfunctionUpRef);
   }
 
   checkFacingLeft(){
@@ -119,8 +129,8 @@ export class Player extends Box {
   }
 
   reduceHealth(Value){
-    this.playerHealth += -Value;
-    this.statusbar.refreshValue(this.playerHealth);
+    this.health += -Value;
+    this.statusbar.refreshValue(this.health);
   }
 
   move(direction) {
@@ -217,7 +227,7 @@ export class Player extends Box {
     this.ceckCooldown();
     this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
-    this.statusbar.update(this.playerHealth);
+    this.statusbar.update(this.health);
   }
 
   playerAttack() {

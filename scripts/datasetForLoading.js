@@ -14,6 +14,7 @@ export let imageIsToLoading = {
     menuBackgroundBook: "./assets/menu/buch.png",
     liveBarImageFull: "./assets/bar/livebar-full.png",
     liveBarImageEmpty: "./assets/bar/livebar-empty.png",
+    lifePotion: "./assets/life-potion.png",
   };
   
   export let soundsIsToLoading = {

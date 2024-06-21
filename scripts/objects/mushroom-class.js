@@ -53,6 +53,8 @@ export class Mushroom extends Enemy{
         this.frameHightOffset = 16;
         this.frameWidthOffset = 108;
         this.currentTime = 0;
+        this.createHitBox(this.pos, [80,80], [-66,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
+        this.createHitBox(this.pos, [80,80], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
     }
 
     checkForCooldown(){
@@ -61,9 +63,7 @@ export class Mushroom extends Enemy{
             this.cooldown.isMainAttack = false;
         }
     }
-  /**
-   * 
-   * Only for debugging
+
 
     update(deltaTime){
         super.update(deltaTime);
@@ -72,8 +72,8 @@ export class Mushroom extends Enemy{
    
     draw(){
         super.draw();
-        ctx.fillStyle = "yellow";
+        ctx.strokeStyle = "yellow";
         ctx.strokeRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
     }
-   */
+
 }

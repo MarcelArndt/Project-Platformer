@@ -1,5 +1,6 @@
 import {Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
+import { Jump, GetHit  } from "./stateMashine-player-class.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -14,7 +15,7 @@ export class Box extends Rectangle{
         this.type = type || "Box";
         this.enableUpdateBox = false;
         this.index = 0;
-        this.demageBoxes = []
+        this.demageBoxes = [];
         this.index = this.genEntityIndex();  
     }
     
@@ -86,28 +87,70 @@ export class Box extends Rectangle{
         this.updateHitboxs();
     }
 
+
+
+    checkCollideWithSemiSolidBlock(obj){
+        return (obj.subType == "SemiSolidBlock" && this.crouch);
+    }
+
+
+    checkCollideWithMushroom(obj){
+        if(obj.subType == "Mushroom" && this.type == "Player"){
+            this.stateMachine.changeState(new Jump());
+            this.vel[1] = -1.5;
+            return true;
+        }
+        return false;
+    }
+
+    checkCollideWithEnemy(obj){
+        if(obj.type == "Enemy" && obj.subType != "Mushroom" && this.type == "Player" && !this.gethit){
+            this.getHitLeft = -this.facingLeft;
+            this.gethit = true;
+            this.reduceHealth(10)
+            this.stateMachine.changeState(new GetHit());
+            return true;
+        }
+        return false;
+    }
+
+    checkCollideWithDeadlySolidBlock(obj){
+        if(obj.subType == "deadlySolidBlock" && this.type == "Player"){
+            this.health = 0;
+            return  true;
+        }
+        return false
+    }
+
+    checkCollideWithDeath(obj){
+        if(this.type == "Death" && obj.type != "Rectangle"){
+            return  true;
+        }
+        return false
+    }
+
     collide(obj){
         return {
             fromAbove: () =>{
                 if (this.getPrevPosBottom() <= obj.posTop && obj.type != "Entity" && this.collideWith(obj)){
-                    if (obj.subType == "SemiSolidBlock" && this.crouch){
-                        return;
-                    } else{
-                        this.setBottom(obj.posTop);
-                        this.vel[1] = 0;
-                        this.onGround = true;
-                    }
-                       
-                    if (obj.type == "Player"){
-                        obj.jump.currentPressingKey = false;
-                        obj.jump.alreadyInJump = false
-                    }
 
+                  if(!this.checkCollideWithSemiSolidBlock(obj) && !this.checkCollideWithEnemy(obj) && !this.checkCollideWithMushroom(obj) && !this.checkCollideWithDeadlySolidBlock(obj) && !this.checkCollideWithDeath(obj) ) {
+                    this.setBottom(obj.posTop);
+                    this.vel[1] = 0;
+                    this.onGround = true;
+                    } else{
+                        this.jump.currentPressingKey = false;
+                        this.jump.alreadyInJump = false
+                    }
                     return this.onGround;
             }
             },
             fromBottom: () =>{
                 if (this.getPrevPosTop() >= obj.posBottom && obj.subType != "SemiSolidBlock" && obj.type != "Entity"){
+                    if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
+                        return;
+                    }
+
                     let isCollide = false;
                     isCollide = this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0])
                     if(isCollide){
@@ -119,6 +162,9 @@ export class Box extends Rectangle{
 
             fromRight: () =>{
                 if ( this.getPrevPosRight() <= obj.posLeft && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
+                    if (obj.subType == "SemiSolidBlock" || obj.type == "Death"){
+                        return;
+                    }
                     if (this.pushObject(obj, this.level.objects).toRight()) {
                         return
                     }
@@ -128,6 +174,9 @@ export class Box extends Rectangle{
             },
             fromLeft: () =>{
                 if ( this.getPrevPosLeft() >= obj.posRight && obj.subType != "SemiSolidBlock" && obj.type != "Entity" && this.collideWith(obj)){
+                    if (obj.subType == "SemiSolidBlock"|| obj.type == "Death"){
+                        return;
+                    }
                     if (this.pushObject(obj, this.level.objects).toLeft()){
                         return
                     }

@@ -105,7 +105,7 @@ export class Walking{
 export class Chasing{
 
     start(entity){
-        entity.walkspeed *= 2;
+        entity.walkspeed *= 5;
         entity.acc = entity.walkspeed;
         entity.animationStatus = "chasing";
     }
@@ -159,6 +159,8 @@ export class Attack{
         entity.walkspeed = 0;
         entity.acc = 0;
         entity.animationStatus = "attack"
+        entity.animationTimer = 0;
+        entity.animationSpeed = 2
      
     }
 
@@ -182,13 +184,12 @@ export class Attack{
 
         if(entity.animationStatus == "attack" && entity.animationIsRunning){ 
             switch(entity.facingLeft){
-            case true: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 1)}; break;
-            case false: if(entity.animationTimer >= 6){entity.activateHitbox(entity.index, 0)}; break;
+            case true: if(Math.floor(entity.animationTimer) == 6){entity.activateHitbox(entity.index, 1)}; break;
+            case false: if(Math.floor(entity.animationTimer) == 6){entity.activateHitbox(entity.index, 0)}; break;
             }
-            if(entity.animationTimer == 5){
+            if(Math.floor(entity.animationTimer) == 5){
              entity.chooseRandomSound([soundIsloadet.heavySwordOne, soundIsloadet.heavySwordTwo, soundIsloadet.heavySwordThree]);
             }
-           
         }
            
 
@@ -213,6 +214,7 @@ export class Attack{
         entity.walkspeed = entity.backupOption.walkspeed;
         entity.acc = entity.walkspeed;
         entity.disableHitbox(entity.index, 0, true);
+        entity.animationSpeed = 1;
     }
 }
 
@@ -242,7 +244,7 @@ export class GetHit{
         if(!entity.gethit){
             entity.stateMachine.changeState(new Chasing());     
         }
-        if(entity.HitPoints <= 0){
+        if(entity.health <= 0){
             entity.stateMachine.changeState(new Death());     
         }
     }
@@ -261,21 +263,18 @@ export class Death{
     start(entity){
         entity.walkspeed = 0;
         entity.acc = 0;
-        entity.animationStatus = "getHit"
-        entity.animationSpeed = 1
-
+        entity.animationStatus = "getHit";
+        entity.animationSpeed = 1;
+        entity.type = "Death";
     }
 
     behave(entity){
         if(!entity.onGround){
-            entity.animationStatus = "death"
+            entity.animationStatus = "death";
         } else if (entity.onGround){
-            entity.size[1] = 0
-            entity.setBottom(entity.posBottom - 100);
             entity.acc = 0;
-            entity.animationStatus = "death"
+            entity.animationStatus = "death";
             entity.animationTimer = 4;
-            entity.grav = 0;
             setTimeout(() => {
                 entity.delete();
             }, 1500);
