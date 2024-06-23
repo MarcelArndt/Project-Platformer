@@ -15,9 +15,33 @@ export function renderGameReady(){
   return `<div class="GameMenu">        
           </div>
           <div id="renderSidePanel">
-          <div class="gameReady flickContent"><img src ="./img/button-play.png"></div>
+          <div class="gameReady flickContent"><img value="startGame" class="hover" src ="./img/button-play.png"></div>
           <div class="gameReady"> Game is Ready <br> press 'P' to start the Game.</div>
-          </div>`
+          </div>
+          
+          <div id="quciktip" class="quickTipMenu"> 
+         
+          </div>
+          `
+
+}
+
+export function renderQuickTip(number){
+  let textArray = [  
+    `
+    <div class="tipPicture"><img src ="./img/info-1.jpg"></div>
+    <h2>Quick Tip:</h2>
+    <div class="tipText">Jump on a <span>Mushroom Head</span> will set you to the <span>Sky</span>!</div>`,
+    `
+    <div class="tipPicture"><img src ="./img/info-2.jpg"></div>
+    <h2>Quick Tip:</h2>
+    <div class="tipText">Gain your <span>Health</span> back by collecting <span>Potions</span>!</div>`,
+    `
+    <div class="tipPicture"><img src ="./img/info-3.jpg"></div>
+    <h2>Quick Tip:</h2>
+    <div class="tipText">Watch out for Traps! <span>Spikes</span> are deadly and you will <span>die</span> immediately! </div>`,
+  ];
+  return textArray[number];
 }
 
 export function renderControllPanel(){
@@ -86,14 +110,17 @@ Impressum vom <a target="_blank" href="https://www.impressum-generator.de">Impre
 
 export function renderIngameGui(){
   return`
-   <div class="menu-container">
-        <div class="banner-red"> <img src="./img/banner.png">
-          <div class="iconContainer">
-          <div class="plusIcon"><img value="volumnePlus" class="hover" src="./img/plus-icon.png"></div>
-          <div class="volumneIcon"><img value="volumneSelf" class="hover" id="volumne" src="./img/volumne-full.png"></div>
-          <div class="minusIcon"><img value="volumneMinus" class="hover" src="./img/minus-icon.png"></div>
+      <div class="icons-container">
+          <div class="subMenu">
+            <div class="icon"><img value="openKeyboard" class="hover" src="./img/keyboard.png"></div>
+            <div class="icon"><img value="restartButton" class="hover" src="./img/restart.png"></div>
           </div>
-        </div>
+
+          <div class="subMenu">
+            <div class="icon"><img value="volumnePlus" class="hover" src="./img/plus-icon.png"></div>
+            <div class="icon"><img value="volumneSelf" class="hover" src="./img/volumne-full.png"></div>
+            <div class="icon"><img value="volumneMinus" class="hover" src="./img/minus-icon.png"></div>
+          </div> 
       </div>
   `
 }

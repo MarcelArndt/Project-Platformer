@@ -99,8 +99,7 @@ export class Bird extends Box {
             this.soundFrameTimer += secDeltaTime;
             if(Math.floor(this.soundFrameTimer) >= this.SoundDelay){
                 distance = this.checkDistanceToPlayer(this.level.objectsOfType.Player[0]);
-                sound = this.soundArray[randomValue];
-                //sound.volume = this.checkVolume(distance[0], 1000);
+                sound = this.soundArray[randomValue];;
                 sound.volume = 0.7 * this.level.globalVolume;
                 sound.play();
                 this.soundFrameTimer = 0;
@@ -109,20 +108,6 @@ export class Bird extends Box {
         }
     }
 
-    checkVolume(value, divider = 1000){
-        let soundVolume = 0.01
-        let totalValue =((1000) -  value) / divider;
-        if( totalValue < 0.9){
-            soundVolume = (totalValue / 50) 
-        } else {
-            soundVolume = 1 / 50
-        }
-        if(soundVolume < 0) {
-            soundVolume = 0;
-        }
-        return soundVolume
-    }
-    
     update(deltaTime){
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);

@@ -434,6 +434,30 @@ p{
   flex-direction: column;
 }
 
+.icons-container{
+  position: absolute;
+  right: 48px;
+  top: 30px;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 36px;
+}
+
+.icon img{
+  height: 46px;
+  width: auto;
+}
+
+.icon img:hover{
+  transform: scale(1.1);
+}
+
+.subMenu{
+  flex-direction: row-reverse;
+  display: flex;
+  gap: 12px;
+}
+
 .plusIcon{
   display: flex;
   justify-content: center;
@@ -462,6 +486,40 @@ p{
   opacity: 0.2;
 }
 
+.quickTipMenu{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  color: #ffffff;
+  font-size: 21px;
+  height: 60%;
+  width: 32%;
+  overflow: hidden;
+  position: absolute;
+  right: 188px;
+  top: 100px;
+  border-radius: 12px;
+}
+
+.quickTipMenu h2{
+  margin-top: 18px;
+  margin-bottom: -4px;
+  font-size: 32px;
+  color: #db371a;
+}
+
+.tipPicture{
+  height: 255px;
+  width: 95%;
+  object-fit: contain;
+}
+
+.tipPicture img {
+  border-radius: 12px;
+  width: 100%;
+  object-fit: cover;
+}
 
 .hover{
   user-select: none;

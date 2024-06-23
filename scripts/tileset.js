@@ -113,8 +113,8 @@ export class Tileset {
     this.level.objects = [];
     this.entityArray = [];
     this.tilesArray = [];
-    this.slicedCollisonBlock = [];
     this.tileArray = [];
+    this.slicedCollisonBlock = [];
     this.createCollision();
     this.createTiles();
     this.createEntity();

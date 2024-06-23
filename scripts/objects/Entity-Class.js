@@ -19,7 +19,6 @@ export class Entity extends Rectangle{
 
     update(deltaTime){
         super.update(deltaTime);
-        
     }
 }
 

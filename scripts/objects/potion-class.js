@@ -8,15 +8,17 @@ export class Potion extends Entity{
         this.subType = subType || "Item";
         this.value =  value || 15;
         this.animationFrames = {
-            idle: [[{x:0, y:0}], true],
+            idle: [[{x:0, y:0},{x:1, y:0},{x:2, y:0},{x:3, y:0},{x:4, y:0},{x:5, y:0},{x:6, y:0},{x:7, y:0},{x:8, y:0},{x:9, y:0}], true],
         }
         this.animationStatus = "idle";
         this.frameWidth = 24;
-        this.frameHight = 24;
-        this.frameHightOffset = 19;
+        this.frameHight = 36;
+        this.frameHightOffset = 0;
         this.frameWidthOffset = 0;
         this.animationImage = imageIsloadet.lifePotion;
-        this.scaling = 0.80;
+        this.scaling = 0.9;
+        this.animationTimer = 0;
+
     }
 
     activateItem(){
@@ -64,7 +66,8 @@ export class Potion extends Entity{
     }
 
 
-    update(){
-        //
+    update(deltaTime){
+        super.update(deltaTime);
+        this.updateFrameAnimation(deltaTime);
     }
 }

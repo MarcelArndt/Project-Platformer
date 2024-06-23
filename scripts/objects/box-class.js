@@ -2,6 +2,7 @@ import {Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
 import { Jump, GetHit  } from "./stateMashine-player-class.js";
 import { soundIsloadet } from "../assets.js";
+import { Collider } from "./collider-class.js";
 
 export class Box extends Rectangle{
     constructor(options, type){
@@ -17,7 +18,8 @@ export class Box extends Rectangle{
         this.enableUpdateBox = false;
         this.index = 0;
         this.demageBoxes = [];
-        this.index = this.genEntityIndex();  
+        this.index = this.genEntityIndex(); 
+        this.collider = new Collider(this);
     }
     
     genEntityIndex(){
@@ -79,12 +81,7 @@ export class Box extends Rectangle{
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
         this.boundToLevel();
-        this.level.objects.forEach(obj => {
-            this.collide(obj).fromAbove();
-            this.collide(obj).fromBottom();
-            this.collide(obj).fromLeft();
-            this.collide(obj).fromRight();
-        })
+        this.collider.update(deltaTime)
         this.updateHitboxs();
     }
 

@@ -2,7 +2,7 @@ import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
 import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume,} from "./menuScript.js";
+import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume} from "./menuScript.js";
 import { ctx } from "./canvas.js";
 export let camera = {
   pos: [0, 0],
@@ -54,14 +54,27 @@ export class Level {
     this.globalVolume = globalVolume || 0;
     this.savedGlobalVolume = this.globalVolume;
     this.keyFuncRef = (e) => this.keyFunction(e);
+    this.mouseFuncRef = (e) => this.mouseFunction(e);
   }
 
   addControll() {
     window.addEventListener("keydown", this.keyFuncRef);
+    window.addEventListener("click", this.mouseFuncRef);
   }
 
   removeControll() {
     window.removeEventListener("keydown", this.keyFuncRef);
+    window.removeEventListener("click", this.mouseFuncRef);
+  }
+
+  mouseFunction(e){
+    const clickedDiv = e.target;
+    const atribute = clickedDiv.getAttribute("value");
+    switch(atribute){
+      case "openKeyboard": this.pause(1); break;
+      case "restartButton": this.resetLevel(); break;
+      case "startGame": this.start(); break;
+    }
   }
 
   keyFunction(e) {
@@ -77,7 +90,6 @@ export class Level {
       this.resetLevel();
     }
   }
-
 
     /**
    * @param obj -> adds Obj to current level level
@@ -222,7 +234,7 @@ export class Level {
     pullIngameGui();
   }
 
-  pause() {
+  pause(modus = 0) {
     soundIsloadet.tone07.volume = 1 * this.globalVolume;
     soundIsloadet.tone07.play();
     this.currentAmbient.pause();
@@ -230,7 +242,7 @@ export class Level {
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
     ctx.fillRect(0,0, canvas.width, canvas.height);
     ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0);
-    pullPauseMenu();
+    pullPauseMenu(modus);
     this.status = status.pause;
     this.timer.getInPause();
     this.savedGlobalVolume = this.globalVolume;
@@ -238,7 +250,6 @@ export class Level {
   }
 
   gameOver() {
-
     this.savedGlobalVolume = this.globalVolume;
     this.removeControll();
     this.timer.getInPause();

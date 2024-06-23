@@ -7,6 +7,8 @@ export class Game {
     this.currentLevelIndex = 0;
     this.levelAlreadySwitched = false;
   }
+
+  
   get currentLevel() {
     return this.levelList[this.currentLevelIndex];
   }
@@ -23,17 +25,17 @@ export class Game {
     if (this.levelList.length === 0) return "No Level in levelList";
     playSound("success16");
     pullGameReady ();
-    this.currentLevel.drawObjects();
     this.currentLevel.addControll();
   }
 
   switchToNextLevel() {
-    this.currentLevelIndex++;
-    if (this.currentLevelIndex > this.levelList.length) {
-      console.log("won game");
+    if(!this.levelAlreadySwitched){
+      this.levelAlreadySwitched = true;
+      this.currentLevelIndex ++;
+      console.log(this.currentLevelIndex)
+      this.currentLevel.start();
+      this.currentLevel.addControll();
     }
-    this.currentLevel.drawObjects();
-    this.currentLevel.start();
   }
 
   resume(){

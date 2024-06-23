@@ -1,13 +1,13 @@
 
 
-import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady} from "./template.js";
+import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
 import { soundIsloadet } from "./assets.js";
 export let currentGame = null;
 export let currentLevelOne = null;
 export let globalVolume = 0.6;
 export let savedGlobalVolume = globalVolume
-let sidePanel = ""
+export let sidePanel = ""
 
 
 export function InitMainMenu(myGame, levelOne){
@@ -20,8 +20,8 @@ export function InitMainMenu(myGame, levelOne){
 export function menuInit(){
     document.addEventListener("click", (e) => {
         const clickedDiv = e.target;
-        const atribute = clickedDiv.getAttribute("value");
-        switch(atribute){
+        const attribute = clickedDiv.getAttribute("value");
+        switch(attribute){
             case "start": currentGame.startLevel(); break;
             case "controls": pullControllPanel(); break;
             case "impressum": pullControllImpressum(); break;
@@ -35,13 +35,22 @@ export function menuInit(){
     sidePanel = document.getElementById("renderSidePanel");
 }
 
-export function pullPauseMenu(){
+export function pullPauseMenu(modus = 0){
     canvasOverlayContent.innerHTML = renderPauseMenu();
+    if(modus == 1){
+        sidePanel = document.getElementById("renderSidePanel");
+        sidePanel.innerHTML = renderControllPanel();
+    }
 }
 
 export function pullGameReady(){
+    let quciktipPanel = null
+    let randomNumber = Math.floor(Math.random()* 3) 
     playSound("success09");
     canvasOverlayContent.innerHTML =  renderGameReady();
+    quciktipPanel = document.getElementById("quciktip");
+    quciktipPanel.innerHTML = renderQuickTip(randomNumber);
+
 }
 
 function pullControllPanel(){
