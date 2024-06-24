@@ -53,6 +53,7 @@ export class Skelett extends Enemy{
         this.frameHightOffset = 78;
         this.frameWidthOffset = 90;
         this.currentTime = 0;
+        this.scoreValue = options.scoreValue || 8;
         this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
         this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
     }

@@ -6,6 +6,10 @@ export class Game {
     this.getAllLevel(levelList);
     this.currentLevelIndex = 0;
     this.levelAlreadySwitched = false;
+    this.playerLives = 5;
+    this.playerHealth = 55;
+    this.playerMaxHealth = this.playerHealth;
+    this.playerScore = 0;
   }
 
   
@@ -28,13 +32,27 @@ export class Game {
     this.currentLevel.addControll();
   }
 
+  committedValueToGame(){
+    this.playerHealth = this.currentLevel.player.health;
+    this.playerLives = this.currentLevel.player.lives;
+    this.playerScore = this.currentLevel.player.score;
+    this.playerMaxHealth = this.currentLevel.player.maxHealth;
+  }
+
+  committedValueToLevel(){
+    this.currentLevel.player.health = this.playerHealth;
+    this.currentLevel.player.lives = this.playerLives;
+    this.currentLevel.player.score = this.playerScore;
+    this.currentLevel.player.maxHealth = this.playerMaxHealth;
+  }
+
   switchToNextLevel() {
     if(!this.levelAlreadySwitched){
       this.levelAlreadySwitched = true;
       this.currentLevelIndex ++;
-      console.log(this.currentLevelIndex)
       this.currentLevel.start();
       this.currentLevel.addControll();
+      this.committedValueToLevel();
     }
   }
 

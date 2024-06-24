@@ -229,6 +229,7 @@ export class GetHit{
         entity.jump(-1);
         entity.getPushBack = true;
         entity.acc = 0;
+        entity.level.player.score += Math.floor(entity.scoreValue / 3);
     }
 
     behave(entity){
@@ -266,6 +267,7 @@ export class Death{
         entity.animationStatus = "getHit";
         entity.animationSpeed = 1;
         entity.type = "Death";
+        entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
     }
 
     behave(entity){

@@ -1,6 +1,7 @@
 import { Box } from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-player-class.js";
 import { StatusBar } from "./statusBar-class.js";
+import { ScoreBar } from "./score-class.js";
 import { imageIsloadet } from "../assets.js";
 
 export class Player extends Box {
@@ -33,6 +34,8 @@ export class Player extends Box {
     this.prevKeyInput = "";
     this.maxHealth = options.health || 50;
     this.health = options.health || 50;
+    this.score = options.score || 0;
+    this.lives = options.lives || 5;
     this.stateMachine = new StateMachine(new Idle(), this);
 
     this.cooldown = {
@@ -59,6 +62,7 @@ export class Player extends Box {
     this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [43,0] )
+    this.scoreBar = new ScoreBar([25,85]);
     this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
     this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
     this.addControll();
@@ -229,6 +233,7 @@ export class Player extends Box {
     this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
     this.statusbar.update(this.health);
+    this.scoreBar.update(this.score);
   }
 
   playerAttack() {

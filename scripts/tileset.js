@@ -8,6 +8,7 @@ import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { Box } from "./objects/box-class.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
+import {Coin } from "./objects/coin-class.js";
 
 export class Tileset {
   constructor(option) {
@@ -57,7 +58,7 @@ export class Tileset {
         switch (tileNumber) {
           case 0: break;
           case 971: newEntity = new Potion ({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D",}); this.level.pushNewObject(newEntity);break;
-          //case 636: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D", }); this.level.pushNewObject(newEntity); break;
+          case 972: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [15, 15], color: "#FFD53D", }); this.level.pushNewObject(newEntity); break;
           case 967: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [44, 100], color: "#FFD53D",}); this.level.pushNewObject(newEntity); break;
           case 970: newEntity = new Mushroom({ pos: [x * this.tileSize, y * this.tileSize], size: [34, 71], color: "#FFD53D",jumpspeed: -1.07 }); this.level.pushNewObject(newEntity); break;
           case 965: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 67], color: "edff2b", type: "Player", health: 60,});  this.level.pushNewObject(newEntity); break;;

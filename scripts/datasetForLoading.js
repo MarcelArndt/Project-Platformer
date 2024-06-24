@@ -15,6 +15,7 @@ export let imageIsToLoading = {
     liveBarImageFull: "./assets/bar/livebar-full.png",
     liveBarImageEmpty: "./assets/bar/livebar-empty.png",
     lifePotion: "./assets/life-potion.png",
+    coin: "./assets/coin-sheet.png",
   };
   
   export let soundsIsToLoading = {
@@ -49,9 +50,14 @@ export let imageIsToLoading = {
     tone07: "./assets/sound/misc/tone07.ogg",
     success11: "./assets/sound/misc/success11.ogg",
     success09: "./assets/sound/misc/success09.ogg",
+
     pop01: "./assets/sound/misc/pop01.mp3",
     pop02: "./assets/sound/misc/pop02.mp3",
     pop03: "./assets/sound/misc/pop03.mp3",
+
+    coin01: "./assets/sound/misc/coin-3.mp3",
+    coin02: "./assets/sound/misc/coin-2.mp3",
+    coin03: "./assets/sound/misc/coin-1.mp3",
 
     slurp04: "./assets/sound/enemy/slurp04.ogg",
     swipe4: "./assets/sound/enemy/swipe4.ogg",

@@ -7,6 +7,7 @@ export class Potion extends Entity{
         super({pos, size, color}, type || "Entity");
         this.subType = subType || "Item";
         this.value =  value || 15;
+        this.healthValue =  value || 15;
         this.animationFrames = {
             idle: [[{x:0, y:0},{x:1, y:0},{x:2, y:0},{x:3, y:0},{x:4, y:0},{x:5, y:0},{x:6, y:0},{x:7, y:0},{x:8, y:0},{x:9, y:0}], true],
         }
@@ -25,13 +26,14 @@ export class Potion extends Entity{
         let newValue = null;
         this.chooseRandomSound(["pop01","pop02","pop03"], false);
         if(this.level.player.maxHealth - this.level.player.health >= this.value){
-            this.level.player.health += this.value;
+            this.level.player.health += this.healthValue;
             this.level.player.statusbar.refreshValue(this.level.player.health);
         } else {
             newValue = this.level.player.maxHealth - this.level.player.health;
             this.level.player.health += newValue;
             this.level.player.statusbar.refreshValue(this.level.player.health);
         }
+        this.level.player.score += this.value;
         this.deleteObject();
     }
 

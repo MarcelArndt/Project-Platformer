@@ -43,7 +43,6 @@ export class Level {
     };
     this.originPlayerSize = 0;
     this.demageBoxes = {};
-    this.deleteObjects = [];
     this.screenshakeValue = 0;
     this.screenshakeMaxValue = 35;
     this.screenshakeToggle = false;
@@ -52,6 +51,7 @@ export class Level {
     this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
     this.globalVolume = globalVolume || 0;
+  
     this.savedGlobalVolume = this.globalVolume;
     this.keyFuncRef = (e) => this.keyFunction(e);
     this.mouseFuncRef = (e) => this.mouseFunction(e);
@@ -192,6 +192,9 @@ export class Level {
     this.status = status.pause;
     this.timer.pause;
     this.removeControll();
+    this.game.playerLives = this.player.lives;
+    this.game.playerHealth = this.player.health;
+    this.game.playerScore = this.player.score;
     this.game.switchToNextLevel();
   }
 
@@ -232,6 +235,7 @@ export class Level {
     this.originPlayerSize = [... this.player.size];
     this.playBackgoundmusic();
     pullIngameGui();
+    this.game.committedValueToGame();
   }
 
   pause(modus = 0) {

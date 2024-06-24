@@ -37,27 +37,21 @@ export class Enemy extends Box {
         this.prevStatus = "idle";
         this.demageBoxes = [];
         this.stateMachine = new StateMachine(new Idle(), this);
-     
+        this.scoreValue = options.scoreValue || 15;
 
     }
 
 
-    delete(type = this.type){
-        for (let i = 0; i < this.level.objects.length; i++){
-            if (this.level.objects[i].type == type && this.level.objects[i].index == this.index){
-                if(this.subType != "Hitbox"){
-                    this.health = this.backupOption.health;
-                    this.level.deleteObjects.push(this);
-                }
-                this.level.objects.splice([i],1)
-            } 
-        }
-        for (let i = 0; i < this.level.objectsOfType.Entity.length; i++){
-            if (this.level.objectsOfType.Entity[i].type == type && this.level.objectsOfType.Entity[i].index == this.index){
-                this.level.objectsOfType.Entity.splice([i],1)
-            } 
-        }
-    }
+    delete(){
+            let index = null;
+            this.level.objects.forEach((obj) => {
+                if (obj.index == this.index){
+                    index = this.level.objects.indexOf(obj);
+                    this.level.objects.splice(index, 1);
+            }  
+        });
+    }   
+    
 
     pushObject(box){
         return{

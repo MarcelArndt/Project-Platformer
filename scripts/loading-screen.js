@@ -15,7 +15,7 @@ function checkPercentageLoadet() {
     if (currentValue > 0) {
       percentageLoadet = Math.floor((currentValue / MaxValue) * 100);
     }
-  }
+}
 
   function fillLoadingBar() {
     clearCanvas();

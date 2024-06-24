@@ -17,10 +17,10 @@ export class StatusBar{
     update(currentValue){
         this.refreshValue(currentValue);
         this.calcCurrentValues();
-        this.draw();  
+        this.drawBar();  
     }
 
-    draw(){
+    drawBar(){
         ctx.drawImage(this.emptyBarImage, this.posOnCanvas[0], this.posOnCanvas[1])
         ctx.drawImage(this.fullBarImage, 0, 0, this.imageWidth * this.currentWidthPercentage, this.imageHeight, this.posOnCanvas[0] + this.offset[0], this.posOnCanvas[1], this.imageWidth * this.currentWidthPercentage, this.imageHeight)
     }
