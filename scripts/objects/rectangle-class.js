@@ -73,8 +73,7 @@ export class Rectangle {
             if(Object.keys(this.animationFrames).length > 0){
                 this.drawAnimation();
             }  else {
-                ctx.fillStyle = this.color;
-                
+                ctx.fillStyle = this.color;  
                 ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
             }
         } 

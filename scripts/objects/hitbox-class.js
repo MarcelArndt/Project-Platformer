@@ -3,13 +3,14 @@ import { ctx } from "../canvas.js";
 
 export class Hitbox extends Entity{
     constructor(options, type){
-        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, offset, object} = options
+        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset, object} = options
         super({pos, size, color}, type || "Hitbox");
         this.lifespan = lifespan || 3;
         this.forceToLeft = forceToLeft || false;
         this.demage = demage ||0;
         this.demageFlag = demageFlag || "Enemy";
         this.isAktiv = isAktiv || false;
+        this.isAllawysAktiv = isAllawysAktiv || false;
         this.color = color || "rgba(255,125,0,0.5)";
         this.setOffset = offset || [0,0];
         this.stickToObject = object || null
@@ -18,9 +19,10 @@ export class Hitbox extends Entity{
     }
 
     update(deltaTime){
+        this.checkIsAllawysAktiv();
         this.drawbox()
         this.updatePosition(this.stickToObject);
-        this.updateCounter(deltaTime);
+        //this.updateCounter(deltaTime);
     }
 
     updatePosition(obj){
@@ -30,17 +32,24 @@ export class Hitbox extends Entity{
 
     drawbox(){
         this.clearCanvas;
-        ctx.fillStyle = "red";
+        ctx.fillStyle =  this.color;
         ctx.fillRect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
     }
 
-    aktivateCounter(objId, id){
+    aktivateCounter(){
+        this.console("hell")
         this.isAktiv = true;
     }
 
     deactivateCounter(){
         this.isAktiv = false;
         this.frameCounter = 0;
+    }
+
+    checkIsAllawysAktiv(){
+        if(this.isAllawysAktiv){
+            this.isAktiv = true;
+        }
     }
 
     updateCounter(deltaTime){

@@ -1,7 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-mushroom-class.js";
 import { imageIsloadet } from "../assets.js";
-import { ctx } from "../canvas.js";
 
 let animationImage = imageIsloadet.mushroom;
 
@@ -54,8 +53,10 @@ export class Mushroom extends Enemy{
         this.frameWidthOffset = 108;
         this.currentTime = 0;
         this.scoreValue = options.scoreValue || 12;
-        this.createHitBox(this.pos, [80,80], [-66,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
-        this.createHitBox(this.pos, [80,80], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+        this.createHitBox(this.pos, [80,80], [-66,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [80,80], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [16,48], [-4,25], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [16,48], [20,25], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
     }
 
     checkForCooldown(){

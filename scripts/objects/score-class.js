@@ -1,5 +1,4 @@
 import { ctx } from "../canvas.js";
-import { imageIsloadet} from "../assets.js"
 
 export class ScoreBar{
     constructor(posOnCanvas, initStartValue, color, shadowColor){

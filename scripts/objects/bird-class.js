@@ -112,11 +112,7 @@ export class Bird extends Box {
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
         this.boundToLevel();
-        this.level.objects.forEach(obj => {
-            this.collide(obj).fromAbove();
-            this.collide(obj).fromLeft();
-            this.collide(obj).fromRight();
-        })
+        this.collider.update(deltaTime)
         this.updateFrameAnimation(deltaTime);
         this.applyFlyingPhsics();
         this.stateMachine.updateState(deltaTime);

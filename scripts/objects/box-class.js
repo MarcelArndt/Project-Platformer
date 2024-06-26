@@ -82,9 +82,8 @@ export class Box extends Rectangle{
         this.applyPhsics(deltaTime);
         this.boundToLevel();
         this.collider.update(deltaTime)
-        this.updateHitboxs();
+        this.updateHitboxs(deltaTime);
     }
-
 
 
     checkCollideWithSemiSolidBlock(obj, direction){
@@ -102,6 +101,7 @@ export class Box extends Rectangle{
         return false;
     }
 
+
     checkCollideWithEnemy(obj){
         if(obj.type == "Enemy" && obj.subType != "Mushroom" && this.type == "Player" && !this.gethit){
             this.getHitLeft = -this.facingLeft;
@@ -113,6 +113,7 @@ export class Box extends Rectangle{
         return false;
     }
 
+
     checkCollideWithDeadlySolidBlock(obj, direction){
         if(obj.subType == "deadlySolidBlock" && this.type == "Player" && direction == "above" || obj.subType == "deadlySolidBlock" && this.type == "Enemy" && direction == "above"){
             this.health = 0;
@@ -121,12 +122,14 @@ export class Box extends Rectangle{
         return false
     }
 
+
     checkCollideWithDeath(obj){
         if(obj.type == "Death"){
             return  true;
         }
         return false
     }
+
 
     checkIsEntity(obj){
         if(obj.type == "Entity" && obj.subType == "Bird"){
@@ -138,6 +141,7 @@ export class Box extends Rectangle{
         return false
     }
 
+    
     checkAll(obj, direction){
         return (
             !this.checkCollideWithSemiSolidBlock(obj, direction)
@@ -147,48 +151,6 @@ export class Box extends Rectangle{
             && !this.checkCollideWithDeath(obj)
             && !this.checkIsEntity(obj)
         );
-    }
-
-
-    collide(obj){
-        return {
-            fromAbove: () =>{
-                if (this.getPrevPosBottom() <= obj.posTop && this.collideWith(obj) && this.checkAll(obj, "above")){
-                    this.setBottom(obj.posTop);
-                    this.vel[1] = 0;
-                    this.onGround = true;
-                } else {
-                    this.jump.currentPressingKey = false;
-                    this.jump.alreadyInJump = false
-                }
-                return this.onGround;
-            },
-            
-            fromBottom: () =>{
-                if (this.getPrevPosTop() >= obj.posBottom && obj.subType && this.collideWith(obj, [this.vel[0] * 3 * -2.5 ,0]) && this.checkAll(obj, "below")){
-                        this.setTop(obj.posBottom);
-                        this.vel[1] = 0;
-                }
-            },
-
-            fromRight: () =>{
-                if ( this.getPrevPosRight() <= obj.posLeft && this.collideWith(obj) && this.checkAll(obj, "right")){
-                    this.setRight(obj.posLeft - 1.5);
-                    this.vel[0] = 0;
-                } else if(this.pushObject(obj, this.level.objects).toRight()){
-                    return;
-                } 
-            },
-
-            fromLeft: () =>{
-                if ( this.getPrevPosLeft() >= obj.posRight && this.collideWith(obj) && this.checkAll(obj, "left")){
-                    this.setLeft(obj.posRight + 1.5);
-                    this.vel[0] = 0;
-                } else if(this.pushObject(obj, this.level.objects).toLeft()) {
-                    return;
-                }
-            }
-        }
     }
 
     pushObject(){
@@ -249,6 +211,7 @@ export class Box extends Rectangle{
           demage: options.demage || 10,
           demageFlag: options.demageFlag || "Player",
           isAktiv: options.isAktiv || false,
+          isAllawysAktiv: options.isAllawysAktiv || false,
           lifespan: options.lifespan || 6,
           color: options.color || "rgba(255,125,0,0.25)",
           object : obj,
@@ -267,14 +230,13 @@ export class Box extends Rectangle{
        }
       }
     
-      updateHitboxs(){
+      updateHitboxs(deltaTime){
         if (this.demageBoxes.length > 0){
           this.level.demageBoxes[this.index].forEach((box) => {
-            box.pos[0] = this.pos[0] + box.setOffset[0];
-            box.pos[1] = this.pos[1] + box.setOffset[1];
-            if(box.isAktiv){
-              box.draw();
-            }
+           box.update(deltaTime)
+           if(box.isAktiv || box.isAlwaysAktiv){
+            box.draw();
+          }
           });
         }
       }
@@ -296,6 +258,7 @@ export class Box extends Rectangle{
             soundArray[randomNumber].play();
         }
       }
+
     stopPlayingSound(soundArray){
         soundArray.forEach((sound => {
             if(!soundIsloadet[sound].paused){

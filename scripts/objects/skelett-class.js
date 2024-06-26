@@ -54,8 +54,10 @@ export class Skelett extends Enemy{
         this.frameWidthOffset = 90;
         this.currentTime = 0;
         this.scoreValue = options.scoreValue || 8;
-        this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
-        this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+        this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, this,)
+        this.createHitBox(this.pos, [28,120], [-4,-10], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [28,120], [24,-10], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
     }
 
     checkForCooldown(){
