@@ -204,13 +204,14 @@ export class Attack {
       } else{
         entity.activateHitbox(entity.index , 0);
       }
-    } else if(Math.floor(entity.animationTimer) == 10){
+    } else if(Math.floor(entity.animationTimer) == 8){
       entity.disableHitbox(entity.index, 0, true);
     }
-    if(Math.floor(entity.animationTimer) == 3){
+    if(Math.floor(entity.animationTimer) == 5){
       entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
     }
   }
+
   checkConditions(entity) {
     if(!entity.animationIsRunning){
       entity.stateMachine.changeState(new Idle());
@@ -253,6 +254,7 @@ export class GetHit {
     entity.vel[1] = -1;
     this.onGround = false;
     entity.acc = 0;
+    entity.type = "GetHit";
   }
 
   behave(entity) {
@@ -273,6 +275,7 @@ export class GetHit {
   }
 
   leaveState(entity) {
+    entity.type = "Player";
     entity.animationSpeed = 1;
     if(entity.onGround && entity.vel[1] == 0){
       entity.chooseRandomSound([soundIsloadet.LightStepsOne, soundIsloadet.LightStepsTwo, soundIsloadet.LightStepsThree]);

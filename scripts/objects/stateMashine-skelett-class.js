@@ -268,6 +268,7 @@ export class Death{
         entity.animationSpeed = 1;
         entity.type = "Death";
         entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
+        entity.disableHitboxAndWithAllwaysOn(entity.index);
     }
 
     behave(entity){

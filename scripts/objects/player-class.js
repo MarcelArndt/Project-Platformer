@@ -63,8 +63,8 @@ export class Player extends Box {
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [43,0] )
     this.scoreBar = new ScoreBar([25,85]);
-    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0.25)"}, this,)
-    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0.25)"}, this,)
+    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0)"}, this,)
     this.addControll();
   }
 
@@ -191,7 +191,7 @@ export class Player extends Box {
   pushObject(box) {
     return {
       toLeft: () => {
-        if (box.type !== "Box") return false;
+        if (box.type != "Box") return false;
         const distance = box.posRight - this.posLeft;
         if (box.canBeMoved([-distance, 0])) {
           box.setRight(this.posLeft);
@@ -207,7 +207,7 @@ export class Player extends Box {
       },
 
       toRight: () => {
-        if (box.type !== "Box") return false;
+        if (box.type != "Box") return false;
         const distance = this.posRight - box.posLeft;
         if (box.canBeMoved([distance, 0])) {
           box.setLeft(this.posRight);
@@ -230,6 +230,7 @@ export class Player extends Box {
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
     this.ceckCooldown();
+    this.checkVerticalSpeed();
     this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
     this.statusbar.update(this.health);
@@ -290,4 +291,12 @@ export class Player extends Box {
       this.isCoyoteTimeReady = false;
     }
   }
+
+  checkVerticalSpeed(){
+    if(this.vel[1] > 1.25 ){
+      this.vel[1] = 1.25;
+    }
+  }
+
 }
+

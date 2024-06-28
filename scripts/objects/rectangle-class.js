@@ -132,8 +132,5 @@ export class Rectangle {
     update(){
     }
 
-    reset(){
-       this.pos = [... this.originalPos];
-    }
     
 }

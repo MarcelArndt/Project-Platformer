@@ -197,10 +197,10 @@ export class Enemy extends Box {
  * @returns - Value 1 = will it collide at all | Value 2 = will it collide from left = true or Right = false;
  */
     checkisObjectNear(){
-        let offset = [2,0];
+        let offset = [25,0];
         let willCollide = [false, false];
         if (this.walkspeed < 0){
-            offset = [offset[0] *-1,0];
+            offset = [offset[0] * -1, 0];
         }
         this.level.objects.forEach( obj => {
             if (this.collideWith(obj, offset) && obj.type != "Entity" && obj.type != "Player"){

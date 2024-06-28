@@ -1,6 +1,7 @@
 import { Entity} from "./entity-class.js";
 import { imageIsloadet } from "../assets.js";
 import { soundIsloadet } from "../assets.js";
+import { Collider } from "./collider-class.js";
 export class Coin extends Entity{
     constructor(options, type){
         const {pos, size, color, value, subType} = options
@@ -18,7 +19,7 @@ export class Coin extends Entity{
         this.animationImage = imageIsloadet.coin;
         this.scaling = 0.85;
         this.animationTimer = 0;
-
+        this.collider = new Collider(this);
     }
 
     activateItem(){
@@ -61,4 +62,5 @@ export class Coin extends Entity{
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
     }
+
 }

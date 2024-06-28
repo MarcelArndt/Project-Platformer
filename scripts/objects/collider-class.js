@@ -12,11 +12,11 @@ export class Collider {
      * @param {*} poxY  -> position on Canvas.height
      */
     print(debugObj, posX = 350, poxY = 50){
-        ctx.font = "14px PixelifySans";
+        ctx.font = "14px Arial";
         ctx.fillStyle = "#fff";
         ctx.fillText(`${debugObj}`, posX, poxY);
         ctx.fillStyle = "f000";
-        ctx.fillText(`${debugObj}`, posX, poxY);
+        ctx.fillText(`${debugObj}`, posX + 0.5, poxY + 0.5);
     }
 
     /**
@@ -24,17 +24,21 @@ export class Collider {
      * Draw Hitbox to Debug-Purpose:
      */
     showCollider(){
-            ctx.fillStyle = "rgb(0, 75, 175)";  
+            ctx.fillStyle = "rgba(50, 175, 200, 0.45)";  
             ctx.fillRect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
     }
 
     update(deltaTime){
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
-            this.checkFromBelow(obj);
-            this.checkFromAbove(obj);
-            this.checkFromLeft(obj);
-            this.checkFromRight(obj);
+            if(this.isAvailable == true && obj.subType != "SemiSolidBlock"){
+                this.checkFromBelow(obj);
+                this.checkFromAbove(obj);
+                this.checkFromLeft(obj);
+                this.checkFromRight(obj);
+            } else {
+                this.checkSemiSolid(obj);
+            }
         });
     }
 
@@ -57,16 +61,29 @@ export class Collider {
     }
  
     checkFromLeft(obj) {
-        if(this.entity.posRight <= obj.posLeft && this.entity.posLeft <= obj.posLeft && this.entity.collideWith(obj, [8, -2]) && this.checkSpecialHandle(obj ,"left")){
+        if(this.entity.getPrevPosRight() <= obj.posLeft && this.entity.getPrevPosLeft() <= obj.posLeft && this.entity.collideWith(obj, [8, -2]) && this.checkSpecialHandle(obj ,"left")){
             this.entity.setRight(obj.posLeft - 9);
             this.entity.vel[0] = 0;
         }
     }
 
     checkFromRight(obj) {
-        if(this.entity.posLeft >= obj.posRight && this.entity.posLeft >= obj.posLeft && this.entity.collideWith(obj, [-8, -2]) && this.checkSpecialHandle(obj ,"right")){
+        if(this.entity.getPrevPosLeft() >= obj.posRight && this.entity.getPrevPosLeft() >= obj.posLeft && this.entity.collideWith(obj, [-8, -2]) && this.checkSpecialHandle(obj ,"right")){
             this.entity.setLeft(obj.posRight + 9);
             this.entity.vel[0] = 0;
+        }
+    }
+
+    checkSemiSolid(obj) {
+        if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch ) {
+            if(this.entity.vel[1] >= -0.001 && obj.collideWith(this.entity, [0, (-this.entity.size[1] / 2 * this.entity.vel[1])])){
+                this.entity.setBottom(obj.posTop - 3);
+                this.entity.vel[1] = 0;
+                this.entity.onGround = true;
+            }  else {
+                this.entity.jump.currentPressingKey = false;
+                this.entity.jump.alreadyInJump = false
+            }
         }
     }
 
@@ -78,16 +95,46 @@ export class Collider {
     checkSpecialHandle(obj, direction){
         return (
             !this.checkforBird(obj)
-            && !this.checkforDeath(obj, direction)
+            && !this.checkforDeath(obj)
+            && !this.checkforItem(obj)
+            && !this.checkforGetHit(obj)
+            && !this.checkDeadlySolidBlock(obj, direction)
+            && !this.checkMushroom(obj, direction)
         );
     }
 
+    checkforItem(obj){
+        if (obj.subType == "Item") {
+            if(this.entity.type == "Player"){
+                obj.activateItem();
+            }
+            return true
+        }
+    } 
+
     checkforBird(obj){
-        return (obj.subType == "Bird");
+        return (obj.subType == "Bird" && this.entity.type != "Rectangle" || this.entity.subType == "Bird" && obj.type != "Rectangle");
     }
 
-    checkforDeath(obj, direction){
-        return(direction != "above" && obj.type == "Death" ||  direction != "above" && this.entity.Type == "Death");
+    checkforDeath(obj){
+        return (obj.type == "Death" && this.entity.type != "Rectangle" || this.entity.type == "Death" && obj.type != "Rectangle");
     }
 
+    checkforGetHit(obj){
+        return (obj.type == "GetHit" && this.entity.type != "Rectangle" || this.entity.type == "GetHit" && obj.type != "Rectangle");
+    }
+
+    checkDeadlySolidBlock(obj, direction){
+        if (direction == "below" && obj.subType == "deadlySolidBlock"){
+            obj.activateTrap(this.entity);
+            return true
+        }
+    }
+
+    checkMushroom(obj, direction){
+        if (direction == "below" && obj.subType == "Mushroom"){
+            obj.activateTrap(this.entity);
+            return true
+        }
+    }
 }

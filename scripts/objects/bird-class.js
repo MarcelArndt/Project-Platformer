@@ -1,6 +1,7 @@
 import { Box} from "./box-class.js";
 import { StateMachine, Idle } from "./stateMashine-bird-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
+import { Collider } from "./collider-class.js";
 
 let soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"]
 let SoundOne = new Audio("./assets/sound/entity/flying-001.mp3");
@@ -46,7 +47,8 @@ export class Bird extends Box {
         this.soundArray = [soundIsloadet.flyingOne, soundIsloadet.flyingTwo, soundIsloadet.flyingThree];
         this.soundFrameTimer = 0;
         this.SoundDelay = 35;
-        this.toggleSound = false
+        this.toggleSound = false;
+        this.collider = new Collider(this);
 
         this.animationImage = new Image();
         this.animationImage = this.imageArray[this.randomNumber(3)];

@@ -1,6 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-mushroom-class.js";
-import { imageIsloadet } from "../assets.js";
+import { imageIsloadet, soundIsloadet } from "../assets.js";
 
 let animationImage = imageIsloadet.mushroom;
 
@@ -71,6 +71,12 @@ export class Mushroom extends Enemy{
         super.update(deltaTime);
         this.draw();
     }
+
+    activateTrap(obj){
+        obj.vel[1] = -1.5;
+        this.chooseRandomSound([soundIsloadet.bounce02]);
+    }
+    
     /**
      * 
      *  Only for Debug;

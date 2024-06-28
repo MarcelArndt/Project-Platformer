@@ -13,4 +13,13 @@ export class DeadlySolidBlock extends Rectangle{
     update(deltaTime){
       
     }
+
+    activateTrap(obj){
+      if (obj.subType == "Bird"){
+        obj.despawn()
+      } else {
+        obj.health = 0;
+      }
+    }
+
 }

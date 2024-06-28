@@ -90,69 +90,6 @@ export class Box extends Rectangle{
         return (obj.subType == "SemiSolidBlock" && this.crouch && direction == "above" || obj.subType == "SemiSolidBlock" && direction != "above" );
     }
 
-
-    checkCollideWithMushroom(obj, direction){
-        if(obj.subType == "Mushroom" && this.type == "Player" && direction == "above"){
-            this.stateMachine.changeState(new Jump());
-            this.chooseRandomSound([soundIsloadet.bounce02]), false;
-            this.vel[1] = -1.5;
-            return true;
-        }
-        return false;
-    }
-
-
-    checkCollideWithEnemy(obj){
-        if(obj.type == "Enemy" && obj.subType != "Mushroom" && this.type == "Player" && !this.gethit){
-            this.getHitLeft = -this.facingLeft;
-            this.gethit = true;
-            this.reduceHealth(10)
-            this.stateMachine.changeState(new GetHit());
-            return true;
-        }
-        return false;
-    }
-
-
-    checkCollideWithDeadlySolidBlock(obj, direction){
-        if(obj.subType == "deadlySolidBlock" && this.type == "Player" && direction == "above" || obj.subType == "deadlySolidBlock" && this.type == "Enemy" && direction == "above"){
-            this.health = 0;
-            return true;
-        }
-        return false
-    }
-
-
-    checkCollideWithDeath(obj){
-        if(obj.type == "Death"){
-            return  true;
-        }
-        return false
-    }
-
-
-    checkIsEntity(obj){
-        if(obj.type == "Entity" && obj.subType == "Bird"){
-            return  true;
-        } else if(obj.type == "Entity" && obj.subType == "Item"){
-            obj.activateItem();
-            return  true;
-        }
-        return false
-    }
-
-    
-    checkAll(obj, direction){
-        return (
-            !this.checkCollideWithSemiSolidBlock(obj, direction)
-            && !this.checkCollideWithEnemy(obj) 
-            && !this.checkCollideWithMushroom(obj, direction)
-            && !this.checkCollideWithDeadlySolidBlock(obj, direction)
-            && !this.checkCollideWithDeath(obj)
-            && !this.checkIsEntity(obj)
-        );
-    }
-
     pushObject(){
         return{
             toRight:() => false,
@@ -229,6 +166,11 @@ export class Box extends Rectangle{
         case false: this.level.demageBoxes[ObjId][id].isAktiv = false; break;
        }
       }
+
+      disableHitboxAndWithAllwaysOn(ObjId){
+        this.level.demageBoxes[ObjId].forEach((box) => { box.isAktiv = false; box.isAllawysAktiv = false; });
+        }
+
     
       updateHitboxs(deltaTime){
         if (this.demageBoxes.length > 0){
