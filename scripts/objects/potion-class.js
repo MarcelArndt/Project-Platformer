@@ -17,7 +17,7 @@ export class Potion extends Entity{
         this.frameHightOffset = 0;
         this.frameWidthOffset = 0;
         this.animationImage = imageIsloadet.lifePotion;
-        this.scaling = 0.9;
+        this.scaling = 0.65;
         this.animationTimer = 0;
 
     }

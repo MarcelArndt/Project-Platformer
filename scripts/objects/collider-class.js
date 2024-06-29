@@ -29,6 +29,7 @@ export class Collider {
     }
 
     update(deltaTime){
+        //this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
             if(this.isAvailable == true && obj.subType != "SemiSolidBlock"){

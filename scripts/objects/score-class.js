@@ -17,7 +17,7 @@ export class ScoreBar{
     }
 
     drawScore(){
-        ctx.font = "14px PixelifySans";
+        ctx.font = "12px PixelifySans";
         ctx.fillStyle = this.shadowColor;
         ctx.fillText(`SCORE: ${this.stingyfyValue}`, this.posX + 1, this.posY + 2);
         ctx.fillStyle = this.color;

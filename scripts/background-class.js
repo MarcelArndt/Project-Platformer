@@ -10,21 +10,21 @@ export class Background {
         image: this.backgroundImageLayerOne,
         offset: [1.3, 0.32],
         offsetValues: [6, 3],
-        heightOffset: 0,
+        heightOffset: -30,
         widthOffset: 0,
       },
       {
         image: this.backgroundImageLayerTwo,
         offset: [1.5, 0.64],
         offsetValues: [12, 8],
-        heightOffset: 40,
+        heightOffset: -20,
         widthOffset: 0,
       },
       {
         image: this.backgroundImageLayerThree,
         offset: [2.5, 1.4],
         offsetValues: [24, 14],
-        heightOffset: -80,
+        heightOffset: -120,
         widthOffset: 0,
       },
     ];
@@ -71,7 +71,7 @@ export class Background {
   }
 
   //drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
-  draw(upscaling = 2.675, offsetForWidth = 20, offsetForHeight = 125) {
+  draw(upscaling = 1.8, offsetForWidth = 160, offsetForHeight = 85) {
     let calcOffsetWidth = 0;
     let moduloValue = 0;
     let calcDoppelWidth = 0;

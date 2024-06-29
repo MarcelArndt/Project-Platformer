@@ -177,8 +177,8 @@ export class Level {
   
 
   updateCamera() {
-    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.69, this.player.posRight - (canvas.width * 0.65) / 2 ) + this.screenshakeValue);
-    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.69, this.player.posTop - (canvas.height * 0.5) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
+    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.8 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue);
+    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.8 / 2, this.player.posTop - (canvas.height / 3.5 ) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
   }
 
   drawObjects() {

@@ -19,8 +19,8 @@ function checkPercentageLoadet() {
 
   function fillLoadingBar() {
     clearCanvas();
-    let screenWidth = (canvas.width / 145) * 100;
-    let screenHeight = (canvas.height / 145) * 100 ;
+    let screenWidth = (canvas.width / 180) * 100;
+    let screenHeight = (canvas.height / 180) * 100 ;
     let maxlenght = (canvas.width / (canvasScalingFactor * 100)) * 100 * 0.8;
     let maxheight = (canvas.height / (canvasScalingFactor * 100)) * 100 * 0.01;
     drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight);
@@ -45,6 +45,6 @@ function checkPercentageLoadet() {
     fillLoadingBar();
     if (percentageLoadet == 100) {
       menuImage = imageIsloadet.menuBackgroundBook;
-      ctx.drawImage(menuImage, 0, 0);
+      ctx.drawImage(menuImage, 0, 0, menuImage.width, menuImage.height, 0 , 0, menuImage.width / 180 * 100 * 1.45, menuImage.height / 180 * 100 * 1.45);
     }
   }

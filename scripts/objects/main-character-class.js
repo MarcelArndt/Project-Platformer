@@ -22,10 +22,11 @@ export class Character extends Player {
             crouch: [[{x:0, y:6}, {x:1, y:6}, {x:2, y:6}, {x:3, y:6}], true],
             getHit: [[{x:0, y:7}, {x:1, y:7}, {x:2, y:7}, {x:3, y:7}], true],
         }
+        this.scaling = 0.85;
         this.frameWidth = 64;
         this.frameHight = 44;
-        this.frameHightOffset = 48;
-        this.frameWidthOffset = 0;
+        this.frameHightOffset = 31;
+        this.frameWidthOffset = 3;
         this.animationImage = imageIsloadet.character;
         this.walkspeed = 0.0132;
       

@@ -38,10 +38,10 @@ export class Bird extends Box {
             jump: [[{x:0, y:4}, {x:0, y:4}, {x:1, y:4}, {x:1, y:4},{x:2, y:4}, {x:2, y:4}], true],
             flying: [[{x:0, y:0}, {x:0, y:0}, {x:1, y:0}, {x:1, y:0},{x:2, y:0}, {x:2, y:0}], true],
         }
-        this.scaling = 0.7
+        this.scaling = 0.55;
         this.frameWidth = 32;
         this.frameHight = 32;
-        this.frameHightOffset = 1;
+        this.frameHightOffset = 8;
         this.frameWidthOffset = 0;
         this.imageArray = [imageIsloadet.whiteBird, imageIsloadet.bluejayBird, imageIsloadet.robinBird]
         this.soundArray = [soundIsloadet.flyingOne, soundIsloadet.flyingTwo, soundIsloadet.flyingThree];

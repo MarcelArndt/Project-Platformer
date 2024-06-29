@@ -21,8 +21,8 @@ export class StatusBar{
     }
 
     drawBar(){
-        ctx.drawImage(this.emptyBarImage, this.posOnCanvas[0], this.posOnCanvas[1])
-        ctx.drawImage(this.fullBarImage, 0, 0, this.imageWidth * this.currentWidthPercentage, this.imageHeight, this.posOnCanvas[0] + this.offset[0], this.posOnCanvas[1], this.imageWidth * this.currentWidthPercentage, this.imageHeight)
+        ctx.drawImage(this.emptyBarImage, 0, 0, this.emptyBarImage.width, this.emptyBarImage.height, this.posOnCanvas[0], this.posOnCanvas[1], this.emptyBarImage.width * 0.8, this.emptyBarImage.height * 0.8)
+        ctx.drawImage(this.fullBarImage, 0, 0, this.imageWidth * this.currentWidthPercentage, this.imageHeight, this.posOnCanvas[0] + this.offset[0], this.posOnCanvas[1], (this.imageWidth * 0.8) * this.currentWidthPercentage, (this.imageHeight * 0.8))
     }
 
     refreshValue(currentValue){
