@@ -71,7 +71,7 @@ export class Background {
   }
 
   //drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
-  draw(upscaling = 1.8, offsetForWidth = 160, offsetForHeight = 85) {
+  draw(upscaling = 2.3, offsetForWidth = 160, offsetForHeight = 135) {
     let calcOffsetWidth = 0;
     let moduloValue = 0;
     let calcDoppelWidth = 0;

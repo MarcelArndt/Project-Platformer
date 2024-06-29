@@ -44,20 +44,20 @@ export class Skelett extends Enemy{
             latestDateOfAttack: "",
             MainAttackCooldownValue: 1350,
         }
-        this.scaling = 1
-        this.status = "idle"
+        this.scaling = 0.72;
+        this.status = "idle";
         this.frameWidth = 150;
         this.frameHight = 65;
         this.animationImage = imageIsloadet.skeleton;
         this.animationImage.src = "./assets/skelet-animation-atlas.png";
-        this.frameHightOffset = 78;
-        this.frameWidthOffset = 90;
+        this.frameHightOffset = 41;
+        this.frameWidthOffset = 86;
         this.currentTime = 0;
         this.scoreValue = options.scoreValue || 8;
-        this.createHitBox(this.pos, [135,95], [-110,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
-        this.createHitBox(this.pos, [135,95], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, this,)
-        this.createHitBox(this.pos, [28,120], [-4,-10], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
-        this.createHitBox(this.pos, [28,120], [24,-10], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [108,75], [-80,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [108,75], [0,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, this,)
+        this.createHitBox(this.pos, [28,80], [-9,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
     }
 
     checkForCooldown(){

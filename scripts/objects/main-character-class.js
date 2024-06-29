@@ -28,11 +28,9 @@ export class Character extends Player {
         this.frameHightOffset = 31;
         this.frameWidthOffset = 3;
         this.animationImage = imageIsloadet.character;
-        this.walkspeed = 0.0132;
+        this.walkspeed = 0.012;
       
     }
-
-
 
   /**
      * Just enable for debug purposes only

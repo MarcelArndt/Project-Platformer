@@ -62,9 +62,9 @@ export class Player extends Box {
     this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [35,0] )
-    this.scoreBar = new ScoreBar([25,85]);
-    this.createHitBox(this.pos, [70,44], [-55,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
-    this.createHitBox(this.pos, [70,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0)"}, this,)
+    this.scoreBar = new ScoreBar([25,70]);
+    this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
+    this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0)"}, this,)
     this.addControll();
   }
 
@@ -158,6 +158,7 @@ export class Player extends Box {
       this.crouch = true;
       this.size[1] = this.size[1] / 2
       this.setTop(this.posTop + (this.size[1]))
+      this.frameHightOffset = 48;
     }
   }
 
@@ -166,7 +167,8 @@ export class Player extends Box {
       this.crouch = false;
       this.size[1] = this.size[1] * 2
       this.setBottom(this.posBottom - (this.size[1] / 2))
-    }
+      this.frameHightOffset = 31;
+        }
   }
 
   playerJump() {

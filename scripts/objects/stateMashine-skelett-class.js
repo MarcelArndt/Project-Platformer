@@ -234,9 +234,9 @@ export class GetHit{
 
     behave(entity){
         if (entity.getHitLeft && entity.vel[1] < 0){
-            entity.vel[0] = 1
+            entity.vel[0] = 0.7
         } else if (!entity.getHitLeft && entity.vel[1] < 0) {
-            entity.vel[0] = -1
+            entity.vel[0] = -0.7
         }
     }
 

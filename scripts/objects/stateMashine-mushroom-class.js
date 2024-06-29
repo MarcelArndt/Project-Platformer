@@ -50,6 +50,10 @@ export class Idle{
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
+        
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
+        }
     }
     
     leaveState(entity){
@@ -93,6 +97,10 @@ export class Walking{
 
         if(Math.floor(entity.animationTimer) == 1 && entity.checkThisOnScreen() || Math.floor(entity.animationTimer) == 5){
             entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03], false);
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
         }
       
     }
@@ -146,6 +154,10 @@ export class Chasing{
         if(entity.gethit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
         }
 
     }

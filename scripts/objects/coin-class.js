@@ -16,7 +16,7 @@ export class Coin extends Entity{
         this.frameWidth = 15;
         this.frameHight = 15;
         this.frameHightOffset = 0;
-        this.frameWidthOffset = 0;
+        this.frameWidthOffset = 8;
         this.animationImage = imageIsloadet.coin;
         this.scaling = 0.625;
         this.animationTimer = 0;

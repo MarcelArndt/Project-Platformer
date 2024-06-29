@@ -44,19 +44,19 @@ export class Mushroom extends Enemy{
             latestDateOfAttack: "",
             MainAttackCooldownValue: 1350,
         }
-        this.scaling = 1
-        this.status = "idle"
+        this.scaling = 0.8;
+        this.status = "idle";
         this.frameWidth = 150;
         this.frameHight = 64;
         this.animationImage = imageIsloadet.mushroom;
-        this.frameHightOffset = 16;
-        this.frameWidthOffset = 108;
+        this.frameHightOffset = 12;
+        this.frameWidthOffset = 94;
         this.currentTime = 0;
         this.scoreValue = options.scoreValue || 12;
-        this.createHitBox(this.pos, [80,80], [-66,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
-        this.createHitBox(this.pos, [80,80], [18,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,255,255,0)"}, this,)
-        this.createHitBox(this.pos, [16,48], [-4,25], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
-        this.createHitBox(this.pos, [16,48], [20,25], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
+        this.createHitBox(this.pos, [42,64], [-48,-8], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [42,64], [48,-8], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [10,42], [-11,22], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
+        this.createHitBox(this.pos, [10,42], [31,22], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, this,)
     }
 
     checkForCooldown(){

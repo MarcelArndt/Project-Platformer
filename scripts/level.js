@@ -177,8 +177,8 @@ export class Level {
   
 
   updateCamera() {
-    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.8 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue);
-    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.8 / 2, this.player.posTop - (canvas.height / 3.5 ) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
+    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.5 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue);
+    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.5 , this.player.posTop - (canvas.height / 2.5 ) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
   }
 
   drawObjects() {
@@ -245,7 +245,7 @@ export class Level {
     this.currentLevelMusic.pause();
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0);
+    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0, imageIsloadet.menuBackgroundBook.width, imageIsloadet.menuBackgroundBook.height, 0 , 0, imageIsloadet.menuBackgroundBook.width / 180 * 100 * 1.45, imageIsloadet.menuBackgroundBook.height / 180 * 100 * 1.45)
     pullPauseMenu(modus);
     this.status = status.pause;
     this.timer.getInPause();
