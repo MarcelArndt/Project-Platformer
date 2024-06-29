@@ -212,7 +212,7 @@ export class Level {
     });
   }
 
-  playBackgoundmusic(){
+  playBackgroundMusic(){
     this.currentLevelMusic.play()
     this.currentLevelMusic.volume = 0.35 * this.globalVolume;
     this.currentAmbient.play()
@@ -233,7 +233,7 @@ export class Level {
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
     this.originPlayerSize = [... this.player.size];
-    this.playBackgoundmusic();
+    this.playBackgroundMusic();
     pullIngameGui();
     this.game.committedValueToGame();
   }
@@ -269,7 +269,7 @@ export class Level {
     soundIsloadet.tone09.volume = 1 * this.globalVolume;
     soundIsloadet.tone09.play();
     this.globalVolume = this.savedGlobalVolume;
-    this.playBackgoundmusic();
+    this.playBackgroundMusic();
     canvasOverlayContent.innerHTML = "";
     this.status = status.running;
     this.timer.pause = false;
@@ -309,7 +309,7 @@ export class Level {
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();
-    this.playBackgoundmusic();
+    this.playBackgroundMusic();
     pullIngameGui();
     checkForVolume();
   }

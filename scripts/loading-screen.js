@@ -33,7 +33,7 @@ function checkPercentageLoadet() {
     ctx.fillStyle = "grey";
     ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, maxlenght, maxheight); 
   
-    ctx.font = "16px PixelifySans"
+    ctx.font = "14px PixelifySans"
     ctx.fillText(`Game is loading - ${percentageLoadet}%`, (screenWidth - maxlenght) / 2, ((screenHeight - maxheight) / 2) - 8)
   
     ctx.fillStyle = "#d8ad56"; 
