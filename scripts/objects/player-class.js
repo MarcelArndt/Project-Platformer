@@ -183,6 +183,7 @@ export class Player extends Box {
       clearTimeout(this.currentCoyoteTime);
     }
   }
+  
   checkKeyPressedTime(keyIsPressedTime) {
     if (keyIsPressedTime - 1000 >= this.jump.latestJump) {
       return false;

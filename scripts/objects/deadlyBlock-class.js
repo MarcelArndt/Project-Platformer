@@ -1,5 +1,4 @@
 import { Rectangle } from "./rectangle-class.js";
-import { ctx } from "../canvas.js";
 export class DeadlySolidBlock extends Rectangle{
     constructor(options, type){
         const {pos, size, color} = options

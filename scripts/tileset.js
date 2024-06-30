@@ -9,6 +9,7 @@ import { Box } from "./objects/box-class.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
 import {Coin } from "./objects/coin-class.js";
+import { Projectile } from "./objects/projectile-class.js";
 
 export class Tileset {
   constructor(option) {
@@ -57,6 +58,7 @@ export class Tileset {
       row.forEach((tileNumber, x) => {
         switch (tileNumber) {
           case 0: break;
+          case 962: newEntity = new Projectile  ({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D",}); this.level.pushNewObject(newEntity);break;
           case 971: newEntity = new Potion ({ pos: [x * this.tileSize, y * this.tileSize], size: [24, 24], color: "#FFD53D",}); this.level.pushNewObject(newEntity);break;
           case 972: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [15, 15], color: "#FFD53D", }); this.level.pushNewObject(newEntity); break;
           case 967: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 74], color: "#FFD53D",}); this.level.pushNewObject(newEntity); break;

@@ -1,8 +1,6 @@
 import { Entity} from "./entity-class.js";
 import { imageIsloadet } from "../assets.js";
-import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
-import { ctx } from "../canvas.js";
 export class Coin extends Entity{
     constructor(options, type){
         const {pos, size, color, value, subType} = options
@@ -27,36 +25,6 @@ export class Coin extends Entity{
         this.chooseRandomSound(["coin01","coin02","coin03"], false);
         this.level.player.score += this.value;
         this.deleteObject();
-    }
-
-    chooseRandomSound(soundArray = [], toInterrupt = true){
-        let randomNumber = Math.floor(Math.random() * soundArray.length);
-        if(!soundIsloadet[soundArray[randomNumber]].paused && toInterrupt){
-            soundIsloadet[soundArray[randomNumber]].pause();
-            soundIsloadet[soundArray[randomNumber]].currentTime = 0;
-        } else {
-            soundIsloadet[soundArray[randomNumber]].volume = 1 * this.level.globalVolume;
-            soundIsloadet[soundArray[randomNumber]].play();
-        }
-      }
-      
-    stopPlayingSound(soundArray){
-        soundArray.forEach((sound => {
-            if(!soundIsloadet[sound].paused){
-                soundIsloadet[sound].pause();
-                soundIsloadet[sound].currentTime = 0;
-            }
-        }));
-    }
-
-    deleteObject(){
-        let index = null
-        this.level.objects.forEach(obj => {
-            if (obj.index == this.index){
-                index = this.level.objects.indexOf(obj);
-                this.level.objects.splice(index, 1);
-            }  
-        })
     }
 
     update(deltaTime){

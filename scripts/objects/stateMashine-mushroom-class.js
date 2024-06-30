@@ -65,7 +65,7 @@ export class Idle{
 //////////////////////////////////////
 ////////// WALKING STATUS ////////////
 //////////////////////////////////////
-export class Walking{
+class Walking{
 
     start(entity){
         entity.acc = entity.backupOption.walkspeed
@@ -114,7 +114,7 @@ export class Walking{
 //////////////////////////////////////
 ////////// CHASING STATUS ////////////
 //////////////////////////////////////
-export class Chasing{
+class Chasing{
 
     start(entity){
         entity.walkspeed *= 5;
@@ -172,7 +172,7 @@ export class Chasing{
 //////////////////////////////////////
 ////////// ATTACK STATUS /////////////
 //////////////////////////////////////
-export class Attack{
+class Attack{
 
     start(entity){
         entity.walkspeed = 0;
@@ -244,7 +244,7 @@ export class Attack{
 //////////////////////////////////////
 ///////// GET HIT STATUS /////////////
 //////////////////////////////////////
-export class GetHit{
+class GetHit{
 
     start(entity){
         entity.chooseRandomSound([soundIsloadet.slurp04]);
@@ -282,7 +282,7 @@ export class GetHit{
 //////////////////////////////////////
 /////////// DEATH STATUS /////////////
 //////////////////////////////////////
-export class Death{
+class Death{
 
     start(entity){
         entity.chooseRandomSound([soundIsloadet.hit03]);

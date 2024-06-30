@@ -6,7 +6,7 @@ export class Collider {
     }
 
     /**
-     * Only for Debug-Purpose beacause sometimes console.log is to to laggy. 
+     * Only for Debug-Purpose. 
      * @param {*} debugObj -> Send and draw Variable to Debug-Purpose:
      * @param {*} posX  -> position on Canvas.witdh
      * @param {*} poxY  -> position on Canvas.height
@@ -101,6 +101,7 @@ export class Collider {
             && !this.checkforGetHit(obj)
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
+            && !this.checkProjectile(obj)
         );
     }
 
@@ -135,6 +136,12 @@ export class Collider {
     checkMushroom(obj, direction){
         if (direction == "below" && obj.subType == "Mushroom"){
             obj.activateTrap(this.entity);
+            return true
+        }
+    }
+
+    checkProjectile(obj){
+        if (obj.subType == "Projectile"){
             return true
         }
     }

@@ -22,7 +22,7 @@ export class Hitbox extends Entity{
         this.checkIsAllawysAktiv();
         this.drawbox()
         this.updatePosition(this.stickToObject);
-        //this.updateCounter(deltaTime);
+        this.updateCounter(deltaTime);
     }
 
     updatePosition(obj){

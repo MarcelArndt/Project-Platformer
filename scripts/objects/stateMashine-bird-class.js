@@ -13,9 +13,9 @@ export class StateMachine {
         this.currentState.start(this.entity);
     }
 
-    updateState(deltaTime){
-        this.currentState.behave(this.entity, deltaTime);
-        this.currentState.checkConditions(this.entity, deltaTime);
+    updateState(){
+        this.currentState.behave(this.entity);
+        this.currentState.checkConditions(this.entity);
     }
 }
 
@@ -46,7 +46,7 @@ export class Idle{
         entity.prevStatus = "idle";
     }
 
-    behave(entity, deltaTime){
+    behave(entity){
         let randomNumber = Math.floor(Math.random() * 100)
         switch(randomNumber){
             case 0:  entity.stateMachine.changeState(new Jump()); break;
@@ -70,7 +70,7 @@ export class Idle{
 //////////////////////////////////////
 ////////// Flying ////////////
 //////////////////////////////////////
-export class Flying{
+class Flying{
 
     start(entity){
         entity.isFlying = true;
@@ -79,7 +79,7 @@ export class Flying{
         entity.prevStatus = "flying";
     }
 
-    behave(entity, deltaTime){
+    behave(entity){
         entity.flee();
         entity.fly();
         entity.checkFacingLeft();
@@ -100,7 +100,7 @@ export class Flying{
 //////////////////////////////////////
 ///////////// Despawn ///////////////
 //////////////////////////////////////
-export class Despawn{
+class Despawn{
 
     start(entity){
         entity.isFlying = false;
@@ -108,7 +108,7 @@ export class Despawn{
         entity.animationStatus = "idle";
     }
 
-    behave(entity, deltaTime){
+    behave(entity){
         entity.despawn();
     }
 
@@ -127,7 +127,7 @@ export class Despawn{
 //////////////////////////////////////
 ///////////// Jump ///////////////
 //////////////////////////////////////
-export class Jump{
+class Jump{
 
     start(entity){
         entity.isFlying = false;
@@ -135,7 +135,7 @@ export class Jump{
         entity.animationStatus = "jump";
     }
 
-    behave(entity, deltaTime){
+    behave(entity){
         let randomNumber = Math.floor(Math.random() * 3)
         switch(randomNumber){
             case 0: entity.walkspeed *= -1; entity.moving() ; break;
@@ -146,7 +146,7 @@ export class Jump{
         entity.stateMachine.changeState(new Idle());
     }
 
-    checkConditions(entity, deltaTime){
+    checkConditions(entity){
         let distance = entity.checkDistanceToPlayer(entity.level.objectsOfType.Player[0]);
         if (distance[0] <= 95){
             entity.stateMachine.changeState(new Flying());

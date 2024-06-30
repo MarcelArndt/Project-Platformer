@@ -1,6 +1,5 @@
-import {Rectangle} from "./rectangle-class.js";
+import { Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
-import { Jump, GetHit  } from "./stateMashine-player-class.js";
 import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
 
