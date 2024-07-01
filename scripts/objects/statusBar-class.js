@@ -17,7 +17,6 @@ export class StatusBar{
     update(currentValue){
         this.refreshValue(currentValue);
         this.calcCurrentValues();
-        this.drawBar();  
     }
 
     drawBar(){

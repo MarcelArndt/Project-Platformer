@@ -119,6 +119,8 @@ export class Level {
         this.objects[i].update(deltaTime);
         this.objects[i].draw();
       }
+      this.player.statusbar.drawBar();
+      this.player.scoreBar.drawScore();
   }
 
   checkForVolume(){

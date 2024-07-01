@@ -5,6 +5,7 @@ export let imageIsToLoading = {
     robinBird: "./assets/bird_3_robin.png",
     skeleton: "./assets/skelet-animation-atlas.png",
     mushroom: "./assets/mushroom-atlas.png",
+    ghost: "./assets/boss-animation-atlas.png",
     tileset: "./assets/oak_woods_tileset-36x36_acd_tx_village_props.png",
     backgroundOne: "./assets/background/background_layer_1.png",
     backgroundTwo: "./assets/background/background_layer_2.png",

@@ -29,7 +29,7 @@ export class Collider {
     }
 
     update(deltaTime){
-        //this.showCollider();
+        this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
             if(this.isAvailable == true && obj.subType != "SemiSolidBlock"){
@@ -102,6 +102,7 @@ export class Collider {
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
             && !this.checkProjectile(obj)
+            && !this.checkBoss(obj, direction)
         );
     }
 
@@ -144,5 +145,9 @@ export class Collider {
         if (obj.subType == "Projectile"){
             return true
         }
+    }
+
+    checkBoss(obj, direction){
+        return (obj.subType == "Boss" && this.entity.type != "Rectangle" || this.entity.subType == "Boss" && obj.type != "Rectangle");
     }
 }
