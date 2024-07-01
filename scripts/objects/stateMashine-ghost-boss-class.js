@@ -45,10 +45,11 @@ export class Idle{
     }
 
     checkConditions(entity){
-        let randomNumbTeleport = Math.floor(Math.random() * 50);
+        let randomNumbTeleportUp = Math.floor(Math.random() * 150);
+        let randomNumbTeleportDown = Math.floor(Math.random() * 450);
         let randomNumbMove = Math.floor(Math.random() * 100);
 
-        if (randomNumbTeleport == 1){
+        if (randomNumbTeleportUp == 1 && !entity.isAbove || randomNumbTeleportDown == 1 && entity.isAbove ){
             entity.isAbove = entity.isAbove == false ? true:false;
             entity.stateMachine.changeState(new Teleporting());
         }
@@ -106,7 +107,7 @@ class Wandering{
     }
 
     behave(entity){
-        let randomNumbMove = Math.floor(Math.random() * 100);
+        let randomNumbMove = Math.floor(Math.random() * 460);
         entity.flyAround()
         if (randomNumbMove == 1) {
             entity.stateMachine.changeState(new Idle());

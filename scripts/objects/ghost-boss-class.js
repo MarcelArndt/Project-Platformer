@@ -72,7 +72,14 @@ export class GhostBoss extends Enemy{
 
     update(deltaTime){
         super.update(deltaTime);
-        this.draw();
+        this.setAbovePlayer();
+    }
+
+
+    setAbovePlayer(){
+       if(this.isAbove){
+        this.setBottom(this.level.player.posTop - 105)
+       }
     }
 
     activateTrap(obj){
@@ -80,12 +87,11 @@ export class GhostBoss extends Enemy{
     }
 
     teleportingUpwards(){
-        this.pos[1] = this.pos[1] - 225;
-
+        this.setBottom(this.level.player.posTop - 105)
     }
 
     teleportingDownwards(){
-        this.pos[1] = this.pos[1] + 225;
+        this.pos[1] = this.level.player.pos[1] + 55;
 
 }
 
@@ -98,9 +104,8 @@ export class GhostBoss extends Enemy{
 
     flyAround(){
         let distance = this.distanceToOrigin();
-        console.log(this.acc, this.walkspeed);
-        this.facingTowardsPlayer();
         let randomNumber = Math.random() * 75;
+        this.facingTowardsPlayer();
         if(randomNumber == 1 && !this.isTurningBack){
             this.acc = -this.walkspeed;
         } else if(randomNumber == 2 && !this.isTurningBack){
@@ -115,6 +120,7 @@ export class GhostBoss extends Enemy{
         this.turnAroundBydistance();
     }
 
+
     facingTowardsPlayer(){
         let distanceX = this.pos[0] - this.level.player.pos[0];
         if(distanceX > 0){
@@ -127,11 +133,9 @@ export class GhostBoss extends Enemy{
     turnAroundBydistance(){
         let distance = this.distanceToOrigin();
         if(distance < -300 && !this.isTurningBack){
-            console.log("turn back")
             this.isTurningBack = true;
             this.acc = this.walkspeed;
         } else if(distance > 300 && !this.isTurningBack){
-            console.log("turn back")
             this.isTurningBack = true;
             this.acc = -this.walkspeed;
         } else if(this.isTurningBack && distance < 10 && distance > -10){
