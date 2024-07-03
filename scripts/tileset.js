@@ -8,7 +8,7 @@ import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { Box } from "./objects/box-class.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
-import {Coin } from "./objects/coin-class.js";
+import { Coin } from "./objects/coin-class.js";
 import { Projectile } from "./objects/projectile-class.js";
 import { GhostBoss } from "./objects/ghost-boss-class.js";
 

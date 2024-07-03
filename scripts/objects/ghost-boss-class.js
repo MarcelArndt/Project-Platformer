@@ -60,7 +60,11 @@ export class GhostBoss extends Enemy{
         this.isAbove = false;
         this.scoreValue = options.scoreValue || 250;
         this.isTurningBack = false;
+        this.distanceToPlayer = 0;
+        this.distanceYToPlayer = 0
+        this.distanceXToPlayer = 0;
     }
+
 
     checkForCooldown(){
         this.currentTime = new Date();
@@ -73,32 +77,38 @@ export class GhostBoss extends Enemy{
     update(deltaTime){
         super.update(deltaTime);
         this.setAbovePlayer();
+        this.checkDistanceToPlayer();
+        this.adjustLevelCamera();
     }
 
 
     setAbovePlayer(){
        if(this.isAbove){
-        this.setBottom(this.level.player.posTop - 105)
+        this.teleportingUpwards()
        }
     }
 
-    activateTrap(obj){
-
-    }
-
     teleportingUpwards(){
-        this.setBottom(this.level.player.posTop - 105)
+        this.setBottom(this.level.player.posTop - this.size[1] - 50);
     }
+
 
     teleportingDownwards(){
-        this.pos[1] = this.level.player.pos[1] + 55;
-
-}
+        this.setBottom(this.level.player.posBottom);
+    }
 
 
     distanceToOrigin(){
         let distanceX = this.pos[0] - this.originalPos[0];
         return distanceX
+    }
+
+    adjustLevelCamera(){
+        if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
+            this.level.cameraHeightOffset ++;
+        }   else if(this.distanceToPlayer > 700 && this.level.cameraHeightOffset > 0){
+            this.level.cameraHeightOffset --;
+        } 
     }
 
 
@@ -141,6 +151,12 @@ export class GhostBoss extends Enemy{
         } else if(this.isTurningBack && distance < 10 && distance > -10){
             this.isTurningBack = false;
         }
+    }
+
+    checkDistanceToPlayer(){
+        this.distanceXToPlayer = this.pos[0] - this.level.player.pos[0];
+        this.distanceYToPlayer = this.pos[1] - this.level.player.pos[1];
+        this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
     }
 
 

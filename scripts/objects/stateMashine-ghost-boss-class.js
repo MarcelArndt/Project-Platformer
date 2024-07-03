@@ -1,4 +1,5 @@
 import { soundIsloadet } from "../assets.js";
+import { Projectile } from "./projectile-class.js";
 
 export class StateMachine {
     constructor(state, entity){
@@ -107,10 +108,13 @@ class Wandering{
     }
 
     behave(entity){
-        let randomNumbMove = Math.floor(Math.random() * 460);
+        let randomNumbMove = Math.floor(Math.random() * 60);
         entity.flyAround()
         if (randomNumbMove == 1) {
             entity.stateMachine.changeState(new Idle());
+        }
+        if (randomNumbMove == 2) {
+            entity.stateMachine.changeState(new AttackThrow());
         }
     }
 
@@ -129,11 +133,11 @@ class Wandering{
 class Chasing{
 
     start(entity){
-     
+   
     }
 
     behave(entity){
-       
+     
     }
 
     checkConditions(entity){
@@ -142,6 +146,46 @@ class Chasing{
     
     leaveState(entity){
     
+    }
+}
+
+
+//////////////////////////////////////
+////////// ATTACK STATUS /////////////
+//////////////////////////////////////
+class AttackThrow{
+
+    start(entity){
+    entity.animationStatus = "attackTwo";
+    entity.animationIsRunning = true;
+    entity.acc = 0;
+    this.fired = false;
+    }
+
+    behave(entity){
+        let aimX = 0;
+        let aimY = 0;
+        if(Math.floor(entity.animationTimer) > 5 && !this.fired){
+            aimX = entity.distanceXToPlayer / entity.distanceToPlayer;
+            aimY = entity.distanceYToPlayer / entity.distanceToPlayer;
+            this.fired = true;
+            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX, peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+            }));
+            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX - (Math.floor(Math.random() * 3) / 10), peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+            }));
+            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX + (Math.floor(Math.random() * 3) / 10), peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+            }));
+           }
+    }
+
+    checkConditions(entity){
+      if(!entity.animationIsRunning){
+        entity.stateMachine.changeState(new Idle());
+      }
+    }
+    
+    leaveState(entity){ 
+        
     }
 }
 

@@ -43,6 +43,7 @@ export class Level {
     };
     this.originPlayerSize = 0;
     this.demageBoxes = {};
+    this.cameraHeightOffset = 0;
     this.screenshakeValue = 0;
     this.screenshakeMaxValue = 35;
     this.screenshakeToggle = false;
@@ -116,8 +117,11 @@ export class Level {
       this.background.updateBackground(this.player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
-        this.objects[i].update(deltaTime);
-        this.objects[i].draw();
+        try{
+          this.objects[i].update(deltaTime);
+          this.objects[i].draw()
+        }catch(e){
+        }
       }
       this.player.statusbar.drawBar();
       this.player.scoreBar.drawScore();
@@ -179,8 +183,8 @@ export class Level {
   
 
   updateCamera() {
-    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.5 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue);
-    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.5 , this.player.posTop - (canvas.height / 2.5 ) / 2 ) + this.screenshakeValue - this.originPlayerSize[1]);
+    this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.5 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue );
+    this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.5 , this.player.posTop - (canvas.height / 2.5 ) / 2 ) + this.screenshakeValue - this.originPlayerSize[1] - this.cameraHeightOffset);
   }
 
   drawObjects() {
