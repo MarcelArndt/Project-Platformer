@@ -117,13 +117,15 @@ export class Level {
       this.background.updateBackground(this.player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
-
           this.objects[i].draw()
+          if (this.objects[i].statusbar){
+            this.objects[i].statusbar.drawBar();
+           } 
+           if(this.objects[i].scoreBar){
+            this.objects[i].scoreBar.drawScore();
+           }
           this.objects[i].update(deltaTime);
-
       }
-      this.player.statusbar.drawBar();
-      this.player.scoreBar.drawScore();
   }
 
   checkForVolume(){
@@ -305,7 +307,7 @@ export class Level {
       imageIsloadet.backgroundOne,
       imageIsloadet.backgroundTwo,
       imageIsloadet.backgroundThree,
-    ]);
+    ], this);
     this.globalVolume = this.savedGlobalVolume;
     canvasOverlayContent.innerHTML = "";
     this.tileset.generateLevel(this);

@@ -1,7 +1,8 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-ghost-boss-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
-import { ctx } from "../canvas.js";
+import { ctx, canvas} from "../canvas.js";
+import { StatusBar } from "./statusBar-class.js";
 
 let animationImage = imageIsloadet.ghost
 
@@ -64,6 +65,8 @@ export class GhostBoss extends Enemy{
         this.distanceToPlayer = 0;
         this.distanceYToPlayer = 0
         this.distanceXToPlayer = 0;
+        this.health = 30;
+        this.statusbar = new StatusBar( options.HitPoints || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 )
     }
 
 
@@ -80,6 +83,7 @@ export class GhostBoss extends Enemy{
         this.setAbovePlayer();
         this.checkDistanceToPlayer();
         this.adjustLevelCamera();
+        this.statusbar.update(this.health, this.distanceToPlayer);
     }
 
 

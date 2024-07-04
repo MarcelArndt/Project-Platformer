@@ -161,15 +161,12 @@ export class Bird extends Box {
         let distance =[Math.hypot(distanceX, distanceY), distanceX, distanceY]; 
         return distance;
     }
-    setTop(){
-    }
 
     jump(){
         if (this.onGround){
                 this.vel[1] = -0.4
             }
         }
-        
 
     checkDistanceToOriginPos(){
         let distanceX = (this.pos[0] - this.originPos[0]) * -1;
