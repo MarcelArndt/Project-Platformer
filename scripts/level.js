@@ -117,11 +117,10 @@ export class Level {
       this.background.updateBackground(this.player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
-        try{
-          this.objects[i].update(deltaTime);
+
           this.objects[i].draw()
-        }catch(e){
-        }
+          this.objects[i].update(deltaTime);
+
       }
       this.player.statusbar.drawBar();
       this.player.scoreBar.drawScore();
@@ -231,7 +230,7 @@ export class Level {
       imageIsloadet.backgroundOne,
       imageIsloadet.backgroundTwo,
       imageIsloadet.backgroundThree,
-    ]);
+    ], this);
     this.status = status.running;
     this.timer.pause = false;
     this.timer.start();

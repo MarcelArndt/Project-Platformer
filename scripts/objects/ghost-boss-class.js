@@ -1,6 +1,7 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, Idle } from "./stateMashine-ghost-boss-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
+import { ctx } from "../canvas.js";
 
 let animationImage = imageIsloadet.ghost
 
@@ -154,9 +155,14 @@ export class GhostBoss extends Enemy{
     }
 
     checkDistanceToPlayer(){
-        this.distanceXToPlayer = this.pos[0] - this.level.player.pos[0];
-        this.distanceYToPlayer = this.pos[1] - this.level.player.pos[1];
+        this.distanceXToPlayer = (this.pos[0] + (this.size[0] / 2 )) - (this.level.player.pos[0] + (this.level.player.size[0] / 2));
+        this.distanceYToPlayer = (this.pos[1] + (this.size[1] / 2 )) - (this.level.player.pos[1] + (this.level.player.size[1] / 2));
         this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
+        ctx.strokeStyle = 'grey';
+        ctx.beginPath();
+        ctx.moveTo((this.pos[0] + (this.size[0] / 2 )) - this.level.cameraPos[0] , (this.pos[1] + (this.size[1] / 2 )) - this.level.cameraPos[1]);
+        ctx.lineTo((this.level.player.pos[0] + (this.level.player.size[0] / 2)) - this.level.cameraPos[0] ,(this.level.player.pos[1] + (this.level.player.size[1] / 2)) - this.level.cameraPos[1])
+        ctx.stroke();
     }
 
 

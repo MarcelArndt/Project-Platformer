@@ -24,9 +24,12 @@ export class Collider {
      * Draw Hitbox to Debug-Purpose:
      */
     showCollider(){
-            ctx.fillStyle = "rgba(50, 175, 200, 0.45)";  
-            ctx.fillRect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
-    }
+            ctx.beginPath();
+            ctx.lineWidth = "3";
+            ctx.strokeStyle = "rgba(50, 175, 200, 0.45)";
+            ctx.rect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
+            ctx.stroke();
+        }
 
     update(deltaTime){
         this.showCollider();

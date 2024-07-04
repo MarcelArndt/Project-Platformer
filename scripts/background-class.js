@@ -1,7 +1,8 @@
 import { canvas, ctx} from "./canvas.js";
 
 export class Background {
-  constructor(option, ImagesArray, type) {
+  constructor(option, ImagesArray, level, type) {
+    this.level = level;
     this.backgroundImageLayerOne = ImagesArray[0];
     this.backgroundImageLayerTwo = ImagesArray[1];
     this.backgroundImageLayerThree = ImagesArray[2];
@@ -9,22 +10,22 @@ export class Background {
       {
         image: this.backgroundImageLayerOne,
         offset: [1.3, 0.32],
-        offsetValues: [6, 3],
-        heightOffset: -30,
+        offsetValues: [0.2, 0.05],
+        heightOffset: 140,
         widthOffset: 0,
       },
       {
         image: this.backgroundImageLayerTwo,
         offset: [1.5, 0.64],
-        offsetValues: [12, 8],
-        heightOffset: -20,
+        offsetValues: [0.3, 0.2],
+        heightOffset: 130,
         widthOffset: 0,
       },
       {
         image: this.backgroundImageLayerThree,
         offset: [2.5, 1.4],
-        offsetValues: [24, 14],
-        heightOffset: -120,
+        offsetValues: [0.7, 0.4],
+        heightOffset: -30,
         widthOffset: 0,
       },
     ];
@@ -34,7 +35,6 @@ export class Background {
     this.type = type || "backgroundElements";
     this.width = this.imageObject[0].image.width;
     this.height = this.imageObject[0].image.height;
-    this.multiplyerX = 8;
     this.playerVel = [0, 0];
     this.playerPos = [0, 0];
     this.latestSpeed = 0;
@@ -62,16 +62,15 @@ export class Background {
       } else if (this.playerVel[0] == 0) {
         backgroundImg.offset[1] = 0;
       }
-      backgroundImg.widthOffset +=
-        (this.multiplyerX / 5) * backgroundImg.offsetValues[0];
-      backgroundImg.offset[1] =
-        (this.playerPos[1] / 70) * backgroundImg.offsetValues[1] +
-        backgroundImg.heightOffset;
+
+      backgroundImg.widthOffset = this.level.cameraPos[0] * backgroundImg.offsetValues[0];
+
+      backgroundImg.offset[1] = this.level.cameraPos[1] * backgroundImg.offsetValues[1] + backgroundImg.heightOffset;
     });
   }
 
   //drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
-  draw(upscaling = 2.3, offsetForWidth = 160, offsetForHeight = 135) {
+  draw(upscaling = 2.3, offsetForWidth = 0, offsetForHeight = 0) {
     let calcOffsetWidth = 0;
     let moduloValue = 0;
     let calcDoppelWidth = 0;

@@ -169,11 +169,7 @@ class AttackThrow{
             aimX = entity.distanceXToPlayer / entity.distanceToPlayer;
             aimY = entity.distanceYToPlayer / entity.distanceToPlayer;
             this.fired = true;
-            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX, peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
-            }));
-            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX - (Math.floor(Math.random() * 3) / 10), peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
-            }));
-            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2), entity.pos[1]], size: [16,16], color : "#000", speedX: -aimX + (Math.floor(Math.random() * 3) / 10), peedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+            entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX, speedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
             }));
            }
     }
