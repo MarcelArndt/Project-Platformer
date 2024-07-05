@@ -26,9 +26,9 @@ export let imageIsToLoading = {
     flyingTwo: "./assets/sound/entity/flying-002.mp3",
     flyingThree: "./assets/sound/entity/flying-003.mp3",
   
-    lightswordOne: "./assets/sound/character/clang01.ogg",
-    lightswordTwo: "./assets/sound/character/clang02.ogg",
-    lightswordThree: "./assets/sound/character/clang03.ogg",
+    lightswordOne: "./assets/sound/character/clang01.wav",
+    lightswordTwo: "./assets/sound/character/clang02.wav",
+    lightswordThree: "./assets/sound/character/clang03.wav",
 
     playerStepsOne: "./assets/sound/character/steps001.mp3",
     playerStepsTwo: "./assets/sound/character/steps002.mp3",

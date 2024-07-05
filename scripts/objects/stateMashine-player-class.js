@@ -34,8 +34,8 @@ export class Idle {
     if (entity.crouch){
       entity.stateMachine.changeState(new Crouch());
     }
-    if(entity.cooldown.isInMainAttack){
-      entity.stateMachine.changeState(new Attack());
+    if(entity.cooldown.startAttack){
+        entity.stateMachine.changeState(new Attack());
     }
     if (entity.vel[1] < 0 && !entity.onGround){
       entity.stateMachine.changeState(new Jump());
@@ -135,8 +135,8 @@ export class Walking {
     if (entity.crouch){
       entity.stateMachine.changeState(new Crouch());
     }
-    if(entity.cooldown.isInMainAttack){
-      entity.stateMachine.changeState(new Attack());
+    if(entity.cooldown.startAttack){
+        entity.stateMachine.changeState(new Attack());
     }
     if (entity.vel[1] < 0 && !entity.onGround){
       entity.stateMachine.changeState(new Jump());
@@ -192,24 +192,51 @@ export class Crouch {
 //////////////////////////////////////
 export class Attack {
   start(entity) {
+    entity.vel[0] = 0;
+    entity.acc = 0;
     entity.animationTimer = 0;
-    this.startAttack = true
-    entity.animationStatus = "attack";
+    entity.cooldown.startAttack = false;
+    if(entity.cooldown.prepareNextAttack){
+      entity.animationStatus = "attackTwo";
+      entity.cooldown.prepareNextAttack = false;
+    } else {
+      entity.animationStatus = "attack";
+    }
   }
 
   behave(entity) {
-    if(Math.floor(entity.animationTimer) == 5){
-      if(entity.facingLeft){
-        entity.activateHitbox(entity.index , 1);
-      } else{
-        entity.activateHitbox(entity.index , 0);
+
+    if(entity.animationStatus == "attack"){
+      if(Math.floor(entity.animationTimer) == 5){
+        if(entity.facingLeft){
+          entity.activateHitbox(entity.index , 1);
+        } else{
+          entity.activateHitbox(entity.index , 0);
+        }
+      } else if(Math.floor(entity.animationTimer) == 8){
+        entity.disableHitbox(entity.index, 0, true);
       }
-    } else if(Math.floor(entity.animationTimer) == 8){
-      entity.disableHitbox(entity.index, 0, true);
+      if(Math.floor(entity.animationTimer) == 3){
+        entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
+      }
     }
-    if(Math.floor(entity.animationTimer) == 5){
-      entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
+
+    if(entity.animationStatus == "attackTwo"){
+      if(Math.floor(entity.animationTimer) == 1){
+        if(entity.facingLeft){
+          entity.activateHitbox(entity.index , 1);
+        } else{
+          entity.activateHitbox(entity.index , 0);
+        }
+      } else if(Math.floor(entity.animationTimer) == 3){
+        entity.disableHitbox(entity.index, 0, true);
+      }
+      if(Math.floor(entity.animationTimer) == 1){
+        entity.chooseRandomSound([soundIsloadet.lightswordOne, soundIsloadet.lightswordTwo, soundIsloadet.lightswordThree]);
+      }
     }
+
+
   }
 
   checkConditions(entity) {
@@ -223,25 +250,25 @@ export class Attack {
       entity.stateMachine.changeState(new Fall());
     } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
       entity.stateMachine.changeState(new Walking());
+    } else if(entity.cooldown.prepareNextAttack && !entity.animationIsRunning){
+      entity.stateMachine.changeState(new Attack());    
     }
+
     if(entity.gethit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
       entity.stateMachine.changeState(new Death());
     }
+
   }
 
   leaveState(entity) {
-    entity.cooldown.isInMainAttack = false;
-    entity.disableHitbox(entity.index, 0, true);
-    entity.animationStatus = "idle";
     entity.cooldown.mainAttack = false;
-    entity.cooldown.isInMainAttack =  false;
-    entity.cooldown.mainCooldown =  "";
-    entity.cooldown.mainKeyIsPressed = false;
+    entity.disableHitbox(entity.index, 0, true);
   }
 }
+
 
 //////////////////////////////////////
 ////////// GETHIT STATUS ////////////

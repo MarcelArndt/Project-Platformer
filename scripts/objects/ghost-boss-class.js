@@ -79,11 +79,13 @@ export class GhostBoss extends Enemy{
 
 
     update(deltaTime){
+        this.facingTowardsPlayer();
         super.update(deltaTime);
         this.setAbovePlayer();
         this.checkDistanceToPlayer();
         this.adjustLevelCamera();
         this.statusbar.update(this.health, this.distanceToPlayer);
+        this.drawConnectionLine();
     }
 
 
@@ -120,7 +122,6 @@ export class GhostBoss extends Enemy{
     flyAround(){
         let distance = this.distanceToOrigin();
         let randomNumber = Math.random() * 75;
-        this.facingTowardsPlayer();
         if(randomNumber == 1 && !this.isTurningBack){
             this.acc = -this.walkspeed;
         } else if(randomNumber == 2 && !this.isTurningBack){
@@ -162,11 +163,16 @@ export class GhostBoss extends Enemy{
         this.distanceXToPlayer = (this.pos[0] + (this.size[0] / 2 )) - (this.level.player.pos[0] + (this.level.player.size[0] / 2));
         this.distanceYToPlayer = (this.pos[1] + (this.size[1] / 2 )) - (this.level.player.pos[1] + (this.level.player.size[1] / 2));
         this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
-        ctx.strokeStyle = 'grey';
-        ctx.beginPath();
-        ctx.moveTo((this.pos[0] + (this.size[0] / 2 )) - this.level.cameraPos[0] , (this.pos[1] + (this.size[1] / 2 )) - this.level.cameraPos[1]);
-        ctx.lineTo((this.level.player.pos[0] + (this.level.player.size[0] / 2)) - this.level.cameraPos[0] ,(this.level.player.pos[1] + (this.level.player.size[1] / 2)) - this.level.cameraPos[1])
-        ctx.stroke();
+    }
+
+    drawConnectionLine(){
+        if(this.level.showDebug){
+            ctx.strokeStyle = 'grey';
+            ctx.beginPath();
+            ctx.moveTo((this.pos[0] + (this.size[0] / 2 )) - this.level.cameraPos[0] , (this.pos[1] + (this.size[1] / 2 )) - this.level.cameraPos[1]);
+            ctx.lineTo((this.level.player.pos[0] + (this.level.player.size[0] / 2)) - this.level.cameraPos[0] ,(this.level.player.pos[1] + (this.level.player.size[1] / 2)) - this.level.cameraPos[1])
+            ctx.stroke();
+        }
     }
 
 

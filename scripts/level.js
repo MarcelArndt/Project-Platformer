@@ -52,6 +52,7 @@ export class Level {
     this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
     this.globalVolume = globalVolume || 0;
+    this.showDebug = false;
   
     this.savedGlobalVolume = this.globalVolume;
     this.keyFuncRef = (e) => this.keyFunction(e);
@@ -89,6 +90,9 @@ export class Level {
       }
     } else if (e.key == "r" && this.status == status.running) {
       this.resetLevel();
+    }
+    else if (e.key == "?") { 
+      this.showDebug = this.showDebug == false ? true:false;
     }
   }
 

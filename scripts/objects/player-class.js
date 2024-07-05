@@ -42,12 +42,13 @@ export class Player extends Box {
       getHurt : 0,
       dash: false,
       dashCooldown: "",
-      mainAttack: false,
-      isInMainAttack: false,
-      mainCooldown: "",
+      startAttack: false,
+      mainCooldown: false,
       mainKeyIsPressed: false,
-      mainCooldownValue: 1050,
-      mainCurrentFiringSetTimer: "",
+      mainCooldownValue: 11,
+      mainCurrentTimer: 0,
+      prepareNextAttack: false,
+
     };
     this.jump = {
       alreadyInJump: false,
@@ -63,8 +64,8 @@ export class Player extends Box {
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [35,0] )
     this.scoreBar = new ScoreBar([25,70]);
-    this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,0)"}, this,)
-    this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,0)"}, this,)
+    this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,1)"}, this,)
+    this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,1))"}, this,)
     this.addControll();
   }
 
@@ -232,7 +233,7 @@ export class Player extends Box {
     this.checkIsHit()
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
-    this.ceckCooldown();
+    this.ceckCooldown(deltaTime);
     this.checkVerticalSpeed();
     this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
@@ -241,30 +242,28 @@ export class Player extends Box {
   }
 
   playerAttack() {
-    if (
-      !this.cooldown.mainAttack &&
-      this.status != "jump" &&
-      this.status != "crouch"
-    ) {
-      this.vel[0] = 0;
-      this.acc = 0;
-      this.cooldown.isInMainAttack = true;
+    if (!this.cooldown.mainAttack && this.status != "jump" && this.status != "crouch") {
       this.cooldown.mainAttack = true;
-      this.cooldown.mainCooldown = new Date();
+      this.cooldown.startAttack = true;
+    }
+    if(this.cooldown.mainAttack && this.animationTimer > 5){
+      this.cooldown.prepareNextAttack = true;
     }
   }
 
-  ceckCooldown() {
-    let currentTime = new Date();
-    this.checkMainAttackCooldown(currentTime);
+  ceckCooldown(deltaTime) {
+    let secDeltaTime = deltaTime / 100
+    this.checkMainAttackCooldown(secDeltaTime);
   }
 
-  checkMainAttackCooldown(currentTime) {
-    if (
-      currentTime - this.cooldown.mainCooldownValue >
-      this.cooldown.mainCooldown
-    ) {
-      this.cooldown.mainAttack = false;
+  checkMainAttackCooldown(currentTime){
+    if(this.cooldown.mainAttack){
+      this.cooldown.mainCurrentTimer += currentTime;
+      if(Math.floor(this.cooldown.mainCurrentTimer) >= this.cooldown.mainCooldownValue){
+        this.cooldown.mainCurrentTimer = 0;
+        this.cooldown.mainAttack = false;
+        this.cooldown.startAttack = false;
+      }
     }
   }
 

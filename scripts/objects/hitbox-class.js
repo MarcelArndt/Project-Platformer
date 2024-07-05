@@ -20,7 +20,7 @@ export class Hitbox extends Entity{
 
     update(deltaTime){
         this.checkIsAllawysAktiv();
-        this.drawbox()
+        this.draw();
         this.updatePosition(this.stickToObject);
         this.updateCounter(deltaTime);
     }
@@ -30,10 +30,11 @@ export class Hitbox extends Entity{
         this.pos[1] = obj.pos[1] + this.setOffset[1];
     }
 
-    drawbox(){
-        this.clearCanvas;
-        ctx.fillStyle =  this.color;
-        ctx.fillRect(this.pos[0], this.pos[1], this.size[0], this.size[1]);
+    draw(){
+        if(this.isAktiv && this.level.showDebug || this.isAllawysAktiv && this.level.showDebug){
+            ctx.fillStyle = "rgba(225,50,0,0.1)";
+            ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
+        }
     }
 
     aktivateCounter(){

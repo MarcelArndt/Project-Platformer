@@ -82,6 +82,9 @@ export class Box extends Rectangle{
         this.boundToLevel();
         this.collider.update(deltaTime)
         this.updateHitboxs(deltaTime);
+        this.demageBoxes.forEach( (hitbox) => {
+            hitbox.draw();
+        })
     }
 
 

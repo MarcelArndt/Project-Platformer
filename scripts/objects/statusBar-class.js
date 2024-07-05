@@ -31,7 +31,6 @@ export class StatusBar{
     refreshValue(currentValue, distance){
         this.currentValue = currentValue;
         this.distanceValue = distance
-        console.log(this.currentValue)
     }
 
     calcCurrentValues(){

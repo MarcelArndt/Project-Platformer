@@ -21,14 +21,16 @@ export class Collider {
 
     /**
      * Only for Debug-Purpose
-     * Draw Hitbox to Debug-Purpose:
+     * Draw Hitbox.
      */
     showCollider(){
-            ctx.beginPath();
-            ctx.lineWidth = "3";
-            ctx.strokeStyle = "rgba(50, 175, 200, 0.45)";
-            ctx.rect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
-            ctx.stroke();
+        if(this.entity.level.showDebug){
+                ctx.beginPath();
+                ctx.lineWidth = "3";
+                ctx.strokeStyle = "rgba(50, 175, 200, 0.45)";
+                ctx.rect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
+                ctx.stroke();
+            }
         }
 
     update(deltaTime){
