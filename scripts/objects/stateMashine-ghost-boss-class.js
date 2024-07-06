@@ -58,8 +58,6 @@ export class Idle{
         if(randomNumbMove == 1 && entity.isAbove){
             entity.stateMachine.changeState(new Wandering());
         }
-
-
     }
     
     leaveState(entity){
@@ -116,6 +114,9 @@ class Wandering{
         if (randomNumbMove == 2) {
             entity.stateMachine.changeState(new AttackThrow());
         }
+        if (randomNumbMove == 3) {
+            entity.stateMachine.changeState(new AttackSpawnMinion());
+        }
     }
 
     checkConditions(entity){
@@ -127,32 +128,10 @@ class Wandering{
 }
 
 
-//////////////////////////////////////
-////////// CHASING STATUS ////////////
-//////////////////////////////////////
-class Chasing{
-
-    start(entity){
-   
-    }
-
-    behave(entity){
-     
-    }
-
-    checkConditions(entity){
-        
-    }
-    
-    leaveState(entity){
-    
-    }
-}
-
 
 //////////////////////////////////////
-////////// ATTACK STATUS /////////////
-//////////////////////////////////////
+//////// ATTACKTHROW STATUS //////////
+/////////////////////////////////////
 class AttackThrow{
 
     start(entity){
@@ -171,7 +150,43 @@ class AttackThrow{
             this.fired = true;
             entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX, speedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
             }));
+            if(entity.health <= 100){
+                entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX + (Math.random() * 8) * 0.1, speedY: -aimY + (Math.random() * 3) * 0.1, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+                }));
+                entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX - (Math.random() * 8) * 0.1, speedY: -aimY - (Math.random() * 3) * 0.1, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
+                }));
+            }
            }
+    }
+
+    checkConditions(entity){
+      if(!entity.animationIsRunning){
+        entity.stateMachine.changeState(new Idle());
+      }
+    }
+    
+    leaveState(entity){ 
+        
+    }
+}
+
+
+
+//////////////////////////////////////
+///// ATTACKSPAWNMINION STATUS //////
+/////////////////////////////////////
+class AttackSpawnMinion{
+
+    start(entity){
+    entity.animationStatus = "attackTwo";
+    entity.animationIsRunning = true;
+    entity.acc = 0;
+    }
+
+    behave(entity){
+      if(entity.isAlreadySummon && Math.floor(entity.animationTimer) == 5 && entity.level.minionCounter <= 5){
+        entity.isAlreadySummon = false;
+      }
     }
 
     checkConditions(entity){

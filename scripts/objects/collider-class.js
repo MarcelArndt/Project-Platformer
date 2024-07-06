@@ -104,11 +104,17 @@ export class Collider {
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
             && !this.checkforGetHit(obj)
+            && !this.checkNoCollsionSubType(obj)
+            && !this.checkProjectile(obj)
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
-            && !this.checkProjectile(obj)
             && !this.checkBoss(obj, direction)
+
         );
+    }
+
+    checkNoCollsionSubType(obj){
+        return (obj.subType == "noCollider" && this.entity.type != "Rectangle" || this.entity.type == "noCollider" && obj.type != "Rectangle");
     }
 
     checkforItem(obj){

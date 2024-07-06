@@ -66,7 +66,7 @@ export class Tileset {
           case 970: newEntity = new Mushroom({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 62], color: "#FFD53D",jumpspeed: -1.07 }); this.level.pushNewObject(newEntity); break;
           case 965: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [33, 56], color: "edff2b", type: "Player", health: 60,});  this.level.pushNewObject(newEntity); break;;
           case 969: newEntity = new Bird({ pos: [x * this.tileSize, y * this.tileSize], size: [18, 23],}); this.level.pushNewObject(newEntity);break;
-          case 975: newEntity = new GhostBoss({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 105], color: "#FFD53D",jumpspeed: -1.07 }); this.level.pushNewObject(newEntity); break;
+          case 975: newEntity = new GhostBoss({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 105], color: "#FFD53D", jumpspeed: -1.07}); this.level.pushNewObject(newEntity); break;
           //case 640: newEntity = new Box({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 36], color: "brown",}); this.level.pushNewObject(newEntity); break;
         }
       });

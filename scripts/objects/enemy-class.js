@@ -23,7 +23,7 @@ export class Enemy extends Box {
         this.gethit = false;
         this.getPushBack = false;
         this.getHitLeft = "";
-        this.health = options.health || 30;
+        this.health = options.health || 50;
         this.activeInvincibility = 0;
         this.invincibilityTimer = options.invincibilityTimer || 500;
         this.onChasing = false;

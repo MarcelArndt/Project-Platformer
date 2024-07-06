@@ -176,10 +176,10 @@ export class Box extends Rectangle{
     
       updateHitboxs(deltaTime){
         if (this.demageBoxes.length > 0){
-          this.level.demageBoxes[this.index].forEach((box) => {
-           box.update(deltaTime)
-           if(box.isAktiv || box.isAlwaysAktiv){
-            box.draw();
+            this.level.demageBoxes[this.index].forEach((box) => {
+            box.update(deltaTime)
+            if(box.isAktiv || box.isAlwaysAktiv){
+                box.draw();
           }
           });
         }

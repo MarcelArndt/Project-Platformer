@@ -53,6 +53,7 @@ export class Mushroom extends Enemy{
         this.frameWidthOffset = 94;
         this.currentTime = 0;
         this.scoreValue = options.scoreValue || 12;
+        this.health = 30;
         this.createHitBox(this.pos, [42,64], [-48,-8], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)
         this.createHitBox(this.pos, [42,64], [48,-8], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,255,255,0)"}, this,)
         this.createHitBox(this.pos, [10,42], [-11,22], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,255,0)"}, this,)

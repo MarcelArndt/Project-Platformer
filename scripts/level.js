@@ -53,6 +53,7 @@ export class Level {
     this.screenEffektTimer = 0;
     this.globalVolume = globalVolume || 0;
     this.showDebug = false;
+    this.minionCounter = 0;
   
     this.savedGlobalVolume = this.globalVolume;
     this.keyFuncRef = (e) => this.keyFunction(e);
@@ -121,15 +122,14 @@ export class Level {
       this.background.updateBackground(this.player);
       this.tileset.draw(this.cameraPos);
       for (let i = 0; i < this.objects.length; i++) {
-          this.objects[i].draw()
-          if (this.objects[i].statusbar){
+        this.objects[i].draw()
+          if (this.objects[i].statusbar && this.objects[i].type != "Player"){
             this.objects[i].statusbar.drawBar();
            } 
-           if(this.objects[i].scoreBar){
-            this.objects[i].scoreBar.drawScore();
-           }
-          this.objects[i].update(deltaTime);
+        this.objects[i].update(deltaTime);
       }
+      this.player.scoreBar.drawScore();
+      this.player.statusbar.drawBar();
   }
 
   checkForVolume(){
@@ -147,10 +147,8 @@ export class Level {
         this.screenshakeAnimationRunning = false;
       }
       this.screenAnimationTimer += secDeltaTime;
-
       if (Math.floor(this.screenAnimationTimer) >= this.screenAnimationMaxTimer) { 
         this.screenshakeToggle = false;
-
       }
     }
   }

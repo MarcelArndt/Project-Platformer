@@ -3,6 +3,7 @@ import { StateMachine, Idle } from "./stateMashine-ghost-boss-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
 import { ctx, canvas} from "../canvas.js";
 import { StatusBar } from "./statusBar-class.js";
+import { Skelett } from "./skelett-class.js";
 
 let animationImage = imageIsloadet.ghost
 
@@ -65,8 +66,10 @@ export class GhostBoss extends Enemy{
         this.distanceToPlayer = 0;
         this.distanceYToPlayer = 0
         this.distanceXToPlayer = 0;
-        this.health = 30;
-        this.statusbar = new StatusBar( options.HitPoints || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 )
+        this.health = 60;
+        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 )
+        this.summonMinionTimer = 0;
+        this.isAlreadySummon = true;
     }
 
 
@@ -86,6 +89,7 @@ export class GhostBoss extends Enemy{
         this.adjustLevelCamera();
         this.statusbar.update(this.health, this.distanceToPlayer);
         this.drawConnectionLine();
+        this.prepareSpawnMinionAtPlayer(deltaTime);
     }
 
 
@@ -94,6 +98,64 @@ export class GhostBoss extends Enemy{
         this.teleportingUpwards()
        }
     }
+
+
+    prepareSpawnMinionAtPlayer(deltaTime){
+        let secDeltaTimer = deltaTime / 1000;
+        let calculateRandomLeft = 0;
+        let calculateRandomRight = 0;
+        let spawnableArray = [];
+        if (!this.isAlreadySummon){
+            this.summonMinionTimer += secDeltaTimer;
+            calculateRandomLeft = this.level.player.pos[0] - 100 - Math.floor(Math.random() * 125);
+            calculateRandomRight = this.level.player.pos[0] + 100 + Math.floor(Math.random() * 125);
+            if( Math.floor(this.summonMinionTimer) >= 1){
+                spawnableArray = this.checkForSpaceNearPlayer(calculateRandomLeft, calculateRandomRight);
+                this.spawnEnemy(spawnableArray, calculateRandomLeft, calculateRandomRight);
+                this.isAlreadySummon = true;
+                this.summonMinionTimer = 0;
+            }
+        }
+    }
+
+    spawnEnemy(spawnableArray, SpawnPointLeft, SpawnPointRight){
+        let finalSpawnPoint = 0;
+        let notSpawnAble = false;
+        if(!spawnableArray[0] && !spawnableArray[1]){
+            finalSpawnPoint = Math.floor(Math.random() * 2 ) == 0 ? SpawnPointLeft : SpawnPointRight;
+        } else if(!spawnableArray[0]){
+            finalSpawnPoint = SpawnPointLeft;
+        } else if (!spawnableArray[1]){
+            finalSpawnPoint = SpawnPointRight;
+        } else {
+            notSpawnAble = true;
+        }
+        if(!notSpawnAble && this.distanceToPlayer <= 650){
+            this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 74], size: [30, 74], color: "#FFD53D",}))
+            this.level.minionCounter++;
+            this.level.createDemageboxes();
+        }
+    }
+
+
+    checkForSpaceNearPlayer(spawnPointLeft, spawnPointRight){
+        let isCollisionArray = [false, false];
+        let collideRight = false;
+        let collideLeft = false;
+        this.level.objects.forEach( (obj ) => {
+            collideRight = this.level.player.collideWith(obj, [spawnPointRight -this.level.player.pos[0], 0]);
+            if(collideRight){
+                isCollisionArray[1] = true;
+            }
+            collideLeft = this.level.player.collideWith(obj, [spawnPointLeft -this.level.player.pos[0], 0] );
+            if(collideLeft){
+                isCollisionArray[0] = true;
+            }
+        });
+        return isCollisionArray;
+    }
+
+
 
     teleportingUpwards(){
         this.setBottom(this.level.player.posTop - this.size[1] - 50);
@@ -154,7 +216,7 @@ export class GhostBoss extends Enemy{
         } else if(distance > 300 && !this.isTurningBack){
             this.isTurningBack = true;
             this.acc = -this.walkspeed;
-        } else if(this.isTurningBack && distance < 10 && distance > -10){
+        } else if(this.isTurningBack && distance < 75 && distance > -75){
             this.isTurningBack = false;
         }
     }
@@ -164,6 +226,7 @@ export class GhostBoss extends Enemy{
         this.distanceYToPlayer = (this.pos[1] + (this.size[1] / 2 )) - (this.level.player.pos[1] + (this.level.player.size[1] / 2));
         this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
     }
+
 
     drawConnectionLine(){
         if(this.level.showDebug){
@@ -176,6 +239,9 @@ export class GhostBoss extends Enemy{
     }
 
 
+
+
+
     airStrike(){
 
     }
@@ -184,16 +250,5 @@ export class GhostBoss extends Enemy{
 
     }
    
-    /**
-     * 
-     *  Only for Debug;
-     * 
-         draw(){
-        super.draw();
-        ctx.strokeStyle = "yellow";
-        ctx.strokeRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
-    }
-     */
-
 
 }
