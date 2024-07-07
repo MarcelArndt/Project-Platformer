@@ -249,18 +249,11 @@ class GetHit{
     start(entity){
         entity.chooseRandomSound([soundIsloadet.slurp04]);
         entity.animationStatus = "getHit";
-        entity.jump(-1);
-        entity.getPushBack = true;
-        entity.acc = 0;
         entity.level.player.score += Math.floor(entity.scoreValue / 3);
     }
 
     behave(entity){
-        if (entity.getHitLeft && entity.vel[1] < 0){
-            entity.vel[0] = 1
-        } else if (!entity.getHitLeft && entity.vel[1] < 0) {
-            entity.vel[0] = -1
-        }
+        entity.pushBack(0.45,0.95);
     }
 
     checkConditions(entity){
@@ -274,7 +267,7 @@ class GetHit{
     }
 
     leaveState(entity){
-
+        entity.gethitJumpAlready = false;
     }
 }
 
@@ -287,9 +280,7 @@ class Death{
     start(entity){
         entity.chooseRandomSound([soundIsloadet.hit03]);
         entity.walkspeed = 0;
-        entity.acc = 0;
         entity.animationStatus = "getHit";
-        entity.animationSpeed = 1;
         entity.type = "Death";
         entity.subType = "Death";
         entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
@@ -297,10 +288,10 @@ class Death{
     }
 
     behave(entity){
+        entity.pushBack(0.45,0.95);
         if(!entity.onGround){
             entity.animationStatus = "death";
         } else if (entity.onGround){
-            entity.acc = 0;
             entity.animationStatus = "death";
             entity.animationTimer = 4;
             setTimeout(() => {

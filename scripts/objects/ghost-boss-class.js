@@ -17,7 +17,7 @@ export class GhostBoss extends Enemy{
             grav: 0,
             friction: options.friction || 0.2,
             jumpspeed: options.jumpspeed ||  -0.85,
-            walkspeed: options.walkspeed || 0.005,
+            walkspeed: options.walkspeed || 0.008,
             aggroRange: options.aggroRange || 625,
             smallAggroRange: options.smallAggroRange || 150,
             HitPoints: options.HitPoints || 30,
@@ -39,7 +39,7 @@ export class GhostBoss extends Enemy{
             chasing: [[{x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:3, y:1}, {x:4, y:1}], true],
             attack: [[{x:0, y:3}, {x:1, y:3}, {x:2, y:3}, {x:3, y:3}, {x:4, y:3}, {x:5, y:3}, {x:6, y:3}, {x:7, y:3}, {x:8, y:3}, {x:9, y:3}, {x:10, y:3}], false],
             attackTwo: [[{x:10, y:3}, {x:9, y:3}, {x:6, y:3}, {x:5, y:3}, {x:4, y:3}, {x:3, y:3}, {x:2, y:3}, {x:1, y:3}, {x:2, y:3}, {x:1, y:3}, {x:2, y:3}, {x:1, y:3}, {x:2, y:3}, {x:1, y:3}, {x:0, y:3}, {x:10, y:3}, {x:9, y:3},], false],
-            death: [[{x:0, y:3}, {x:1, y:3}, {x:2, y:3}, {x:3, y:3}], false],
+            death: [[{x:0, y:4}, {x:1, y:4}, {x:2, y:4}, {x:3, y:4}, {x:4, y:4}, {x:5, y:4}, {x:6, y:4}, {x:7, y:4}], false],
             getHit: [[{x:0, y:2}, {x:1, y:2}, {x:2, y:2}, {x:3, y:2}, {x:4, y:2}, {x:5, y:2}], false],
             jump: [[{x:0, y:0}], false],
             fall: [[{x:0, y:0}], false],
@@ -66,10 +66,10 @@ export class GhostBoss extends Enemy{
         this.distanceToPlayer = 0;
         this.distanceYToPlayer = 0
         this.distanceXToPlayer = 0;
-        this.health = 60;
-        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 )
-        this.summonMinionTimer = 0;
-        this.isAlreadySummon = true;
+        this.maxHealth = 60;
+        this.health = this.maxHealth
+        this.moveRange = 300;
+        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 );
     }
 
 
@@ -89,7 +89,6 @@ export class GhostBoss extends Enemy{
         this.adjustLevelCamera();
         this.statusbar.update(this.health, this.distanceToPlayer);
         this.drawConnectionLine();
-        this.prepareSpawnMinionAtPlayer(deltaTime);
     }
 
 
@@ -99,78 +98,67 @@ export class GhostBoss extends Enemy{
        }
     }
 
-
-    prepareSpawnMinionAtPlayer(deltaTime){
-        let secDeltaTimer = deltaTime / 1000;
-        let calculateRandomLeft = 0;
-        let calculateRandomRight = 0;
-        let spawnableArray = [];
-        if (!this.isAlreadySummon){
-            this.summonMinionTimer += secDeltaTimer;
-            calculateRandomLeft = this.level.player.pos[0] - 100 - Math.floor(Math.random() * 125);
-            calculateRandomRight = this.level.player.pos[0] + 100 + Math.floor(Math.random() * 125);
-            if( Math.floor(this.summonMinionTimer) >= 1){
-                spawnableArray = this.checkForSpaceNearPlayer(calculateRandomLeft, calculateRandomRight);
-                this.spawnEnemy(spawnableArray, calculateRandomLeft, calculateRandomRight);
-                this.isAlreadySummon = true;
-                this.summonMinionTimer = 0;
-            }
-        }
-    }
-
-    spawnEnemy(spawnableArray, SpawnPointLeft, SpawnPointRight){
+    spawnNewMinion(Amount){
         let finalSpawnPoint = 0;
-        let notSpawnAble = false;
-        if(!spawnableArray[0] && !spawnableArray[1]){
-            finalSpawnPoint = Math.floor(Math.random() * 2 ) == 0 ? SpawnPointLeft : SpawnPointRight;
-        } else if(!spawnableArray[0]){
-            finalSpawnPoint = SpawnPointLeft;
-        } else if (!spawnableArray[1]){
-            finalSpawnPoint = SpawnPointRight;
-        } else {
-            notSpawnAble = true;
-        }
-        if(!notSpawnAble && this.distanceToPlayer <= 650){
-            this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 74], size: [30, 74], color: "#FFD53D",}))
-            this.level.minionCounter++;
-            this.level.createDemageboxes();
+        let lastSpawnPoint = 0; 
+        for (let i = 0; i < Amount; i++){
+            if(this.level.minionCounter <= 5){
+                finalSpawnPoint = this.checkForSpawnPoint(lastSpawnPoint);
+                lastSpawnPoint = finalSpawnPoint;
+                this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
+                this.level.createDemageboxes();
+            }
         }
     }
 
+    checkForSpawnPoint(lastSpawnPoint){
+        let spawnPoint;
+        let isNotPossibleToSpawn;
+    
+        do {
+            spawnPoint = this.generateNewSpawnPoint();
+            isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
+        } while (isNotPossibleToSpawn || (Math.abs(lastSpawnPoint - spawnPoint) <= 45));
+    
+        return spawnPoint;
+    }
 
-    checkForSpaceNearPlayer(spawnPointLeft, spawnPointRight){
-        let isCollisionArray = [false, false];
-        let collideRight = false;
-        let collideLeft = false;
+    checkForPossibleToSpawn(spawnPoint){
+        let isNotPossibleToSpawn = false;
+        let isCollision = false;
         this.level.objects.forEach( (obj ) => {
-            collideRight = this.level.player.collideWith(obj, [spawnPointRight -this.level.player.pos[0], 0]);
-            if(collideRight){
-                isCollisionArray[1] = true;
+            isCollision = this.level.player.collideWith(obj, [spawnPoint - this.level.player.pos[0], 0]);
+            if(isCollision){
+                isNotPossibleToSpawn = true;
             }
-            collideLeft = this.level.player.collideWith(obj, [spawnPointLeft -this.level.player.pos[0], 0] );
-            if(collideLeft){
-                isCollisionArray[0] = true;
-            }
-        });
-        return isCollisionArray;
+         });
+        return isNotPossibleToSpawn;
     }
 
-
+    generateNewSpawnPoint(){
+        let randomizer = [
+            this.level.player.pos[0] - 95 - Math.floor(Math.random() * 125),
+            this.level.player.pos[0] + 95 + Math.floor(Math.random() * 125)
+        ]
+        return randomizer[Math.floor(Math.random() * randomizer.length)];
+    }
 
     teleportingUpwards(){
+        if(this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && this.distanceToPlayer <= this.moveRange / 2){
+            let finalSpawnPoint = this.checkForSpawnPoint(this.pos[0]);
+            this.pos[0] = finalSpawnPoint;
+        }
         this.setBottom(this.level.player.posTop - this.size[1] - 50);
     }
 
-
     teleportingDownwards(){
+        if(this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && this.distanceToPlayer <= this.moveRange / 2){
+            let finalSpawnPoint = this.checkForSpawnPoint(this.pos[0]);
+            this.pos[0] = finalSpawnPoint;
+        }
         this.setBottom(this.level.player.posBottom);
     }
 
-
-    distanceToOrigin(){
-        let distanceX = this.pos[0] - this.originalPos[0];
-        return distanceX
-    }
 
     adjustLevelCamera(){
         if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
@@ -179,6 +167,40 @@ export class GhostBoss extends Enemy{
             this.level.cameraHeightOffset --;
         } 
     }
+
+
+    initMovement(){
+        let randomMovement = [this.walkspeed, -this.walkspeed]
+        this.acc = randomMovement[Math.floor(Math.random() * randomMovement.length)];
+
+    }
+
+    moveRandomly(){
+        let randomChoice = Math.floor(Math.random() * 50)
+        if(randomChoice == 5){
+            let randomMovement = [this.walkspeed, -this.walkspeed]
+            this.acc = randomMovement[Math.floor(Math.random() * randomMovement.length)];
+        }
+    }
+
+    checkHomePoint(){
+        let distanceX = this.distanceToOrigin();
+        if(!this.isTurningBack){
+            if(distanceX <= -this.moveRange){
+                this.acc = this.walkspeed;
+            }
+            if(distanceX  >= this.moveRange) {
+                this.acc = -this.walkspeed;
+            }
+        }
+    }
+
+    distanceToOrigin(){
+        let distanceX = this.pos[0] - this.originalPos[0];
+        return distanceX
+    }
+
+
 
 
     flyAround(){
@@ -199,14 +221,6 @@ export class GhostBoss extends Enemy{
     }
 
 
-    facingTowardsPlayer(){
-        let distanceX = this.pos[0] - this.level.player.pos[0];
-        if(distanceX > 0){
-            this.facingLeft = true;
-        } else if(distanceX < 0) {
-            this.facingLeft = false;
-        }
-    }
 
     turnAroundBydistance(){
         let distance = this.distanceToOrigin();
@@ -221,34 +235,32 @@ export class GhostBoss extends Enemy{
         }
     }
 
+
+    facingTowardsPlayer(){
+        let distanceX = this.pos[0] - this.level.player.pos[0];
+        if(this.health > 0){
+            if(distanceX > 0){
+                this.facingLeft = true;
+            } else if(distanceX < 0) {
+                this.facingLeft = false;
+            }
+        }
+    }
+
     checkDistanceToPlayer(){
         this.distanceXToPlayer = (this.pos[0] + (this.size[0] / 2 )) - (this.level.player.pos[0] + (this.level.player.size[0] / 2));
         this.distanceYToPlayer = (this.pos[1] + (this.size[1] / 2 )) - (this.level.player.pos[1] + (this.level.player.size[1] / 2));
         this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
     }
 
-
     drawConnectionLine(){
         if(this.level.showDebug){
-            ctx.strokeStyle = 'grey';
             ctx.beginPath();
+            ctx.strokeStyle = 'cyan';
+            ctx.lineWidth = 2;
             ctx.moveTo((this.pos[0] + (this.size[0] / 2 )) - this.level.cameraPos[0] , (this.pos[1] + (this.size[1] / 2 )) - this.level.cameraPos[1]);
             ctx.lineTo((this.level.player.pos[0] + (this.level.player.size[0] / 2)) - this.level.cameraPos[0] ,(this.level.player.pos[1] + (this.level.player.size[1] / 2)) - this.level.cameraPos[1])
             ctx.stroke();
         }
     }
-
-
-
-
-
-    airStrike(){
-
-    }
-
-    goInIdle(){
-
-    }
-   
-
 }

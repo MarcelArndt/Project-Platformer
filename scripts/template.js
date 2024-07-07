@@ -138,3 +138,13 @@ export function renderPauseMenu(){
             <div id="renderSidePanel">
             </div>`
 }
+
+export function renderdebugCode(debugArray){
+  return `MinionCounter: ${debugArray[0]}     |    
+  PlayerStatus: ${debugArray[3]}     |
+  PlayerHealth: ${debugArray[4]}     |
+  PlayerPos:       X = ${Math.floor(debugArray[1])}       Y = ${Math.floor(debugArray[2])}     |
+  CanvasSize: X = ${debugArray[5]}       Y = ${debugArray[6]}     |
+  CameraPos: X = ${Math.floor(debugArray[7])}      Y = ${Math.floor(debugArray[8])}
+          `
+}

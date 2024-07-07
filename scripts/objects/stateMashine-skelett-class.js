@@ -58,6 +58,7 @@ export class SpawnNew{
         entity.createHitBox(entity.pos, [28,80], [-9,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
         entity.createHitBox(entity.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, entity,);
         entity.level.createDemageboxes();
+        entity.level.minionCounter += 1;
     }
 }
 
@@ -81,6 +82,10 @@ export class Idle{
         if(entity.gethit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
         }
     }
     
@@ -121,6 +126,10 @@ export class Walking{
         if(entity.gethit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
         }
       
     }
@@ -171,6 +180,10 @@ export class Chasing{
         if(entity.gethit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
         }
 
     }
@@ -258,18 +271,11 @@ export class GetHit{
     start(entity){
         entity.chooseRandomSound([soundIsloadet.hit09]);
         entity.animationStatus = "getHit";
-        entity.jump(-1);
-        entity.getPushBack = true;
-        entity.acc = 0;
         entity.level.player.score += Math.floor(entity.scoreValue / 3);
     }
 
     behave(entity){
-        if (entity.getHitLeft && entity.vel[1] < 0){
-            entity.vel[0] = 0.7
-        } else if (!entity.getHitLeft && entity.vel[1] < 0) {
-            entity.vel[0] = -0.7
-        }
+        entity.pushBack(0.45,1.25);
     }
 
     checkConditions(entity){
@@ -305,6 +311,7 @@ export class Death{
     }
 
     behave(entity){
+        entity.pushBack(0.45,1.25);
         if(!entity.onGround){
             entity.animationStatus = "death";
         } else if (entity.onGround){

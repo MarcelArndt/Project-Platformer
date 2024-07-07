@@ -109,12 +109,17 @@ export class Collider {
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
             && !this.checkBoss(obj, direction)
+            && !this.checkEnemyinEnemey(obj)
 
         );
     }
 
     checkNoCollsionSubType(obj){
         return (obj.subType == "noCollider" && this.entity.type != "Rectangle" || this.entity.type == "noCollider" && obj.type != "Rectangle");
+    }
+
+    checkEnemyinEnemey(obj){
+        return (obj.Type == "Enemy" && this.entity.type == "Enemy");
     }
 
     checkforItem(obj){

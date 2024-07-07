@@ -46,17 +46,38 @@ export class Idle{
     }
 
     checkConditions(entity){
-        let randomNumbTeleportUp = Math.floor(Math.random() * 150);
+        let randomNumbTeleportUp = Math.floor(Math.random() * 250);
         let randomNumbTeleportDown = Math.floor(Math.random() * 450);
-        let randomNumbMove = Math.floor(Math.random() * 100);
+        let randomNumbChoice = Math.floor(Math.random() * 100);
 
         if (randomNumbTeleportUp == 1 && !entity.isAbove || randomNumbTeleportDown == 1 && entity.isAbove ){
             entity.isAbove = entity.isAbove == false ? true:false;
             entity.stateMachine.changeState(new Teleporting());
         }
 
-        if(randomNumbMove == 1 && entity.isAbove){
+        if(entity.gethit){
+            entity.stateMachine.changeState(new GetHit());     
+        }
+
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
+        }
+
+        if(entity.isAbove && entity.level.minionCounter <= 5 && entity.distanceToPlayer < 400 && randomNumbChoice >= 0 && randomNumbChoice <= 14){
+            entity.stateMachine.changeState(new AttackSpawnMinion());
+        }
+
+        if(entity.isAbove && randomNumbChoice >= 15 && randomNumbChoice <= 20){
+            entity.stateMachine.changeState(new AttackThrow());
+        }
+
+        if(randomNumbChoice > 20 && randomNumbChoice <= 30 && entity.isAbove){
             entity.stateMachine.changeState(new Wandering());
+        }
+
+        if(randomNumbChoice > 30 && randomNumbChoice <= 33 && entity.isAbove){
+            entity.isAbove = entity.isAbove == false ? true:false;
+            entity.stateMachine.changeState(new Teleporting());
         }
     }
     
@@ -89,6 +110,9 @@ class Teleporting{
     }
 
     checkConditions(entity){
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
+        }
     }
     
     leaveState(entity){ 
@@ -103,23 +127,23 @@ class Wandering{
 
     start(entity){
         entity.animationStatus = "walking"
+        entity.initMovement();
     }
 
     behave(entity){
-        let randomNumbMove = Math.floor(Math.random() * 60);
-        entity.flyAround()
-        if (randomNumbMove == 1) {
-            entity.stateMachine.changeState(new Idle());
-        }
-        if (randomNumbMove == 2) {
-            entity.stateMachine.changeState(new AttackThrow());
-        }
-        if (randomNumbMove == 3) {
-            entity.stateMachine.changeState(new AttackSpawnMinion());
-        }
+     
+        entity.checkHomePoint();
+        entity.moveRandomly();
     }
 
     checkConditions(entity){
+        let randomChoice = Math.floor(Math.random() * 150)
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
+        }
+        if(randomChoice == 50){
+            entity.stateMachine.changeState(new Idle());    
+        }
     }
     
     leaveState(entity){ 
@@ -184,9 +208,6 @@ class AttackSpawnMinion{
     }
 
     behave(entity){
-      if(entity.isAlreadySummon && Math.floor(entity.animationTimer) == 5 && entity.level.minionCounter <= 5){
-        entity.isAlreadySummon = false;
-      }
     }
 
     checkConditions(entity){
@@ -196,7 +217,11 @@ class AttackSpawnMinion{
     }
     
     leaveState(entity){ 
-        
+        if(entity.health > entity.maxHealth / 4 * 3){
+            entity.spawnNewMinion(1);
+        } else if (entity.health < entity.maxHealth / 4 * 3){
+            entity.spawnNewMinion(2);
+        }
     }
 }
 
@@ -230,7 +255,9 @@ class Attack{
 class GetHit{
 
     start(entity){
-      
+        entity.level.player.score += Math.floor(entity.scoreValue / 3);
+        entity.chooseRandomSound([soundIsloadet.hit09]);
+        entity.animationStatus = "getHit";
     }
 
     behave(entity){
@@ -238,7 +265,14 @@ class GetHit{
     }
 
     checkConditions(entity){
-       
+        entity.checkInvincibilityTimer();
+        if(!entity.gethit){
+            entity.isAbove = entity.isAbove == false ? true:false;
+            entity.stateMachine.changeState(new Teleporting());     
+        }
+        if(entity.health <= 0){
+            entity.stateMachine.changeState(new Death());     
+        }
     }
 
     leaveState(entity){
@@ -253,11 +287,12 @@ class GetHit{
 class Death{
 
     start(entity){
-    
+        entity.animationStatus = "death";
+        entity.animationIsRunning = true;
     }
 
     behave(entity){
-       
+
     }
 
     checkConditions(entity){ 

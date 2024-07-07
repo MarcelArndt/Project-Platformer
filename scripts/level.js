@@ -4,6 +4,7 @@ import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
 import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume} from "./menuScript.js";
 import { ctx } from "./canvas.js";
+import { renderdebugCode } from "./template.js";
 export let camera = {
   pos: [0, 0],
 };
@@ -130,12 +131,27 @@ export class Level {
       }
       this.player.scoreBar.drawScore();
       this.player.statusbar.drawBar();
+      this.drawDebug(deltaTime);
   }
 
   checkForVolume(){
     this.globalVolume = globalVolume;
     this.currentLevelMusic.volume = 0.35 * this.globalVolume;
     this.currentAmbient.volume = 0.7 * this.globalVolume;
+  }
+
+
+  drawDebug(deltatime){
+    if( this.showDebug){
+      let debugArray = [this.minionCounter, this.player.pos[0], this.player.pos[1], this.player.animationStatus, this.player.health, canvas.width, canvas.height, this.cameraPos[0], this.cameraPos[1]];
+      ctx.fillStyle = "rgba(0,10,35,0.8)"
+      ctx.fillRect(0,0,1240,15)
+      ctx.font = "7px PixelifySans";
+      ctx.fillStyle = "black";
+      ctx.fillText(renderdebugCode(debugArray), 10 + 0.5, 10 + 0.5);
+      ctx.fillStyle = "white";
+      ctx.fillText(renderdebugCode(debugArray), 10, 10);
+    }
   }
 
 
@@ -301,6 +317,7 @@ export class Level {
     this.objectsOfType = null;
     this.player = null;
     this.objects =  null;
+    this.minionCounter = 0;
   }
 
   rebuildLevel(){

@@ -7,7 +7,7 @@ window.onload = () => {
   loadAllAssests().then(() => {
     Promise.all([
       import("./levels/level_one.js"),
-      import("./game-class.js")
+      import("./game-class.js"),
   ]).then(([levelModule, gameModule]) => {
       const levelOne = levelModule.levelOne;
       const Game = gameModule.Game;

@@ -173,10 +173,7 @@ export class Player extends Box {
   }
 
   playerJump() {
-    if (
-      (this.onGround && !this.crouch) ||
-      (this.isCoyoteTimeReady && !this.crouch)
-    ) {
+    if ( this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch) {
       this.vel[1] += this.jumpseed;
       this.onGround = false;
       this.jump.alreadyInJump = false;

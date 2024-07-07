@@ -38,7 +38,6 @@ export class Enemy extends Box {
         this.demageBoxes = [];
         this.stateMachine = new StateMachine(new Idle(), this);
         this.scoreValue = options.scoreValue || 15;
-
     }
 
 

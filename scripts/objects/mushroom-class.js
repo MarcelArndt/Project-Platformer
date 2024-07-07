@@ -70,24 +70,10 @@ export class Mushroom extends Enemy{
 
     update(deltaTime){
         super.update(deltaTime);
-        this.draw();
     }
 
     activateTrap(obj){
         obj.vel[1] = -1.5;
         this.chooseRandomSound([soundIsloadet.bounce02]);
     }
-    
-    /**
-     * 
-     *  Only for Debug;
-     * 
-         draw(){
-        super.draw();
-        ctx.strokeStyle = "yellow";
-        ctx.strokeRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
-    }
-     */
-
-
 }

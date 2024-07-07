@@ -19,6 +19,7 @@ export class Box extends Rectangle{
         this.demageBoxes = [];
         this.index = this.genEntityIndex(); 
         this.collider = new Collider(this);
+        this.gethitJumpAlready = false;
     }
     
     genEntityIndex(){
@@ -101,11 +102,14 @@ export class Box extends Rectangle{
  
     boundToLevel(){
         if (this.posBottom >= this.level.size[1]){
-            this.vel[1] = 0;
-            this.setBottom(this.level.size[1]);
-            this.onGround = true;
+            if(this.type == "Enemy"){
+                this.health = 0;
+            } else {
+                this.vel[1] = 0;
+                this.setBottom(this.level.size[1]);
+                this.onGround = true;
+            }
         }
-        
         if (this.posLeft <= 0){
             this.setLeft(0);
             this.vel[0] = 0;
@@ -162,6 +166,37 @@ export class Box extends Rectangle{
         this.level.demageBoxes[ObjId][id].isAktiv = true;
       }
     
+      pushBack(velX = 0.85, velY = 0.75) {
+        if (this.gethit && !this.gethitJumpAlready) {
+            this.gethitJump(velY);
+            this.onGround = false;
+        }
+        let collide = this.level.objects.some(obj => 
+            this.getHitLeft && (this.collideWith(obj, [-15, -5]) || !this.getHitLeft && this.collideWith(obj, [15, -5]))
+        );
+        if (this.gethit && !collide && !this.onGround) {
+            this.vel[0] = this.getHitLeft ? velX : -velX;
+        }
+        if (!this.gethit) {
+            this.gethitJumpAlready = false;
+        }
+        if (this.onGround || collide) {
+            this.vel[0] = 0;
+        }
+    }
+
+
+      gethitJump(velY){
+        if (!this.gethitJumpAlready){
+            this.vel[1] = -velY
+            this.gethitJumpAlready = true;
+        }
+        if(this.onGround){
+            this.vel[0] = 0
+        }
+      }
+
+
       disableHitbox(ObjId, id = 0, disableAll = false){
        switch(disableAll){
         case true: this.level.demageBoxes[ObjId].forEach((box) => { box.isAktiv = false;}); break;

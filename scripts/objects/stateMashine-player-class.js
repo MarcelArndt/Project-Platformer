@@ -275,21 +275,13 @@ export class Attack {
 //////////////////////////////////////
 export class GetHit {
   start(entity) {
-    entity.animationSpeed = 1.5;
     entity.screenShakeEnable(55);
     entity.animationStatus = "getHit";
-    entity.vel[1] = -1;
-    this.onGround = false;
-    entity.acc = 0;
     entity.type = "GetHit";
   }
 
   behave(entity) {
-    if (entity.getHitLeft && entity.vel[1] < 0){
-      entity.vel[0] = 1
-  } else if (!entity.getHitLeft && entity.vel[1] < 0) {
-      entity.vel[0] = -1
-  }
+    entity.pushBack()
   }
 
   checkConditions(entity) {
@@ -303,10 +295,6 @@ export class GetHit {
 
   leaveState(entity) {
     entity.type = "Player";
-    entity.animationSpeed = 1;
-    if(entity.onGround && entity.vel[1] == 0){
-      entity.chooseRandomSound([soundIsloadet.LightStepsOne, soundIsloadet.LightStepsTwo, soundIsloadet.LightStepsThree]);
-    }
   }
 }
 
