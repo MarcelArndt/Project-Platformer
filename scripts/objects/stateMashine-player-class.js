@@ -44,7 +44,7 @@ export class Idle {
     } else if(entity.vel[0] > 0.1 || entity.vel[0] < -0.1){
       entity.stateMachine.changeState(new Walking());
     }
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -72,7 +72,7 @@ export class Jump {
     if (entity.vel[1] > 0 && !entity.onGround) {
       entity.stateMachine.changeState(new Fall());
     }
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -99,7 +99,7 @@ export class Fall {
     if (entity.onGround && entity.vel[1] == 0) {
       entity.stateMachine.changeState(new Idle());
     }
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -145,7 +145,7 @@ export class Walking {
     } else if(entity.acc < 0.005 && entity.acc > -0.005 && entity.onGround){
       entity.stateMachine.changeState(new Idle());
     }
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -173,7 +173,7 @@ export class Crouch {
     if(!entity.crouch){
       entity.stateMachine.changeState(new Idle());
     }
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -254,7 +254,7 @@ export class Attack {
       entity.stateMachine.changeState(new Attack());    
     }
 
-    if(entity.gethit){
+    if(entity.getHit){
       entity.stateMachine.changeState(new GetHit());    
     }
     if(entity.health <= 0){
@@ -275,17 +275,25 @@ export class Attack {
 //////////////////////////////////////
 export class GetHit {
   start(entity) {
+    entity.acc = 0;
+    entity.vel[0] = 0;
+    entity.gethitJumpAlready = false;
     entity.screenShakeEnable(55);
     entity.animationStatus = "getHit";
     entity.type = "GetHit";
+    entity.removeControll();
   }
 
   behave(entity) {
-    entity.pushBack()
+    entity.pushBack(0.45,0.95);
+    if(entity.getHitAndLoseControllTimer >= entity.maxGetHitAndLoseControllTimer && !this.alreadyGetControll){
+      entity.addControll();
+      entity.getHit = false;
+    }
   }
 
   checkConditions(entity) {
-    if(!entity.gethit){
+    if(!entity.getHit){
       entity.stateMachine.changeState(new Idle());
     }
     if(entity.health <= 0){

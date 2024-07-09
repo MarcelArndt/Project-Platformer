@@ -46,7 +46,7 @@ export class Idle{
     }
 
     checkConditions(entity){
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -90,7 +90,7 @@ class Walking{
             this.leaveState(entity);
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -151,7 +151,7 @@ class Chasing{
             this.leaveState(entity);
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -225,7 +225,7 @@ class Attack{
             }
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -247,6 +247,9 @@ class Attack{
 class GetHit{
 
     start(entity){
+        entity.acc = 0;
+        entity.vel[0] = 0
+        entity.gethitJumpAlready = false;
         entity.chooseRandomSound([soundIsloadet.slurp04]);
         entity.animationStatus = "getHit";
         entity.level.player.score += Math.floor(entity.scoreValue / 3);
@@ -257,10 +260,9 @@ class GetHit{
     }
 
     checkConditions(entity){
-        entity.checkInvincibilityTimer();
-        if(!entity.gethit){
-            entity.stateMachine.changeState(new Chasing());     
-        }
+        if(!entity.getHit){
+            entity.stateMachine.changeState(new Idle());
+          }
         if(entity.health <= 0){
             entity.stateMachine.changeState(new Death());     
         }

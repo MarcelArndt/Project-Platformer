@@ -33,6 +33,37 @@ export class State{
 
 
 //////////////////////////////////////
+////////// Init STATUS ////////////
+//////////////////////////////////////
+export class Init{
+
+    start(entity){
+        entity.acc = 0;
+        entity.vel[0] = 0;
+        this.timer = 0;
+    }
+
+    behave(entity){
+        entity.invincibility = true;
+        if(entity.distanceToPlayer < 650){
+            this.timer += 60 / 1000
+        }
+    }
+
+    checkConditions(entity){
+        if(entity.distanceToPlayer < 650 && !entity.isAbove && this.timer > 4){
+            entity.stateMachine.changeState(new Teleporting());     
+        } else if (entity.isAbove && this.timer > 4){
+            entity.stateMachine.changeState(new Idle());    
+        }
+    }
+    
+    leaveState(entity){ 
+    }
+}
+
+
+//////////////////////////////////////
 ////////// IDLE STATUS ////////////
 //////////////////////////////////////
 export class Idle{
@@ -43,19 +74,20 @@ export class Idle{
     }
 
     behave(entity){
+
     }
 
     checkConditions(entity){
-        let randomNumbTeleportUp = Math.floor(Math.random() * 250);
-        let randomNumbTeleportDown = Math.floor(Math.random() * 450);
+        let distanceX = entity.distanceToOrigin();
+        let randomNumbTeleportUp = Math.floor(Math.random() * 200);
+        let randomNumbTeleportDown = Math.floor(Math.random() * 200);
         let randomNumbChoice = Math.floor(Math.random() * 100);
 
         if (randomNumbTeleportUp == 1 && !entity.isAbove || randomNumbTeleportDown == 1 && entity.isAbove ){
-            entity.isAbove = entity.isAbove == false ? true:false;
             entity.stateMachine.changeState(new Teleporting());
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             entity.stateMachine.changeState(new GetHit());     
         }
 
@@ -64,11 +96,11 @@ export class Idle{
         }
 
         if(entity.isAbove && entity.level.minionCounter <= 5 && entity.distanceToPlayer < 400 && randomNumbChoice >= 0 && randomNumbChoice <= 14){
-            entity.stateMachine.changeState(new AttackSpawnMinion());
+            entity.stateMachine.changeState(new AttackThrow());
         }
 
         if(entity.isAbove && randomNumbChoice >= 15 && randomNumbChoice <= 20){
-            entity.stateMachine.changeState(new AttackThrow());
+            entity.stateMachine.changeState(new AttackSpawnMinion());
         }
 
         if(randomNumbChoice > 20 && randomNumbChoice <= 30 && entity.isAbove){
@@ -76,8 +108,17 @@ export class Idle{
         }
 
         if(randomNumbChoice > 30 && randomNumbChoice <= 33 && entity.isAbove){
-            entity.isAbove = entity.isAbove == false ? true:false;
             entity.stateMachine.changeState(new Teleporting());
+        }
+
+        if(entity.distanceToPlayer > 650){
+            entity.stateMachine.changeState(new Init());     
+        }
+
+        if(!entity.isAbove && distanceX > 300 || !entity.isAbove && distanceX < -300){
+            entity.stateMachine.changeState(new Wandering());
+        } else if(!entity.isAbove && distanceX < 300 && distanceX > -300 && entity.animationStatus == "walking") {
+            entity.stateMachine.changeState(new Idle());  
         }
     }
     
@@ -94,19 +135,19 @@ class Teleporting{
 
     start(entity){
         entity.animationStatus = "teleport";
+        entity.acc = 0;
+        entity.vel[0] = 0;
+        entity.animationIsRunning = true;
+        entity.alreadyTeleport = false;
+        entity.animationTimer = 0;
     }
 
     behave(entity){
-
+        entity.invincibility = true;
         if(entity.animationStatus == "teleport" && !entity.animationIsRunning){
-            if(entity.isAbove){
-                entity.teleportingUpwards();
-            } else{
-                entity.teleportingDownwards();
-            }
+            entity.teleporting();
             entity.stateMachine.changeState(new Idle());
         }
-
     }
 
     checkConditions(entity){
@@ -116,6 +157,7 @@ class Teleporting{
     }
     
     leaveState(entity){ 
+        entity.invincibility = false;
     }
 }
 
@@ -144,6 +186,12 @@ class Wandering{
         if(randomChoice == 50){
             entity.stateMachine.changeState(new Idle());    
         }
+        if (randomChoice == 1){
+            entity.stateMachine.changeState(new Teleporting());
+        }
+        if(entity.distanceToPlayer > 550){
+            entity.stateMachine.changeState(new Init());     
+        }
     }
     
     leaveState(entity){ 
@@ -168,13 +216,14 @@ class AttackThrow{
     behave(entity){
         let aimX = 0;
         let aimY = 0;
-        if(Math.floor(entity.animationTimer) > 5 && !this.fired){
+        let distance = entity.distancePlayerToOrigin();
+        if(Math.floor(entity.animationTimer) > 5 && !this.fired && distance < 600){
             aimX = entity.distanceXToPlayer / entity.distanceToPlayer;
             aimY = entity.distanceYToPlayer / entity.distanceToPlayer;
             this.fired = true;
             entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX, speedY: -aimY, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
             }));
-            if(entity.health <= 100){
+            if(entity.health <= 75){
                 entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX + (Math.random() * 8) * 0.1, speedY: -aimY + (Math.random() * 3) * 0.1, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
                 }));
                 entity.level.pushNewObject(new Projectile({pos:[entity.pos[0] + (entity.size[0] / 2) - 8 , entity.pos[1] + (entity.size[1] / 2) - 8], size: [16,16], color : "#000", speedX: -aimX - (Math.random() * 8) * 0.1, speedY: -aimY - (Math.random() * 3) * 0.1, speedMultiplyer: 0.45, lifespan: 2, demage: 5,
@@ -217,11 +266,7 @@ class AttackSpawnMinion{
     }
     
     leaveState(entity){ 
-        if(entity.health > entity.maxHealth / 4 * 3){
             entity.spawnNewMinion(1);
-        } else if (entity.health < entity.maxHealth / 4 * 3){
-            entity.spawnNewMinion(2);
-        }
     }
 }
 
@@ -265,9 +310,7 @@ class GetHit{
     }
 
     checkConditions(entity){
-        entity.checkInvincibilityTimer();
-        if(!entity.gethit){
-            entity.isAbove = entity.isAbove == false ? true:false;
+        if(!entity.getHit){
             entity.stateMachine.changeState(new Teleporting());     
         }
         if(entity.health <= 0){

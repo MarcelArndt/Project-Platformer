@@ -1,10 +1,12 @@
 import { Entity } from "./entity-class.js"
 import { ctx } from "../canvas.js";
+import { Collider } from "./collider-class.js";
 
 export class Hitbox extends Entity{
     constructor(options, type){
         const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset, object} = options
         super({pos, size, color}, type || "Hitbox");
+        this.subType = "Hitbox";
         this.lifespan = lifespan || 3;
         this.forceToLeft = forceToLeft || false;
         this.demage = demage ||0;
@@ -15,14 +17,15 @@ export class Hitbox extends Entity{
         this.setOffset = offset || [0,0];
         this.stickToObject = object || null
         this.frameCounter = 0;
-        this.lifespan = lifespan || 10;
+        this.collider = new Collider(this);
+        this.lifespan = lifespan || 1;
     }
 
     update(deltaTime){
         this.checkIsAllawysAktiv();
         this.draw();
         this.updatePosition(this.stickToObject);
-        this.updateCounter(deltaTime);
+        this.updateCounter(deltaTime / 1000);
     }
 
     updatePosition(obj){
@@ -53,13 +56,17 @@ export class Hitbox extends Entity{
         }
     }
 
-    updateCounter(deltaTime){
-        let secDeltaTime = 0;
+    updateCounter(secDeltaTime){
        if(this.isAktiv && Math.floor(this.frameCounter) >= this.lifespan){
             this.deactivateCounter();
         } else if (this.isAktiv){
-            secDeltaTime = deltaTime / 100;
             this.frameCounter += secDeltaTime;
         }
     }  
+
+    aktivInCollision(obj, direction){
+        if(obj.type == this.demageFlag && this.isAktiv){
+            obj.reciveHitFromObj(direction, this.demage);
+        }
+    }
 }

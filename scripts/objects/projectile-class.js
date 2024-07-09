@@ -43,6 +43,12 @@ export class Projectile extends Entity{
         this.stateMaschine.updateState(deltaTime);
     }
 
+    aktivInCollision(obj, direction){
+        if(obj.type == this.demageFlag){
+            obj.reciveHitFromObj(direction, this.demage);
+        }
+    }
+
     moveProjectile(deltaTime){
         if( this.animationStatus != "starting"){
             this.pos[0] += this.speedX * this.speedMultiplyer * deltaTime;

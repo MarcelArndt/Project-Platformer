@@ -225,7 +225,7 @@ export class Level {
 
   createDemageboxes(){
     this.demageBoxes = {};
-    this.objects.forEach((obj) => {
+  this.objects.forEach((obj) => {
       let HitboxArray = [];
       if(obj.demageBoxes != undefined && obj.demageBoxes.length > 0){
         for (let i = 0; i < obj.demageBoxes.length; i++){

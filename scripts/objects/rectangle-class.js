@@ -80,7 +80,7 @@ export class Rectangle {
     }
 
     collideWith(objectRectangle, VectorOffest = [0,0]){
-        if (this === objectRectangle) return false;
+        if (this == objectRectangle) return false;
         return (
             this.posLeft + VectorOffest[0] < objectRectangle.posRight &&
             this.posRight + VectorOffest[0] > objectRectangle.posLeft &&
@@ -90,7 +90,7 @@ export class Rectangle {
     }
 
     updateAnimationTimer(deltaTime = this.level.timer.deltaTime){
-        const secDeltaTime = deltaTime / 100 * this.animationSpeed;
+        let secDeltaTime = deltaTime / 100 * this.animationSpeed;
         if(this.animationTimer >= (this.animationFrames[this.animationStatus][0].length -1) && !this.animationFrames[this.animationStatus][1]){
             this.animationTimer = this.animationFrames[this.animationStatus][0].length -1;
             this.animationIsRunning = false;

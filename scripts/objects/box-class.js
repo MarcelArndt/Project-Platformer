@@ -3,6 +3,7 @@ import { Hitbox } from "./hitbox-class.js";
 import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
 
+
 export class Box extends Rectangle{
     constructor(options, type){
         const {pos, size, color, grav, friction, vel} = options
@@ -20,6 +21,15 @@ export class Box extends Rectangle{
         this.index = this.genEntityIndex(); 
         this.collider = new Collider(this);
         this.gethitJumpAlready = false;
+        this.getHit = false;
+        this.getHitAndLoseControllTimer = 0;
+        this.maxGetHitAndLoseControllTimer = 0.5;
+        this.invincibility = false;
+        this.invincibilityTimer = 0;
+        this.maxInvincibilityTimer = 0.55;
+        this.health = 100;
+        this.maxHealth = 100;
+        this.alreadyLostHealth = false;
     }
     
     genEntityIndex(){
@@ -81,16 +91,12 @@ export class Box extends Rectangle{
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
         this.boundToLevel();
-        this.collider.update(deltaTime)
+        this.collider.update(deltaTime);
         this.updateHitboxs(deltaTime);
         this.demageBoxes.forEach( (hitbox) => {
             hitbox.draw();
-        })
-    }
-
-
-    checkCollideWithSemiSolidBlock(obj, direction){
-        return (obj.subType == "SemiSolidBlock" && this.crouch && direction == "above" || obj.subType == "SemiSolidBlock" && direction != "above" );
+        });
+        this.checkInvincibilityTimer(deltaTime / 1000);
     }
 
     pushObject(){
@@ -166,18 +172,20 @@ export class Box extends Rectangle{
         this.level.demageBoxes[ObjId][id].isAktiv = true;
       }
     
-      pushBack(velX = 0.85, velY = 0.75) {
-        if (this.gethit && !this.gethitJumpAlready) {
+      pushBack(velX = 0.85, velY = 0.75){
+        let collide;
+        if (this.getHit && !this.gethitJumpAlready) {
             this.gethitJump(velY);
             this.onGround = false;
         }
-        let collide = this.level.objects.some(obj => 
-            this.getHitLeft && (this.collideWith(obj, [-15, -5]) || !this.getHitLeft && this.collideWith(obj, [15, -5]))
+        collide = this.level.objects.some(obj => 
+            this.getHitLeft && (this.collideWith(obj, [-15, -5]) && obj.type != "Entity" || !this.getHitLeft && this.collideWith(obj, [15, -5]) && obj.type != "Entity")
         );
-        if (this.gethit && !collide && !this.onGround) {
+
+        if (this.getHit && !collide && !this.onGround) {
             this.vel[0] = this.getHitLeft ? velX : -velX;
         }
-        if (!this.gethit) {
+        if (!this.getHit) {
             this.gethitJumpAlready = false;
         }
         if (this.onGround || collide) {
@@ -250,4 +258,37 @@ export class Box extends Rectangle{
     checkThisOnScreen(){
         return (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width);
     }
+
+    checkInvincibilityTimer(secDeltaTime){
+        if(this.getHit || this.invincibility){
+            this.getHitAndLoseControllTimer += secDeltaTime;
+            this.invincibilityTimer += secDeltaTime;
+            if(this.invincibilityTimer >= this.maxInvincibilityTimer){
+                this.getHit = false;
+                this.invincibility = false;
+                this.alreadyLostHealth = false;
+                this.getHitAndLoseControllTimer = 0;
+                this.invincibilityTimer = 0;
+            }
+        }
+    }
+
+    reciveHitFromObj(directionFrom, demage){
+      if (!this.getHit && !this.alreadyLostHealth && !this.invincibility){
+        this.getHit = true;
+        this.invincibility = true;
+        this.getHitLeft = directionFrom == "left" ? true : false;
+        this.reduceHealth(demage);
+      }
+    }
+
+    reduceHealth(Value){
+        if(!this.alreadyLostHealth){
+            this.alreadyLostHealth = true;
+            this.health += -Value;
+            if(this.statusbar != undefined){
+                this.statusbar.refreshValue(this.health);
+            }
+        }  
+      }
 }

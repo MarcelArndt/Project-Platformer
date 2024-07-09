@@ -86,7 +86,7 @@ class Flying{
       
     }
 
-    checkConditions(entity, deltaTime){
+    checkConditions(entity){
         if (entity.pos[1] < entity.level.cameraPos[1] - 350){
             entity.stateMachine.changeState(new Despawn());
         }

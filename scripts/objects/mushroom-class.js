@@ -18,7 +18,6 @@ export class Mushroom extends Enemy{
             aggroRange: options.aggroRange || 625,
             smallAggroRange: options.smallAggroRange || 150,
             HitPoints: options.HitPoints || 30,
-            invincibilityTimer: options.invincibilityTimer || 575,
             type: type || "Enemy"
         });
         this.subType = "Mushroom";

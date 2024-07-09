@@ -81,9 +81,9 @@ export class Collider {
     }
 
     checkSemiSolid(obj) {
-        if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch ) {
+        if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch && this.checkSpecialHandle(obj ,"below")) {
             if(this.entity.vel[1] >= -0.001 && obj.collideWith(this.entity, [0, (-this.entity.size[1] / 2 * this.entity.vel[1])])){
-                this.entity.setBottom(obj.posTop - 3);
+                this.entity.setBottom(obj.posTop - 2);
                 this.entity.vel[1] = 0;
                 this.entity.onGround = true;
             }  else {
@@ -105,12 +105,12 @@ export class Collider {
             && !this.checkforItem(obj)
             && !this.checkforGetHit(obj)
             && !this.checkNoCollsionSubType(obj)
-            && !this.checkProjectile(obj)
+            && !this.checkEnemyinEnemey(obj)
+            && !this.checkProjectile(obj, direction)
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
             && !this.checkBoss(obj, direction)
-            && !this.checkEnemyinEnemey(obj)
-
+            && !this.checkHitbox(obj, direction)
         );
     }
 
@@ -123,10 +123,10 @@ export class Collider {
     }
 
     checkforItem(obj){
-        if (obj.subType == "Item") {
-            if(this.entity.type == "Player"){
+        if (obj.subType == "Item" && this.entity.type == "Player") {
                 obj.activateItem();
-            }
+            return true
+        } else if(obj.subType == "Item" && this.entity.type == "Enemy"){
             return true
         }
     } 
@@ -157,9 +157,24 @@ export class Collider {
         }
     }
 
-    checkProjectile(obj){
-        if (obj.subType == "Projectile"){
+    checkProjectile(obj, direction){
+        if (obj.subType == "Projectile" && this.entity.type == "Player" || obj.subType == "Projectile" && this.entity.type == "Enemy"){
+            obj.aktivInCollision(this.entity, direction)
             return true
+        }
+    }
+
+    checkHitbox(obj, direction){
+       let hitBoxArray = null;
+       let gethitfrom = null;
+        for (let i = 0; i < Object.keys(this.entity.level.demageBoxes).length; i++){
+                hitBoxArray = this.entity.level.demageBoxes[Object.keys(this.entity.level.demageBoxes)[i]];
+                hitBoxArray .forEach((box => {
+                   if(this.entity.collideWith(box) && box.demageFlag == this.entity.type && box.isAktiv){
+                    gethitfrom = box.forceToLeft == true ? "left" : "right"
+                    box.aktivInCollision(this.entity, gethitfrom);
+                   }
+                }))
         }
     }
 

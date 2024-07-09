@@ -34,6 +34,8 @@ export class Player extends Box {
     this.prevKeyInput = "";
     this.maxHealth = options.health || 50;
     this.health = options.health || 50;
+    this.maxInvincibilityTimer = 1.15;
+    this.maxGetHitAndLoseControllTimer = 0.5;
     this.score = options.score || 0;
     this.lives = options.lives || 5;
     this.stateMachine = new StateMachine(new Idle(), this);
@@ -60,6 +62,7 @@ export class Player extends Box {
       isOnWall: false,
     };
     this.pressedKeys = [];
+    this.alreadyGetControll = false;
     this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [35,0] )
@@ -90,13 +93,19 @@ export class Player extends Box {
     }
 
   addControll() {
-    document.addEventListener("keypress", this.keyfunctionPressRef);
-    document.addEventListener("keyup", this.keyfunctionUpRef);
+    if(!this.alreadyGetControll){
+      document.addEventListener("keypress", this.keyfunctionPressRef);
+      document.addEventListener("keyup", this.keyfunctionUpRef);
+      this.alreadyGetControll = true;
+    }
   }
 
   removeControll() {
-    document.removeEventListener("keypress", this.keyfunctionPressRef);
-    document.removeEventListener("keyup", this.keyfunctionUpRef);
+    if(this.alreadyGetControll){
+      document.removeEventListener("keypress", this.keyfunctionPressRef);
+      document.removeEventListener("keyup", this.keyfunctionUpRef);
+      this.alreadyGetControll = false;
+    }
   }
 
   checkFacingLeft(){
@@ -107,37 +116,7 @@ export class Player extends Box {
       this.facingLeft = false;
     }
   }
-
-  checkIsHit(){
-    for (let i = 0; i < Object.keys(this.level.demageBoxes).length; i++){
-        this.level.demageBoxes[Object.keys(this.level.demageBoxes)[i]].forEach((Hitbox) => {
-            if(this.collideWith(Hitbox) && !this.gethit && Hitbox.isAktiv && Hitbox.demageFlag == "Player"){
-                switch (Hitbox.forceToLeft){
-                    case true: this.getHitLeft = true; break;
-                    case false: this.getHitLeft = false; break;
-                }
-                this.gethit = true;
-                this.cooldown.getHurt = 0;
-                this.reduceHealth(Hitbox.demage);
-            }
-        })
-    }
-}
-
-  checkInvincibilityTimer(deltaTime){
-    if(this.gethit){
-      let secDeltaTime = deltaTime / 100;
-      this.cooldown.getHurt += secDeltaTime;
-      if(Math.floor(this.cooldown.getHurt) >= 4 && this.onGround) {
-        this.gethit = false;
-      }
-    }
-  }
-
-  reduceHealth(Value){
-    this.health += -Value;
-    this.statusbar.refreshValue(this.health);
-  }
+ 
 
   move(direction) {
     if (direction == "left"){
@@ -227,12 +206,10 @@ export class Player extends Box {
 
   update(deltaTime) {
     super.update(deltaTime);
-    this.checkIsHit()
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
     this.ceckCooldown(deltaTime);
     this.checkVerticalSpeed();
-    this.checkInvincibilityTimer(deltaTime);
     this.stateMachine.updateState();
     this.statusbar.update(this.health);
     this.scoreBar.update(this.score);

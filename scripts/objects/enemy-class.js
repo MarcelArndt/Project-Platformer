@@ -3,7 +3,7 @@ import { StateMachine, Idle } from "./stateMashine-skelett-class.js";
 
 export class Enemy extends Box {
     constructor(options, type){
-        const {walkspeed, jumpspeed, aggroRange, health, invincibilityTimer, smallAggroRange} = options
+        const {walkspeed, jumpspeed, aggroRange, health, smallAggroRange} = options
         super({
             pos: options.pos,
             size: options.size,
@@ -20,12 +20,10 @@ export class Enemy extends Box {
         this.smallAggroRange = options.smallAggroRange || 30;
         this.playerLocation = [];
         this.distanceToPlayer = [];
-        this.gethit = false;
+        this.getHit = false;
         this.getPushBack = false;
         this.getHitLeft = "";
         this.health = options.health || 50;
-        this.activeInvincibility = 0;
-        this.invincibilityTimer = options.invincibilityTimer || 500;
         this.onChasing = false;
         this.PlayerInAggro = [false,false];
         this.fall = false;
@@ -99,17 +97,15 @@ export class Enemy extends Box {
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
-        this.checkIsHit();
         this.checkPlayerPosition();
         this.checkMaxSpeed();
         this.stateMachine.updateState();
     }
 
-
     checkIsFacingLeft(){
-        if(this.acc < 0.00020 && !this.gethit && this.acc != 0){
+        if(this.acc < 0.00020 && !this.getHit && this.acc != 0){
             this.facingLeft = false
-        } else if (this.acc > -0.00020 && !this.gethit && this.acc != 0) {
+        } else if (this.acc > -0.00020 && !this.getHit && this.acc != 0) {
             this.facingLeft = true;
         }
     }
@@ -121,37 +117,6 @@ export class Enemy extends Box {
             isInFall = true;
         }
         return;
-    }
-
-
-    checkInvincibilityTimer(){
-        let timer = new Date();
-        if (this.gethit && timer - this.invincibilityTimer > this.activeInvincibility){
-            this.color = this.backupOption.color;
-            this.gethit = false;
-            this.getPushBack  = false;
-        }
-    }
-
-
-    checkIsHit(){
-        for (let i = 0; i < Object.keys(this.level.demageBoxes).length; i++){
-            this.level.demageBoxes[Object.keys(this.level.demageBoxes)[i]].forEach((Hitbox) => {
-                if(this.collideWith(Hitbox) && !this.gethit && Hitbox.isAktiv && Hitbox.demageFlag == "Enemy"){
-                    switch (Hitbox.forceToLeft){
-                        case true: this.getHitLeft = true; break;
-                        case false: this.getHitLeft = false; break;
-                    }
-                    this.gethit = true;
-                    this.activeInvincibility = new Date();
-                    this.reduceHealth(Hitbox.demage);
-                }
-            })
-        }
-    }
-
-    reduceHealth(value){
-        this.health -= value;
     }
 
 

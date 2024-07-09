@@ -1,5 +1,5 @@
 import { Enemy } from "./enemy-class.js";
-import { StateMachine, Idle } from "./stateMashine-ghost-boss-class.js";
+import { StateMachine, Init } from "./stateMashine-ghost-boss-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
 import { ctx, canvas} from "../canvas.js";
 import { StatusBar } from "./statusBar-class.js";
@@ -28,7 +28,7 @@ export class GhostBoss extends Enemy{
         this.status = "idle";
         this.animationStatus = "idle";
         this.prevStatus = "idle";
-        this.stateMachine = new StateMachine(new Idle(), this);
+        this.stateMachine = new StateMachine(new Init(), this);
         this.originalPos = [... this.pos];
         this.originalWalkspeed = options.walkspeed;
         this.grav = 0;
@@ -60,6 +60,7 @@ export class GhostBoss extends Enemy{
         this.frameHightOffset = -75;
         this.frameWidthOffset = 85;
         this.currentTime = 0;
+        this.maxInvincibilityTimer = 0.55;
         this.isAbove = false;
         this.scoreValue = options.scoreValue || 250;
         this.isTurningBack = false;
@@ -69,6 +70,7 @@ export class GhostBoss extends Enemy{
         this.maxHealth = 60;
         this.health = this.maxHealth
         this.moveRange = 300;
+        this.alreadyTeleport = false;
         this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 );
     }
 
@@ -84,25 +86,19 @@ export class GhostBoss extends Enemy{
     update(deltaTime){
         this.facingTowardsPlayer();
         super.update(deltaTime);
-        this.setAbovePlayer();
+        this.checkIsAbove();
         this.checkDistanceToPlayer();
         this.adjustLevelCamera();
         this.statusbar.update(this.health, this.distanceToPlayer);
         this.drawConnectionLine();
     }
 
-
-    setAbovePlayer(){
-       if(this.isAbove){
-        this.teleportingUpwards()
-       }
-    }
-
     spawnNewMinion(Amount){
+        let distance = this.distancePlayerToOrigin();
         let finalSpawnPoint = 0;
         let lastSpawnPoint = 0; 
         for (let i = 0; i < Amount; i++){
-            if(this.level.minionCounter <= 5){
+            if(this.level.minionCounter <= 5 && distance < 500){
                 finalSpawnPoint = this.checkForSpawnPoint(lastSpawnPoint);
                 lastSpawnPoint = finalSpawnPoint;
                 this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
@@ -114,7 +110,6 @@ export class GhostBoss extends Enemy{
     checkForSpawnPoint(lastSpawnPoint){
         let spawnPoint;
         let isNotPossibleToSpawn;
-    
         do {
             spawnPoint = this.generateNewSpawnPoint();
             isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
@@ -143,22 +138,27 @@ export class GhostBoss extends Enemy{
         return randomizer[Math.floor(Math.random() * randomizer.length)];
     }
 
-    teleportingUpwards(){
-        if(this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && this.distanceToPlayer <= this.moveRange / 2){
+    teleporting(){
+        let distance = this.distancePlayerToOrigin();
+        if(!this.alreadyTeleport && this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && distance < 600){
+            this.isAbove = this.isAbove == false ? true:false;
+            this.alreadyTeleport = true;
             let finalSpawnPoint = this.checkForSpawnPoint(this.pos[0]);
             this.pos[0] = finalSpawnPoint;
+            if(this.isAbove){
+                this.setBottom(this.level.player.posTop - this.size[1] - 50);
+            } else if(!this.isAbove){
+                this.setBottom(this.level.player.posBottom);
+            }
         }
-        this.setBottom(this.level.player.posTop - this.size[1] - 50);
     }
 
-    teleportingDownwards(){
-        if(this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && this.distanceToPlayer <= this.moveRange / 2){
-            let finalSpawnPoint = this.checkForSpawnPoint(this.pos[0]);
-            this.pos[0] = finalSpawnPoint;
-        }
-        this.setBottom(this.level.player.posBottom);
-    }
 
+    checkIsAbove(){
+        if(this.isAbove && this.animationStatus != "teleport" && this.distanceYToPlayer < -20){
+            this.setBottom(this.level.player.posTop - this.size[1] - 50);
+        }
+    }
 
     adjustLevelCamera(){
         if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
@@ -200,8 +200,13 @@ export class GhostBoss extends Enemy{
         return distanceX
     }
 
-
-
+    distancePlayerToOrigin(){
+        let distanceX = this.level.player.pos[0] - this.originalPos[0];
+        if(distanceX < 0){
+            distanceX *= -1
+        }
+        return distanceX
+    }
 
     flyAround(){
         let distance = this.distanceToOrigin();

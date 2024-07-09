@@ -55,7 +55,7 @@ export class SpawnNew{
         entity.subType = undefined;
         entity.createHitBox(entity.pos, [108,75], [-80,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
         entity.createHitBox(entity.pos, [108,75], [0,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, entity,);
-        entity.createHitBox(entity.pos, [28,80], [-9,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
+        entity.createHitBox(entity.pos, [28,80], [-20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
         entity.createHitBox(entity.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, entity,);
         entity.level.createDemageboxes();
         entity.level.minionCounter += 1;
@@ -79,7 +79,7 @@ export class Idle{
     }
 
     checkConditions(entity){
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -123,7 +123,7 @@ export class Walking{
             this.leaveState(entity);
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -177,7 +177,7 @@ export class Chasing{
             this.leaveState(entity);
         }
 
-        if(entity.gethit){
+        if(entity.getHit){
             this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
@@ -249,7 +249,7 @@ export class Attack{
             entity.stateMachine.changeState(new Walking()); 
 
         }
-        if(entity.gethit){
+        if(entity.getHit){
             entity.stateMachine.changeState(new GetHit());    
         }
         
@@ -266,30 +266,32 @@ export class Attack{
 //////////////////////////////////////
 ///////// GET HIT STATUS /////////////
 //////////////////////////////////////
-export class GetHit{
+class GetHit{
 
     start(entity){
+        entity.acc = 0;
+        entity.vel[0] = 0
+        entity.gethitJumpAlready = false;
         entity.chooseRandomSound([soundIsloadet.hit09]);
         entity.animationStatus = "getHit";
         entity.level.player.score += Math.floor(entity.scoreValue / 3);
     }
 
     behave(entity){
-        entity.pushBack(0.45,1.25);
+        entity.pushBack(0.45,0.95);
     }
 
     checkConditions(entity){
-        entity.checkInvincibilityTimer();
-        if(!entity.gethit){
-            entity.stateMachine.changeState(new Chasing());     
-        }
+        if(!entity.getHit){
+            entity.stateMachine.changeState(new Idle());
+          }
         if(entity.health <= 0){
             entity.stateMachine.changeState(new Death());     
         }
     }
 
     leaveState(entity){
-
+        entity.gethitJumpAlready = false;
     }
 }
 
