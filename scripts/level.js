@@ -5,9 +5,11 @@ import { Background } from "./background-class.js";
 import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground} from "./menuScript.js";
 import { ctx } from "./canvas.js";
 import { renderdebugCode } from "./template.js";
+import { LevelManager } from "./levelManager.js";
 export let camera = {
   pos: [0, 0],
 };
+
 
 let status = {
   ready: 1,
@@ -61,45 +63,7 @@ export class Level {
     this.minionCounter = 0;
     this.playerLives = 0;
     this.savedGlobalVolume = this.globalVolume;
-    this.keyFuncRef = (e) => this.keyFunction(e);
-    this.mouseFuncRef = (e) => this.mouseFunction(e);
-  }
-
-  addControll() {
-    window.addEventListener("keydown", this.keyFuncRef);
-    window.addEventListener("click", this.mouseFuncRef);
-  }
-
-  removeControll() {
-    window.removeEventListener("keydown", this.keyFuncRef);
-    window.removeEventListener("click", this.mouseFuncRef);
-  }
-
-  mouseFunction(e){
-    const clickedDiv = e.target;
-    const atribute = clickedDiv.getAttribute("value");
-    switch(atribute){
-      case "openKeyboard": this.pause(1); break;
-      case "restartButton": this.resetLevel(); break;
-      case "startGame": this.start(); break;
-    }
-  }
-
-  keyFunction(e) {
-    if (e.key == "p" || e.key == "enter") {
-      if (this.status == status.ready) {
-        this.start();
-      } else if (this.status == status.running) {
-        this.pause();
-      } else if (this.status == status.pause) {
-        this.resume();
-      }
-    } else if (e.key == "r" && this.status == status.running) {
-      this.resetLevel();
-    }
-    else if (e.key == "?") { 
-      this.showDebug = this.showDebug == false ? true:false;
-    }
+    this.levelManager = new LevelManager(this);
   }
 
     /**
@@ -162,7 +126,6 @@ export class Level {
       ctx.fillText(renderdebugCode(debugArray), 10, 10);
     }
   }
-
 
   checkScreenshakeTime(deltaTime, speed = 1) {
     const secDeltaTime = (deltaTime / 10) * speed;
@@ -279,42 +242,6 @@ export class Level {
     return volume
   }
 
-  start() {
-    this.currentBossMusic.volume = 0;
-    canvasOverlayContent.innerHTML = "";
-    this.background = new Background({ color: "#453d4f" }, [
-      imageIsloadet.backgroundOne,
-      imageIsloadet.backgroundTwo,
-      imageIsloadet.backgroundThree,
-    ], this);
-    this.status = status.running;
-    this.timer.pause = false;
-    this.timer.start();
-    this.tileset.generateLevel(this);
-    this.createDemageboxes();
-    this.player = this.objectsOfType.Player[0];
-    this.originPlayerSize = [... this.player.size];
-    pullIngameGui();
-    this.playBackgroundMusic();
-    this.game.committedValueToGame();
-  }
-
-  pause(modus = 0) {
-    soundIsloadet.tone07.volume = 1 * this.globalVolume;
-    soundIsloadet.tone07.play();
-    this.currentAmbient.pause();
-    this.currentLevelMusic.pause();
-    this.currentBossMusic.pause();
-    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-    drawMenuBookBackground();
-    pullPauseMenu(modus);
-    this.status = status.pause;
-    this.timer.getInPause();
-    this.savedGlobalVolume = this.globalVolume;
-    this.globalVolume = 0;
-  }
-
   gameOver() {
     this.savedGlobalVolume = this.globalVolume;
     this.timer.getInPause();
@@ -324,68 +251,5 @@ export class Level {
     ctx.fillRect(0,0, canvas.width, canvas.height);
     drawMenuBookBackground();
     pullPauseMenu();
-  }
-
-  resume() {
-    soundIsloadet.tone09.volume = 1 * this.globalVolume;
-    soundIsloadet.tone09.play();
-    this.globalVolume = this.savedGlobalVolume;
-    this.playBackgroundMusic();
-    canvasOverlayContent.innerHTML = "";
-    this.status = status.running;
-    this.timer.pause = false;
-    this.timer.start();
-    pullIngameGui();
-    checkForVolume();
-  }
-
-  resetLevel() {  
-    this.status = status.pause;
-    this.timer.getInPause();
-    this.cleanUpLevel();
-    this.rebuildLevel();
-  }
-
-  resetGame() {  
-    this.status = status.pause;
-    this.timer.getInPause();
-    this.cleanUpLevel();
-    this.rebuildLevel();
-  }
-
-  cleanUpLevel(){
-    this.playerLives = this.player.lives;
-    this.bossAlreadySeen = false;
-    this.savedGlobalVolume = this.globalVolume;
-    this.demageBoxes = null;
-    this.screenshakeToggle = false;
-    this.objectsOfType = null;
-    this.player = null;
-    this.objects =  null;
-    this.minionCounter = 0;
-  }
-
-  rebuildLevel(){
-    this.background = null;
-    this.background = new Background({ color: "#453d4f" }, [
-      imageIsloadet.backgroundOne,
-      imageIsloadet.backgroundTwo,
-      imageIsloadet.backgroundThree,
-    ], this);
-    this.currentBossMusic.volume = 0;
-    this.currentBossMusic.currentTime = 0;
-    this.globalVolume = this.savedGlobalVolume;
-    canvasOverlayContent.innerHTML = "";
-    this.tileset.generateLevel(this);
-    this.createDemageboxes();
-    this.player = this.objectsOfType.Player[0];
-    this.player.lives = this.playerLives -1;
-    this.status = status.running;
-    this.bossAlreadySeen = false;
-    this.timer.pause = false;
-    this.timer.start();
-    this.playBackgroundMusic();
-    pullIngameGui();
-    checkForVolume();
   }
 }

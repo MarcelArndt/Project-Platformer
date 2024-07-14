@@ -29,7 +29,7 @@ export class Game {
     if (this.levelList.length === 0) return "No Level in levelList";
     playSound("success16");
     pullGameReady ();
-    this.currentLevel.addControll();
+    this.currentLevel.levelManager.addControll();
   }
 
   committedValueToGame(){
@@ -50,14 +50,14 @@ export class Game {
     if(!this.levelAlreadySwitched){
       this.levelAlreadySwitched = true;
       this.currentLevelIndex ++;
-      this.currentLevel.start();
-      this.currentLevel.addControll();
+      this.currentLevel.levelManager.start();
+      this.currentLevel.levelManager.addControll();
       this.committedValueToLevel();
     }
   }
 
   resume(){
-    this.currentLevel.resume();
+    this.currentLevel.levelManager.resume();
   }
 
   endGame(){
