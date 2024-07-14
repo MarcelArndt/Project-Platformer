@@ -79,7 +79,18 @@ export let imageIsToLoading = {
     heavySwordTwo: "./assets/sound/enemy/heavy_sword_002.mp3",
     heavySwordThree: "./assets/sound/enemy/heavy_sword_003.mp3",
 
-    musicPixelDayDream: "./assets/sound/music/pixelated_daydream.mp3",
+    expolsion1: "./assets/sound/misc/sfx_exp_shortest_soft8.mp3",
+    expolsion2: "./assets/sound/misc/sfx_explosion_colorful_shorter_7.wav",
+    throw: "./assets/sound/misc/sfx_throw_something1.mp3",
+    loadingAttack1: "./assets/sound/misc/loading-attack.wav",
+    loadingAttack2: "./assets/sound/misc/loading-attack-2.wav",
+    blast1: "./assets/sound/misc/sfx_blast_1.mp3",
+    blast2: "./assets/sound/misc/sfx_emerge_short_33.wav",
+    teleport1: "./assets/sound/misc/sfx_movement_portal1.wav",
+    teleport2: "./assets/sound/misc/sfx_emerge_medium_109.wav",
+    
+    battleBoss: "./assets/sound/music/bgm_evil_3_furious.mp3",
+    musicPixelDayDream: "./assets/sound/music/bgm_stage_1.mp3",
     WhisperstheWoods: "./assets/sound/music/WhisperstheWoods.mp3",
     forestAmbient: "./assets/sound/music/forest-ambient.mp3",
     }

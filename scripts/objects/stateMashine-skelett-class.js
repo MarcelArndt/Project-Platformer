@@ -247,7 +247,6 @@ export class Attack{
         entity.checkIsPlayerinAggro();
         if(!entity.PlayerInAggro[1]){
             entity.stateMachine.changeState(new Walking()); 
-
         }
         if(entity.getHit){
             entity.stateMachine.changeState(new GetHit());    
@@ -310,10 +309,11 @@ export class Death{
         entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
         entity.disableHitboxAndWithAllwaysOn(entity.index);
         entity.level.minionCounter--;
+        entity.animationIsRunning = true;
     }
 
     behave(entity){
-        entity.pushBack(0.45,1.25);
+        entity.pushBack(0.45, 1.25);
         if(!entity.onGround){
             entity.animationStatus = "death";
         } else if (entity.onGround){
@@ -327,7 +327,6 @@ export class Death{
     }
 
     checkConditions(entity){ 
-
     }
 
     leaveState(entity){

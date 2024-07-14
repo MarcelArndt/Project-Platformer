@@ -37,7 +37,7 @@ export class Player extends Box {
     this.maxInvincibilityTimer = 1.15;
     this.maxGetHitAndLoseControllTimer = 0.5;
     this.score = options.score || 0;
-    this.lives = options.lives || 5;
+    this.lives = options.lives || 3;
     this.stateMachine = new StateMachine(new Idle(), this);
 
     this.cooldown = {
@@ -65,8 +65,9 @@ export class Player extends Box {
     this.alreadyGetControll = false;
     this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
     this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
-    this.statusbar = new StatusBar( options.health || 30, this.health, [25,20], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [35,0] )
-    this.scoreBar = new ScoreBar([25,70]);
+    this.statusbar = new StatusBar( options.health || 30, this.health, [20,17], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [6.75,27], false, 1.11 );
+    this.scoreBar = new ScoreBar([32,73], {addSuffix: " ", addpPrefix: "SCORE:  "});
+    this.lifeCounter = new ScoreBar([59,32], {addSuffix: " ", addPrefix: "x ", decimalAmount: 2, fontSize: 10,});
     this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,1)"}, this,)
     this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,1))"}, this,)
     this.addControll();
@@ -213,6 +214,7 @@ export class Player extends Box {
     this.stateMachine.updateState();
     this.statusbar.update(this.health);
     this.scoreBar.update(this.score);
+    this.lifeCounter.update(this.lives);
   }
 
   playerAttack() {

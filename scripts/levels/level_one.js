@@ -3,7 +3,8 @@ import { Level } from "../level.js";
 import { Tileset } from "../tileset.js";
 
 let ambientMusic = soundIsloadet.forestAmbient;
-let levelMusic = soundIsloadet.musicPixelDayDream;
+let levelMusic = soundIsloadet.musicPixelDayDream
+let bossMusic = soundIsloadet.battleBoss;
 let tileSetImage = imageIsloadet.tileset;
 
 let tileset = null
@@ -40,7 +41,6 @@ async function init() {
   await loadJson();
   generateTileset();
 }
-
 await init();
 
 export const levelOne = new Level({
@@ -53,6 +53,7 @@ export const levelOne = new Level({
   tileSize: tileSize,
   currentLevelMusic: levelMusic,
   currentAmbient: ambientMusic,
+  currentBossMusic: bossMusic,
   objectofType: {
     Rectangle: [],
     Box: [],

@@ -34,8 +34,8 @@ export class Hitbox extends Entity{
     }
 
     draw(){
-        if(this.isAktiv && this.level.showDebug || this.isAllawysAktiv && this.level.showDebug){
-            ctx.fillStyle = "rgba(225,50,0,0.1)";
+        if(this.level.showDebug){
+            ctx.fillStyle = this.isAktiv ? "rgba(255,50,0,0.1)":"rgba(125,125,125,0.4)";
             ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
         }
     }

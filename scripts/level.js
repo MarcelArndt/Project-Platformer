@@ -2,7 +2,7 @@ import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
 import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume} from "./menuScript.js";
+import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground} from "./menuScript.js";
 import { ctx } from "./canvas.js";
 import { renderdebugCode } from "./template.js";
 export let camera = {
@@ -25,6 +25,8 @@ export class Level {
     this.tileset = option.tileset;
     this.currentLevelMusic = option.currentLevelMusic;
     this.currentAmbient = option.currentAmbient;
+    this.currentBossMusic =  option.currentBossMusic;
+    this.bossAlreadySeen = false;
     this.currentLevelMusic.loop = true;
     this.currentAmbient.loop = true;
     this.player = null;
@@ -33,6 +35,7 @@ export class Level {
     this.timer = new Timer();
     this.status = status.ready;
     this.levelIsWon = false;
+    this.Gamelose = false;
     this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
     this.objectsOfType = {
       Rectangle: [],
@@ -53,9 +56,10 @@ export class Level {
     this.screenAnimationMaxTimer = 5;
     this.screenEffektTimer = 0;
     this.globalVolume = globalVolume || 0;
+    this.bossVolume = 0;
     this.showDebug = false;
     this.minionCounter = 0;
-  
+    this.playerLives = 0;
     this.savedGlobalVolume = this.globalVolume;
     this.keyFuncRef = (e) => this.keyFunction(e);
     this.mouseFuncRef = (e) => this.mouseFunction(e);
@@ -117,7 +121,7 @@ export class Level {
       clearCanvas();
       this.checkForVolume();
       this.updateCamera();
-      this.checkWin();
+      this.checkGameWin();
       this.checkScreenshakeTime(deltaTime, 1);
       this.calculateScreenshakeValue(deltaTime);
       this.background.updateBackground(this.player);
@@ -131,13 +135,18 @@ export class Level {
       }
       this.player.scoreBar.drawScore();
       this.player.statusbar.drawBar();
+      this.player.lifeCounter.drawScore();
       this.drawDebug(deltaTime);
   }
 
   checkForVolume(){
     this.globalVolume = globalVolume;
-    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
-    this.currentAmbient.volume = 0.7 * this.globalVolume;
+    this.currentLevelMusic.volume = this.globalVolume * this.bossVolume;
+    if(this.bossAlreadySeen){
+      this.currentBossMusic.play();
+      this.currentBossMusic.volume = this.globalVolume * this.calculateBossVolume() * 0.5;
+    }
+    this.currentAmbient.volume = this.globalVolume * this.bossVolume;
   }
 
 
@@ -223,8 +232,28 @@ export class Level {
     this.game.switchToNextLevel();
   }
 
+  checkGameWin() {
+    if (!this.levelIsWon) return;
+    endMenuScreen();
+    drawMenuBookBackground();
+    this.status = status.pause;
+    this.timer.pause;
+    this.removeControll();
+    this.currentAmbient.pause();
+    this.currentLevelMusic.pause();
+    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    this.status = status.pause;
+    this.timer.getInPause();
+    this.game.endGame();
+    this.game.committedValueToGame();
+    this.currentAmbient.pause();
+    this.currentLevelMusic.pause();
+    this.currentBossMusic.pause();
+  }
+
   createDemageboxes(){
-    this.demageBoxes = {};
+  this.demageBoxes = {};
   this.objects.forEach((obj) => {
       let HitboxArray = [];
       if(obj.demageBoxes != undefined && obj.demageBoxes.length > 0){
@@ -238,13 +267,20 @@ export class Level {
   }
 
   playBackgroundMusic(){
-    this.currentLevelMusic.play()
-    this.currentLevelMusic.volume = 0.35 * this.globalVolume;
-    this.currentAmbient.play()
-    this.currentAmbient.volume = 0.7 * this.globalVolume;
+    this.currentLevelMusic.play();
+    this.currentAmbient.play();
+  }
+
+  calculateBossVolume(){
+    let volume = 1 - this.bossVolume;
+    volume = volume >= 1 ? 1:volume;
+    volume = volume <= 0 ? 0:volume;
+    this.currentLevelMusic.volume = volume >= 0.8 ? 0:this.currentLevelMusic.volume;
+    return volume
   }
 
   start() {
+    this.currentBossMusic.volume = 0;
     canvasOverlayContent.innerHTML = "";
     this.background = new Background({ color: "#453d4f" }, [
       imageIsloadet.backgroundOne,
@@ -258,8 +294,8 @@ export class Level {
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
     this.originPlayerSize = [... this.player.size];
-    this.playBackgroundMusic();
     pullIngameGui();
+    this.playBackgroundMusic();
     this.game.committedValueToGame();
   }
 
@@ -268,9 +304,10 @@ export class Level {
     soundIsloadet.tone07.play();
     this.currentAmbient.pause();
     this.currentLevelMusic.pause();
+    this.currentBossMusic.pause();
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0, imageIsloadet.menuBackgroundBook.width, imageIsloadet.menuBackgroundBook.height, 0 , 0, imageIsloadet.menuBackgroundBook.width / 180 * 100 * 1.45, imageIsloadet.menuBackgroundBook.height / 180 * 100 * 1.45)
+    drawMenuBookBackground();
     pullPauseMenu(modus);
     this.status = status.pause;
     this.timer.getInPause();
@@ -280,13 +317,12 @@ export class Level {
 
   gameOver() {
     this.savedGlobalVolume = this.globalVolume;
-    this.removeControll();
     this.timer.getInPause();
     this.currentAmbient.pause();
     this.currentLevelMusic.pause();
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0);
+    drawMenuBookBackground();
     pullPauseMenu();
   }
 
@@ -310,7 +346,16 @@ export class Level {
     this.rebuildLevel();
   }
 
+  resetGame() {  
+    this.status = status.pause;
+    this.timer.getInPause();
+    this.cleanUpLevel();
+    this.rebuildLevel();
+  }
+
   cleanUpLevel(){
+    this.playerLives = this.player.lives;
+    this.bossAlreadySeen = false;
     this.savedGlobalVolume = this.globalVolume;
     this.demageBoxes = null;
     this.screenshakeToggle = false;
@@ -327,12 +372,16 @@ export class Level {
       imageIsloadet.backgroundTwo,
       imageIsloadet.backgroundThree,
     ], this);
+    this.currentBossMusic.volume = 0;
+    this.currentBossMusic.currentTime = 0;
     this.globalVolume = this.savedGlobalVolume;
     canvasOverlayContent.innerHTML = "";
     this.tileset.generateLevel(this);
     this.createDemageboxes();
     this.player = this.objectsOfType.Player[0];
+    this.player.lives = this.playerLives -1;
     this.status = status.running;
+    this.bossAlreadySeen = false;
     this.timer.pause = false;
     this.timer.start();
     this.playBackgroundMusic();

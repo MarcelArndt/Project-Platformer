@@ -4,13 +4,12 @@ import { imageIsloadet, soundIsloadet } from "../assets.js";
 import { ctx, canvas} from "../canvas.js";
 import { StatusBar } from "./statusBar-class.js";
 import { Skelett } from "./skelett-class.js";
-
-let animationImage = imageIsloadet.ghost
+import { Collider } from "./collider-class.js";
 
 export class GhostBoss extends Enemy{
     constructor(options, type){
         super({
-            spriteSheet: animationImage,
+            spriteSheet: imageIsloadet.ghost,
             pos: options.pos,
             size: options.size,
             color: options.color || "black",
@@ -25,12 +24,12 @@ export class GhostBoss extends Enemy{
             type: type || "Enemy"
         });
         this.subType = "Boss";
-        this.status = "idle";
         this.animationStatus = "idle";
         this.prevStatus = "idle";
         this.stateMachine = new StateMachine(new Init(), this);
         this.originalPos = [... this.pos];
         this.originalWalkspeed = options.walkspeed;
+        this.collider = new Collider(this);
         this.grav = 0;
 
         this.animationFrames = {
@@ -58,7 +57,7 @@ export class GhostBoss extends Enemy{
         this.frameHight = 307;
         this.animationImage = imageIsloadet.ghost;
         this.frameHightOffset = -75;
-        this.frameWidthOffset = 85;
+        this.frameWidthOffset = 75;
         this.currentTime = 0;
         this.maxInvincibilityTimer = 0.55;
         this.isAbove = false;
@@ -71,7 +70,7 @@ export class GhostBoss extends Enemy{
         this.health = this.maxHealth
         this.moveRange = 300;
         this.alreadyTeleport = false;
-        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650 );
+        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650, 0.8 );
     }
 
 
@@ -84,12 +83,14 @@ export class GhostBoss extends Enemy{
 
 
     update(deltaTime){
-        this.facingTowardsPlayer();
         super.update(deltaTime);
+        this.facingTowardsPlayer();
         this.checkIsAbove();
         this.checkDistanceToPlayer();
         this.adjustLevelCamera();
+        this.adjustLevelMusic();
         this.statusbar.update(this.health, this.distanceToPlayer);
+        this.collider.update();
         this.drawConnectionLine();
     }
 
@@ -114,7 +115,6 @@ export class GhostBoss extends Enemy{
             spawnPoint = this.generateNewSpawnPoint();
             isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
         } while (isNotPossibleToSpawn || (Math.abs(lastSpawnPoint - spawnPoint) <= 45));
-    
         return spawnPoint;
     }
 
@@ -159,6 +159,25 @@ export class GhostBoss extends Enemy{
             this.setBottom(this.level.player.posTop - this.size[1] - 50);
         }
     }
+
+
+    adjustLevelMusic(){
+        this.level.currentLevelMusic.volume = (0.35 * this.level.globalVolume) * this.level.bossVolume;
+        this.level.currentAmbient.volume = (0.7 * this.level.globalVolume) * this.level.bossVolume;
+        if(this.distanceToPlayer < 550 && this.level.bossVolume >= 0){
+            this.level.bossVolume -= 0.03
+        }
+        if(this.distanceToPlayer > 700 && this.level.bossVolume <= 1){
+            this.level.bossVolume += 0.03
+        } 
+        if( this.level.bossVolume <= 0){
+            this.level.bossVolume = 0;
+        }
+        if(this.level.bossVolume >= 1){
+            this.level.bossVolume = 1;
+        }
+    }
+
 
     adjustLevelCamera(){
         if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
@@ -224,8 +243,6 @@ export class GhostBoss extends Enemy{
         }
         this.turnAroundBydistance();
     }
-
-
 
     turnAroundBydistance(){
         let distance = this.distanceToOrigin();

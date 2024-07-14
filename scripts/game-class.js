@@ -60,4 +60,8 @@ export class Game {
     this.currentLevel.resume();
   }
 
+  endGame(){
+    
+  }
+
 }

@@ -1,7 +1,6 @@
 import { ctx, clearCanvas, canvasScalingFactor } from "./canvas.js";
 import { imageIsToLoading, soundsIsToLoading,} from "./datasetForLoading.js";
 import { soundIsloadet, imageIsloadet } from "./assets.js";
-
 export let percentageLoadet =  0;
 
 export function checkCurrentStatus(){

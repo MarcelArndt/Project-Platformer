@@ -1,6 +1,7 @@
 import { Entity} from "./entity-class.js";
 import { imageIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
+
 export class Projectile extends Entity{
     constructor(options, type){
         const {pos, size, color, value, subType} = options
@@ -11,6 +12,7 @@ export class Projectile extends Entity{
         this.speedX = options.speedX || 0.7;
         this.speedY = options.speedY || 0.5;
         this.speedMultiplyer = options.speedMultiplyer || 0.1;
+        this.startSound = options.startSound || 0.1;
         this.prevPos = options.pos || [0,0];
         this.grav = options.grav || 0;
         this.stateMaschine = new StateMachine(new StartAnimationDelay(), this)
@@ -34,6 +36,7 @@ export class Projectile extends Entity{
         this.scaling = 0.625;
         this.animationTimer = 0;
         this.collider = new Collider(this);
+        this.isInCollision = false;
     }
 
     update(deltaTime){
@@ -46,7 +49,10 @@ export class Projectile extends Entity{
     aktivInCollision(obj, direction){
         if(obj.type == this.demageFlag){
             obj.reciveHitFromObj(direction, this.demage);
+        } else if(obj.type == "Rectangle"){
+            this.isInCollision = true;
         }
+        this.isInCollision = true;
     }
 
     moveProjectile(deltaTime){
@@ -99,7 +105,9 @@ class StartAnimationDelay {
             entity.stateMaschine.changeState(new IdleAnimation());
         }
     }
-    leaveState(entity){}
+    leaveState(entity){
+        entity.chooseRandomSound(["throw"])
+    }
 }
 
 class IdleAnimation {
@@ -116,10 +124,13 @@ class IdleAnimation {
         if(!entity.alive){
             entity.stateMaschine.changeState(new EndAnimation());
         }
+        if(this.isInCollision){
+            
+            entity.stateMaschine.changeState(new EndAnimation());
+        }
     }
 
-    leaveState(entity){
-
+    leaveState(entity){  
     }
 } 
 
@@ -127,6 +138,7 @@ class EndAnimation{
     start(entity){
         entity.animationStatus = "ending"
         entity.animationIsRunning = true;
+        entity.alive = false;
     }
 
     behave(entity, deltaTime){

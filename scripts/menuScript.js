@@ -1,8 +1,9 @@
 
 
-import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip} from "./template.js";
+import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip, renderEndMenu} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
-import { soundIsloadet } from "./assets.js";
+import { soundIsloadet, imageIsloadet} from "./assets.js";
+import { ctx } from "./canvas.js";
 export let currentGame = null;
 export let currentLevelOne = null;
 export let globalVolume = 0.6;
@@ -113,6 +114,11 @@ export function playSound(sound){
     }
 }
 
+
+export function drawMenuBookBackground(){
+    ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0, imageIsloadet.menuBackgroundBook.width, imageIsloadet.menuBackgroundBook.height, 0 , 0, imageIsloadet.menuBackgroundBook.width / 180 * 100 * 1.45, imageIsloadet.menuBackgroundBook.height / 180 * 100 * 1.45)
+}
+
 function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = [], newSrc = ""){
     let element = document.querySelectorAll([`[value="${attribute}"]`]);
     element.forEach((obj) => {
@@ -131,4 +137,10 @@ function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = 
             obj.src = newSrc;
         }
     })
+}
+
+
+export function endMenuScreen(isWon = false){
+    drawMenuBookBackground();
+    canvasOverlayContent.innerHTML = renderEndMenu();
 }

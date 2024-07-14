@@ -2,7 +2,7 @@ import { ctx } from "../canvas.js";
 export class Collider {
     constructor(entity, toggle = true,){
         this.entity = entity;
-        this.isAvailable = toggle;
+        this.isAvailable = toggle || true;
     }
 
     /**
@@ -100,7 +100,8 @@ export class Collider {
      */
     checkSpecialHandle(obj, direction){
         return (
-            !this.checkforBird(obj)
+            !this.checkHitbox()
+            && !this.checkforBird(obj)
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
             && !this.checkforGetHit(obj)
@@ -110,7 +111,7 @@ export class Collider {
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
             && !this.checkBoss(obj, direction)
-            && !this.checkHitbox(obj, direction)
+
         );
     }
 
@@ -158,27 +159,33 @@ export class Collider {
     }
 
     checkProjectile(obj, direction){
-        if (obj.subType == "Projectile" && this.entity.type == "Player" || obj.subType == "Projectile" && this.entity.type == "Enemy"){
-            obj.aktivInCollision(this.entity, direction)
+        let validType = ["Player", "Enemy", "Rectangle"]
+        if (obj.subType == "Projectile" && validType.includes(this.entity.type)){
+            obj.aktivInCollision(this.entity, direction);
             return true
         }
+        return false
     }
 
-    checkHitbox(obj, direction){
+    checkHitbox(){
        let hitBoxArray = null;
        let gethitfrom = null;
         for (let i = 0; i < Object.keys(this.entity.level.demageBoxes).length; i++){
                 hitBoxArray = this.entity.level.demageBoxes[Object.keys(this.entity.level.demageBoxes)[i]];
-                hitBoxArray .forEach((box => {
+                hitBoxArray.forEach((box => {
+                    if(this.entity.subType == "Boss" && this.entity.collideWith(box)){
+                        console.log(this.entity);
+                        console.log(box);
+                       }
                    if(this.entity.collideWith(box) && box.demageFlag == this.entity.type && box.isAktiv){
                     gethitfrom = box.forceToLeft == true ? "left" : "right"
                     box.aktivInCollision(this.entity, gethitfrom);
                    }
-                }))
+            }));
         }
     }
 
-    checkBoss(obj, direction){
+    checkBoss(obj){
         return (obj.subType == "Boss" && this.entity.type != "Rectangle" || this.entity.subType == "Boss" && obj.type != "Rectangle");
     }
 }

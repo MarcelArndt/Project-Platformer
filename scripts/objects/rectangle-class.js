@@ -1,4 +1,5 @@
-import {ctx} from "../canvas.js";
+import { ctx } from "../canvas.js";
+import { Collider } from "./collider-class.js";
 
 export class Rectangle {
     constructor(option, type){
@@ -24,6 +25,7 @@ export class Rectangle {
     this.frameHightOffset = 0;
     this.animationIsRunning = false;
     this.scaling = 1;
+    this.collider = new Collider(this);
     }
 
     get posLeft(){
@@ -67,9 +69,10 @@ export class Rectangle {
     }
 
     draw(){
-       // this.pos[0] < this.level.cameraPos[0] + (canvas.width / 1.5) 
-        if (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width){
-            
+        let buffer = 75;
+        if (this.pos[0] > this.level.cameraPos[0] - buffer && this.pos[0]  < this.level.cameraPos[0] + canvas.width
+            && this.pos[1] > this.level.cameraPos[1] - buffer && this.pos[1] < this.level.cameraPos[1] + canvas.height
+        ){
             if(Object.keys(this.animationFrames).length > 0){
                 this.drawAnimation();
             }  else {
@@ -89,6 +92,7 @@ export class Rectangle {
         );
     }
 
+
     updateAnimationTimer(deltaTime = this.level.timer.deltaTime){
         let secDeltaTime = deltaTime / 100 * this.animationSpeed;
         if(this.animationTimer >= (this.animationFrames[this.animationStatus][0].length -1) && !this.animationFrames[this.animationStatus][1]){
@@ -104,6 +108,7 @@ export class Rectangle {
         
     }
 
+    
     updateFrameAnimation(deltaTime, speed = 1){
             let FrameIndex = 0;
             this.updateAnimationTimer(deltaTime, speed)

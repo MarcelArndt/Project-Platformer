@@ -1,7 +1,8 @@
 import { ctx } from "../canvas.js";
 
 export class ScoreBar{
-    constructor(posOnCanvas, initStartValue, color, shadowColor){
+    constructor(posOnCanvas, options, initStartValue){ 
+        const {color, shadowColor, addSuffix, addPrefix, decimalAmount, fontSize} = options
         this.posX = posOnCanvas[0];
         this.posY = posOnCanvas[1];
         this.currentValue = initStartValue || 0;
@@ -9,6 +10,10 @@ export class ScoreBar{
         this.posOnCanvas = posOnCanvas;
         this.color = color || "rgba(255,255,255,1)";
         this.shadowColor = shadowColor || "rgba(0,0,0,0.6)";
+        this.addSuffix = addSuffix || "";
+        this.addPrefix = addPrefix || "SCORE: ";
+        this.decimalAmount =  decimalAmount || 6;
+        this.fontSize = fontSize || 11;
     }
 
     update(currentValue){
@@ -17,11 +22,11 @@ export class ScoreBar{
     }
 
     drawScore(){
-        ctx.font = "11px PixelifySans";
+        ctx.font = `${this.fontSize}px PixelifySans`;
         ctx.fillStyle = this.shadowColor;
-        ctx.fillText(`SCORE: ${this.stingyfyValue}`, this.posX + 1, this.posY + 2);
+        ctx.fillText(`${this.addPrefix}${this.stingyfyValue}${this.addSuffix}`, this.posX + 1, this.posY + 2);
         ctx.fillStyle = this.color;
-        ctx.fillText(`SCORE: ${this.stingyfyValue}`, this.posX, this.posY);
+        ctx.fillText(`${this.addPrefix}${this.stingyfyValue}${this.addSuffix}`, this.posX, this.posY);
     }
 
 
@@ -37,8 +42,8 @@ export class ScoreBar{
         } else {
             value = stingValue;
         }
-        if(value.length <= 5){
-            for( let i = value.length; i < 6; i++){
+        if(value.length <= this.decimalAmount){
+            for( let i = value.length; i < this.decimalAmount; i++){
                 value = "0" + value;
             }
         } else if (value == null || value == undefined){
