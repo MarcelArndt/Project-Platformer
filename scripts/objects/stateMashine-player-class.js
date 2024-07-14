@@ -282,6 +282,7 @@ export class GetHit {
     entity.animationStatus = "getHit";
     entity.type = "GetHit";
     entity.removeControll();
+    entity.chooseRandomSound([soundIsloadet.hitPlayer]);
   }
 
   behave(entity) {
@@ -311,8 +312,8 @@ export class GetHit {
 //////////////////////////////////////
 class Death {
   start(entity) {
+    entity.chooseRandomSound([soundIsloadet.deathPlayer]);
     entity.animationStatus = "death";
-    entity.chooseRandomSound([soundIsloadet.playerStepsThree, soundIsloadet.playerStepsTwo]);
     entity. removeControll();
     entity.type = "Death";
     entity.acc = 0;

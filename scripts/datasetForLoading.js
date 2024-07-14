@@ -74,6 +74,9 @@ export let imageIsToLoading = {
 
     hit09: "./assets/sound/enemy/hit09.ogg",
     hit03: "./assets/sound/enemy/hit03.ogg",
+
+    hitPlayer: "./assets/sound/character/sfx_player_demage.wav",
+    deathPlayer: "./assets/sound/character/sfx_misc_death2.wav",
   
     heavySwordOne: "./assets/sound/enemy/heavy_sword_001.mp3",
     heavySwordTwo: "./assets/sound/enemy/heavy_sword_002.mp3",
