@@ -26,6 +26,7 @@ export class Rectangle {
     this.animationIsRunning = false;
     this.scaling = 1;
     this.collider = new Collider(this);
+    this.isOnScreen = false;
     }
 
     get posLeft(){
@@ -73,13 +74,16 @@ export class Rectangle {
         if (this.pos[0] > this.level.cameraPos[0] - buffer && this.pos[0]  < this.level.cameraPos[0] + canvas.width
             && this.pos[1] > this.level.cameraPos[1] - buffer && this.pos[1] < this.level.cameraPos[1] + canvas.height
         ){
+            this.isOnScreen = true;
             if(Object.keys(this.animationFrames).length > 0){
                 this.drawAnimation();
             }  else {
                 ctx.fillStyle = this.color;  
                 ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
             }
-        } 
+        } else {
+            this.isOnScreen = false;
+        }
     }
 
     collideWith(objectRectangle, VectorOffest = [0,0]){

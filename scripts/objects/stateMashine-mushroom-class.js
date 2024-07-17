@@ -85,7 +85,7 @@ class Walking{
 
     checkConditions(entity){
         entity.checkIsPlayerinAggro();
-        if (entity.PlayerInAggro[0]){
+        if (entity.PlayerInAggro[0] && entity.level.player.health > 0){
             entity.stateMachine.changeState(new Chasing());
             this.leaveState(entity);
         }
@@ -143,10 +143,10 @@ class Chasing{
 
     checkConditions(entity){
         entity.checkIsPlayerinAggro();
-        if (!entity.PlayerInAggro[0]){
+        if (!entity.PlayerInAggro[0] || entity.level.player.animationStatus == "death"){
             entity.stateMachine.changeState(new Walking());
             this.leaveState(entity) ; 
-        } else if (entity.PlayerInAggro[1]){
+        } else if (entity.PlayerInAggro[1] && entity.level.player.animationStatus != "death"){
             entity.stateMachine.changeState(new Attack());  
             this.leaveState(entity);
         }
@@ -218,7 +218,7 @@ class Attack{
 
     checkConditions(entity){
         entity.checkIsPlayerinAggro();
-        if(!entity.PlayerInAggro[1]){
+        if(!entity.PlayerInAggro[1] || entity.level.player.animationStatus == "death"){
             entity.stateMachine.changeState(new Walking()); 
             if(!entity.PlayerInAggro[0]){
                 entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);

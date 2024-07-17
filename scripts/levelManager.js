@@ -1,4 +1,4 @@
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground} from "./menuScript.js";
+import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground, pullGameReady} from "./menuScript.js";
 import { ctx, canvas} from "./canvas.js";
 import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
@@ -9,6 +9,7 @@ let status = {
     running: 3,
     freeze: 4,
   };
+
 export class LevelManager{
     constructor (level){
         this.level = level;
@@ -37,28 +38,26 @@ export class LevelManager{
       }
     
       keyFunction(e) {
-        if (e.key == "p" || e.key == "enter") {
+        switch (e.key) {
+          case "p":  
           if (this.level.status == status.ready) {
             this.start();
           } else if (this.level.status == status.running) {
             this.pause();
           } else if (this.level.status == status.pause) {
             this.resume();
-          }
-        } else if (e.key == "r" && this.level.status == status.running) {
-          this.resetLevel();
-        }
-        else if (e.key == "?") { 
-          this.showDebug = this.level.showDebug == false ? true:false;
+          }; break;
+          case "r": if(this.level.status == status.running){
+            this.resetLevel();
+          }; break;
+          case "?":  this.level.showDebug = this.level.showDebug == false ? true:false; break;
+          case `*`:  this.level.levelIsWon = true; break;
         }
       }
 
       pause(modus = 0) {
         soundIsloadet.tone07.volume = 1 * this.level.globalVolume;
         soundIsloadet.tone07.play();
-        this.level.currentAmbient.pause();
-        this.level.currentLevelMusic.pause();
-        this.level.currentBossMusic.pause();
         ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
         ctx.fillRect(0,0, canvas.width, canvas.height);
         drawMenuBookBackground();
@@ -67,19 +66,20 @@ export class LevelManager{
         this.level.timer.getInPause();
         this.level.savedGlobalVolume = this.level.globalVolume;
         this.level.globalVolume = 0;
+        this.level.musicManager.pause();
       }
 
       resume(){
         soundIsloadet.tone09.volume = 1 * this.level.globalVolume;
         soundIsloadet.tone09.play();
         this.level.globalVolume = this.level.savedGlobalVolume;
-        this.level.playBackgroundMusic();
         canvasOverlayContent.innerHTML = "";
         this.level.status = status.running;
         this.level.timer.pause = false;
         this.level.timer.start();
         pullIngameGui();
         checkForVolume();
+        this.level.musicManager.resume();
       }
     
       start() {
@@ -96,10 +96,11 @@ export class LevelManager{
         this.level.tileset.generateLevel(this.level);
         this.level.createDemageboxes();
         this.level.player = this.level.objectsOfType.Player[0];
+        this.level.originPlayerLives = this.level.player.maxHealth;
         this.level.originPlayerSize = [... this.level.player.size];
         pullIngameGui();
-        this.level.playBackgroundMusic();
         this.level.game.committedValueToGame();
+        this.level.musicManager.play(soundIsloadet.musicPixelDayDream);
       }
 
       resetLevel() {  
@@ -107,6 +108,10 @@ export class LevelManager{
         this.level.timer.getInPause();
         this.cleanUpLevel();
         this.rebuildLevel();
+      }
+
+      endGame(){
+        this.pause();
       }
     
       cleanUpLevel(){
@@ -140,8 +145,27 @@ export class LevelManager{
         this.level.bossAlreadySeen = false;
         this.level.timer.pause = false;
         this.level.timer.start();
-        this.level.playBackgroundMusic();
         pullIngameGui();
         checkForVolume();
       }
+
+    resetGame(){
+      this.level.levelIsWon = false;
+      this.level.Gamelose = false;
+      this.resetLife();
+      this.resetScore();
+      this.resetLevel();
+      this.level.status = status.pause;
+      this.level.timer.getInPause();
+      pullGameReady();
+    }
+
+    resetLife() {
+      this.level.player.lives = this.level.originPlayerLives + 1;
+    }
+
+    resetScore(){
+      this.level.player.score = 0;
+    }
+
 }

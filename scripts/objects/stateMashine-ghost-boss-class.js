@@ -72,6 +72,7 @@ export class Idle{
     start(entity){
         entity.animationStatus = "idle"
         entity.acc = 0;
+        entity.level.playerInBossRange = false;
     }
 
     behave(entity){
@@ -100,7 +101,7 @@ export class Idle{
             entity.stateMachine.changeState(new AttackThrow());
         }
 
-        if(entity.isAbove && randomNumbChoice >= 15 && randomNumbChoice <= 20){
+        if(entity.isAbove && randomNumbChoice >= 15 && randomNumbChoice <= 20 && entity.level.minionCounter < 3){
             entity.stateMachine.changeState(new AttackSpawnMinion());
         }
 
@@ -124,7 +125,7 @@ export class Idle{
     }
     
     leaveState(entity){
-        
+        entity.level.playerInBossRange = true;
     }
 }
 
@@ -348,7 +349,10 @@ class Death{
 
     checkConditions(entity){ 
         if(!entity.animationIsRunning){
+            entity.isAlive = false;
+            entity.level.musicManager.stop();
             entity.level.levelIsWon = true;
+            entity.delete();
         }
     }
 

@@ -6,6 +6,7 @@ import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScre
 import { ctx } from "./canvas.js";
 import { renderdebugCode } from "./template.js";
 import { LevelManager } from "./levelManager.js";
+import { MusikManager } from "./musikManager.js";
 export let camera = {
   pos: [0, 0],
 };
@@ -29,8 +30,6 @@ export class Level {
     this.currentAmbient = option.currentAmbient;
     this.currentBossMusic =  option.currentBossMusic;
     this.bossAlreadySeen = false;
-    this.currentLevelMusic.loop = true;
-    this.currentAmbient.loop = true;
     this.player = null;
     this.game = null;
     this.index = 0;
@@ -62,8 +61,11 @@ export class Level {
     this.showDebug = false;
     this.minionCounter = 0;
     this.playerLives = 0;
+    this.originPlayerLives = 0;
     this.savedGlobalVolume = this.globalVolume;
+    this.playerInBossRange = false;
     this.levelManager = new LevelManager(this);
+    this.musicManager = new MusikManager(option.currentLevelMusic, option.currentAmbient);
   }
 
     /**
@@ -84,35 +86,33 @@ export class Level {
   update(deltaTime) {
       clearCanvas();
       this.checkForVolume();
+      this.musicManager.update(this.globalVolume, deltaTime);
       this.updateCamera();
-      this.checkGameWin();
       this.checkScreenshakeTime(deltaTime, 1);
       this.calculateScreenshakeValue(deltaTime);
-      this.background.updateBackground(this.player);
-      this.tileset.draw(this.cameraPos);
-      for (let i = 0; i < this.objects.length; i++) {
-        this.objects[i].draw()
-          if (this.objects[i].statusbar && this.objects[i].type != "Player"){
-            this.objects[i].statusbar.drawBar();
-           } 
-        this.objects[i].update(deltaTime);
-      }
-      this.player.scoreBar.drawScore();
-      this.player.statusbar.drawBar();
-      this.player.lifeCounter.drawScore();
-      this.drawDebug(deltaTime);
+      this.drawGame(deltaTime);
+      this.checkGameWin();
+  }
+
+  drawGame(deltaTime){
+    this.background.updateBackground(this.player);
+    this.tileset.draw(this.cameraPos);
+    for (let i = 0; i < this.objects.length; i++) {
+      this.objects[i].draw()
+        if (this.objects[i].statusbar && this.objects[i].type != "Player"){
+          this.objects[i].statusbar.drawBar();
+         } 
+      this.objects[i].update(deltaTime);
+    }
+    this.player.scoreBar.drawScore();
+    this.player.statusbar.drawBar();
+    this.player.lifeCounter.drawScore();
+    this.drawDebug(deltaTime);
   }
 
   checkForVolume(){
     this.globalVolume = globalVolume;
-    this.currentLevelMusic.volume = this.globalVolume * this.bossVolume;
-    if(this.bossAlreadySeen){
-      this.currentBossMusic.play();
-      this.currentBossMusic.volume = this.globalVolume * this.calculateBossVolume() * 0.5;
-    }
-    this.currentAmbient.volume = this.globalVolume * this.bossVolume;
   }
-
 
   drawDebug(deltatime){
     if( this.showDebug){
@@ -184,35 +184,10 @@ export class Level {
     }
   }
 
-  checkWin() {
-    if (!this.levelIsWon) return;
-    this.status = status.pause;
-    this.timer.pause;
-    this.removeControll();
-    this.game.playerLives = this.player.lives;
-    this.game.playerHealth = this.player.health;
-    this.game.playerScore = this.player.score;
-    this.game.switchToNextLevel();
-  }
-
   checkGameWin() {
-    if (!this.levelIsWon) return;
-    endMenuScreen();
-    drawMenuBookBackground();
-    this.status = status.pause;
-    this.timer.pause;
-    this.removeControll();
-    this.currentAmbient.pause();
-    this.currentLevelMusic.pause();
-    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-    this.status = status.pause;
-    this.timer.getInPause();
-    this.game.endGame();
-    this.game.committedValueToGame();
-    this.currentAmbient.pause();
-    this.currentLevelMusic.pause();
-    this.currentBossMusic.pause();
+    if(this.levelIsWon){
+      this.levelManager.endGame()
+    }
   }
 
   createDemageboxes(){
@@ -229,27 +204,13 @@ export class Level {
     });
   }
 
-  playBackgroundMusic(){
-    this.currentLevelMusic.play();
-    this.currentAmbient.play();
-  }
-
-  calculateBossVolume(){
-    let volume = 1 - this.bossVolume;
-    volume = volume >= 1 ? 1:volume;
-    volume = volume <= 0 ? 0:volume;
-    this.currentLevelMusic.volume = volume >= 0.8 ? 0:this.currentLevelMusic.volume;
-    return volume
-  }
-
   gameOver() {
     this.savedGlobalVolume = this.globalVolume;
     this.timer.getInPause();
-    this.currentAmbient.pause();
-    this.currentLevelMusic.pause();
     ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
     ctx.fillRect(0,0, canvas.width, canvas.height);
     drawMenuBookBackground();
     pullPauseMenu();
   }
+
 }

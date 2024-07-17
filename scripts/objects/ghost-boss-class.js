@@ -29,9 +29,11 @@ export class GhostBoss extends Enemy{
         this.stateMachine = new StateMachine(new Init(), this);
         this.originalPos = [... this.pos];
         this.originalWalkspeed = options.walkspeed;
+        this.bossMusic = options.currentBossMusic || soundIsloadet.battleBoss;
         this.collider = new Collider(this);
         this.grav = 0;
-
+        this.isAlive = true;
+        this.musicAlreadyPlaying = false;
         this.animationFrames = {
             idle: [[{x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:4, y:0}], true],
             walking: [[{x:0, y:1}, {x:1, y:1}, {x:2, y:1}, {x:3, y:1}, {x:4, y:1}], true],
@@ -51,13 +53,13 @@ export class GhostBoss extends Enemy{
             MainAttackCooldownValue: 1350,
             secondAttackCooldownValue: 1350,
         }
-        this.scaling = 0.4;
+        this.scaling = 0.375;
         this.status = "idle";
         this.frameWidth = 315;
         this.frameHight = 307;
         this.animationImage = imageIsloadet.ghost;
         this.frameHightOffset = -75;
-        this.frameWidthOffset = 75;
+        this.frameWidthOffset = 85;
         this.currentTime = 0;
         this.maxInvincibilityTimer = 0.55;
         this.isAbove = false;
@@ -81,17 +83,15 @@ export class GhostBoss extends Enemy{
         }
     }
 
-
     update(deltaTime){
         super.update(deltaTime);
         this.facingTowardsPlayer();
         this.checkIsAbove();
         this.checkDistanceToPlayer();
         this.adjustLevelCamera();
-        this.adjustLevelMusic();
         this.statusbar.update(this.health, this.distanceToPlayer);
-        this.collider.update();
         this.drawConnectionLine();
+        this.adjustMusik();
     }
 
     spawnNewMinion(Amount){
@@ -99,7 +99,7 @@ export class GhostBoss extends Enemy{
         let finalSpawnPoint = 0;
         let lastSpawnPoint = 0; 
         for (let i = 0; i < Amount; i++){
-            if(this.level.minionCounter <= 5 && distance < 500){
+            if(this.level.minionCounter <= 3 && distance < 500){
                 finalSpawnPoint = this.checkForSpawnPoint(lastSpawnPoint);
                 lastSpawnPoint = finalSpawnPoint;
                 this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
@@ -161,30 +161,23 @@ export class GhostBoss extends Enemy{
     }
 
 
-    adjustLevelMusic(){
-        this.level.currentLevelMusic.volume = (0.35 * this.level.globalVolume) * this.level.bossVolume;
-        this.level.currentAmbient.volume = (0.7 * this.level.globalVolume) * this.level.bossVolume;
-        if(this.distanceToPlayer < 550 && this.level.bossVolume >= 0){
-            this.level.bossVolume -= 0.03
-        }
-        if(this.distanceToPlayer > 700 && this.level.bossVolume <= 1){
-            this.level.bossVolume += 0.03
-        } 
-        if( this.level.bossVolume <= 0){
-            this.level.bossVolume = 0;
-        }
-        if(this.level.bossVolume >= 1){
-            this.level.bossVolume = 1;
-        }
-    }
-
-
     adjustLevelCamera(){
         if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
             this.level.cameraHeightOffset ++;
         }   else if(this.distanceToPlayer > 700 && this.level.cameraHeightOffset > 0){
             this.level.cameraHeightOffset --;
         } 
+    }
+
+    adjustMusik(){
+        if(this.distanceToPlayer <= 600 && !this.musicAlreadyPlaying){
+            this.level.musicManager.setNewMusik(this.bossMusic);
+            this.musicAlreadyPlaying = true;
+        }
+        else if (this.distanceToPlayer > 600  && this.musicAlreadyPlaying){
+            this.level.musicManager.setNewMusik(soundIsloadet.musicPixelDayDream);
+            this.musicAlreadyPlaying = false;
+        }
     }
 
 

@@ -19,6 +19,7 @@ export class StateMachine {
   }
 }
 
+
 //////////////////////////////////////
 ////////// IDLE STATUS ////////////
 //////////////////////////////////////
@@ -314,7 +315,7 @@ class Death {
   start(entity) {
     entity.chooseRandomSound([soundIsloadet.deathPlayer]);
     entity.animationStatus = "death";
-    entity. removeControll();
+    entity.removeControll();
     entity.type = "Death";
     entity.acc = 0;
     this.countDown = 0;
@@ -324,7 +325,7 @@ class Death {
     if(!entity.animationIsRunning){
       this.countDown ++;
       if(this.countDown >= 50){      
-        entity.level.resetLevel();
+        entity.level.levelManager.resetLevel();
       }
     }
   }

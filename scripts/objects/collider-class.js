@@ -33,10 +33,15 @@ export class Collider {
             }
         }
 
+
     update(deltaTime){
+        let validType = ["Player", "Enemy"]
         this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
+            if (this.entity.isOnScreen && validType.includes(this.entity.type)){
+                this.checkHitbox();
+            }
             if(this.isAvailable == true && obj.subType != "SemiSolidBlock"){
                 this.checkFromBelow(obj);
                 this.checkFromAbove(obj);
@@ -93,6 +98,20 @@ export class Collider {
         }
     }
 
+    checkHitbox(){
+        let hitBoxArray = null;
+        let gethitfrom = null;
+         for (let i = 0; i < Object.keys(this.entity.level.demageBoxes).length; i++){
+                 hitBoxArray = this.entity.level.demageBoxes[Object.keys(this.entity.level.demageBoxes)[i]];
+                 hitBoxArray.forEach((box => {
+                    if(this.entity.collideWith(box) && box.demageFlag == this.entity.type && box.isAktiv){
+                     gethitfrom = box.forceToLeft == true ? "left" : "right"
+                     box.aktivInCollision(this.entity, gethitfrom);
+                    }
+             }));
+         }
+     }
+
     /**
      * @param {*} obj  -> Object
      * @param {*} direction  -> Direction form where Object hits this.entity. - "above" object hits this.entity from above
@@ -100,8 +119,7 @@ export class Collider {
      */
     checkSpecialHandle(obj, direction){
         return (
-            !this.checkHitbox()
-            && !this.checkforBird(obj)
+            !this.checkforBird(obj)
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
             && !this.checkforGetHit(obj)
@@ -111,7 +129,6 @@ export class Collider {
             && !this.checkDeadlySolidBlock(obj, direction)
             && !this.checkMushroom(obj, direction)
             && !this.checkBoss(obj, direction)
-
         );
     }
 
@@ -165,24 +182,6 @@ export class Collider {
             return true
         }
         return false
-    }
-
-    checkHitbox(){
-       let hitBoxArray = null;
-       let gethitfrom = null;
-        for (let i = 0; i < Object.keys(this.entity.level.demageBoxes).length; i++){
-                hitBoxArray = this.entity.level.demageBoxes[Object.keys(this.entity.level.demageBoxes)[i]];
-                hitBoxArray.forEach((box => {
-                    if(this.entity.subType == "Boss" && this.entity.collideWith(box)){
-                        console.log(this.entity);
-                        console.log(box);
-                       }
-                   if(this.entity.collideWith(box) && box.demageFlag == this.entity.type && box.isAktiv){
-                    gethitfrom = box.forceToLeft == true ? "left" : "right"
-                    box.aktivInCollision(this.entity, gethitfrom);
-                   }
-            }));
-        }
     }
 
     checkBoss(obj){

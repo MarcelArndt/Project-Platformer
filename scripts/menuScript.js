@@ -23,6 +23,7 @@ export function menuInit(){
         const clickedDiv = e.target;
         const attribute = clickedDiv.getAttribute("value");
         switch(attribute){
+            case "restartGame": currentGame.restartGame(); break;
             case "start": currentGame.startLevel(); break;
             case "controls": pullControllPanel(); break;
             case "impressum": pullControllImpressum(); break;
@@ -141,6 +142,6 @@ function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = 
 
 
 export function endMenuScreen(isWon = false){
-    drawMenuBookBackground();
+    
     canvasOverlayContent.innerHTML = renderEndMenu();
 }

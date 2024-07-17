@@ -1,4 +1,4 @@
-import { pullGameReady, playSound} from "./menuScript.js";
+import { pullGameReady, playSound, drawMenuBookBackground} from "./menuScript.js";
 
 export class Game {
   constructor(levelList) {
@@ -28,8 +28,13 @@ export class Game {
   startLevel() {
     if (this.levelList.length === 0) return "No Level in levelList";
     playSound("success16");
-    pullGameReady ();
+    pullGameReady();
     this.currentLevel.levelManager.addControll();
+  }
+
+  restartGame(){
+    startLevel();
+    this.currentLevel.levelManager.resetGame();
   }
 
   committedValueToGame(){
@@ -61,7 +66,7 @@ export class Game {
   }
 
   endGame(){
-    
+    drawMenuBookBackground();
   }
 
 }

@@ -144,13 +144,13 @@ export function renderEndMenu(){
   return `<div class="GameMenu">
                 <h1>GameName <br>Here II</h1>
                   <nav>
-                    <div value="restart" class="button">Start New Game</div>
+                    <div value="restartGame" class="button">Start New Game</div>
                     <div value="controls" class="button">Steuerung</div>
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>
             <div id="renderSidePanel">
-            <div id="currentGameState"><h1>You Won</h1></div>
+            <div id="currentGameState"><h2>You Won</h2></div>
             <div>
             <ul>
             <li>Your Score:</li>
