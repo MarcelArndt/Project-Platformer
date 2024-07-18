@@ -1,8 +1,7 @@
 import { canvas, clearCanvas } from "./canvas.js";
 import { Timer } from "./timer.js";
-import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
-import { Background } from "./background-class.js";
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground} from "./menuScript.js";
+import { imageIsloadet, soundIsloadet} from "./assets.js";
+import { globalVolume, pullPauseMenu, drawMenuBookBackground} from "./menuScript.js";
 import { ctx } from "./canvas.js";
 import { renderdebugCode } from "./template.js";
 import { LevelManager } from "./levelManager.js";
@@ -202,15 +201,6 @@ export class Level {
         this.demageBoxes[obj.index] = HitboxArray
       }
     });
-  }
-
-  gameOver() {
-    this.savedGlobalVolume = this.globalVolume;
-    this.timer.getInPause();
-    ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-    drawMenuBookBackground();
-    pullPauseMenu();
   }
 
 }

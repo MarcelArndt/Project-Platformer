@@ -1,4 +1,4 @@
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, endMenuScreen, drawMenuBookBackground, pullGameReady} from "./menuScript.js";
+import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, checkVolumeButtons, pullEndMenuScreen, drawMenuBookBackground, pullGameReady} from "./menuScript.js";
 import { ctx, canvas} from "./canvas.js";
 import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
@@ -32,7 +32,7 @@ export class LevelManager{
         const atribute = clickedDiv.getAttribute("value");
         switch(atribute){
           case "openKeyboard": this.pause(1); break;
-          case "restartButton": this.resetLevel(); break;
+          case "restartButton": this.resetLevel();  this.resetMusicManger(); break;
           case "startGame": this.start(); break;
         }
       }
@@ -48,7 +48,8 @@ export class LevelManager{
             this.resume();
           }; break;
           case "r": if(this.level.status == status.running){
-            this.resetLevel();
+            this.resetLevel(); 
+            this.resetMusicManger();
           }; break;
           case "?":  this.level.showDebug = this.level.showDebug == false ? true:false; break;
           case `*`:  this.level.levelIsWon = true; break;
@@ -100,7 +101,8 @@ export class LevelManager{
         this.level.originPlayerSize = [... this.level.player.size];
         pullIngameGui();
         this.level.game.committedValueToGame();
-        this.level.musicManager.play(soundIsloadet.musicPixelDayDream);
+        this.level.musicManager.play(soundIsloadet.musicPixelDayDream, false);
+        this.level.musicManager.play(this.level.currentAmbient, true);
       }
 
       resetLevel() {  
@@ -111,7 +113,18 @@ export class LevelManager{
       }
 
       endGame(){
-        this.pause();
+        soundIsloadet.win.volume = 1 * this.level.globalVolume;
+        soundIsloadet.win.play();
+        ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+        drawMenuBookBackground();
+        pullEndMenuScreen();
+        this.level.status = status.pause;
+        this.level.timer.getInPause();
+        this.level.savedGlobalVolume = this.level.globalVolume;
+        this.level.globalVolume = 0;
+        this.level.musicManager.stopAll();
+        this.level.musicManager.play(soundIsloadet.bgm_outro);
       }
     
       cleanUpLevel(){
@@ -149,6 +162,13 @@ export class LevelManager{
         checkForVolume();
       }
 
+    resetMusicManger(){
+      this.level.musicManager.stopAll();
+      this.level.musicManager.currentPlaylist = [];
+      this.level.musicManager.play(soundIsloadet.musicPixelDayDream, false);
+      this.level.musicManager.play(this.level.currentAmbient, true);
+    }
+
     resetGame(){
       this.level.levelIsWon = false;
       this.level.Gamelose = false;
@@ -157,7 +177,9 @@ export class LevelManager{
       this.resetLevel();
       this.level.status = status.pause;
       this.level.timer.getInPause();
+      this.level.musicManager.stop();
       pullGameReady();
+      checkVolumeButtons();
     }
 
     resetLife() {

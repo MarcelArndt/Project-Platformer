@@ -8,84 +8,115 @@ export class MusikManager{
         this.currentAmbient = defaultAmbient || null;
         this.currentTimer = 0;
         this.fadeBufferVolume = 1;
-        this.backfadeIn = false;
-        this.switchToNewTrack = false;
-        this.newTrack = null;
-        this.isAlreadyInSwitch = false;
+        this.currentPlaylist = [];
         }
+
+    addNewSongToList(track , isAmbient = false){
+        let newSongObject = {};
+        newSongObject.name = this.generateNameOfSong(track);
+        newSongObject.song = track;
+        newSongObject.song.loop = true;
+        newSongObject.isAmbient = isAmbient;
+        newSongObject.fadingOut = false;
+        newSongObject.fadingIn = false;
+        newSongObject.fadingValue = 1;
+        newSongObject.isPause = false;
+        this.currentPlaylist.unshift(newSongObject);
+    }         
+
+    generateNameOfSong(track){
+        let name = track.src.split("/");
+        name = name[6].slice(name[6].lenght, -4);
+        return name;
+    }    
 
     setGlobalVolume(Volume){
         this.globalVolume = Volume;
     }
 
     pause(){
-             if(this.currentMusik.volume >= 0){
-                this.currentMusik.volume = 0;
-                this.currentMusik.pause();
-             }
+        this.currentPlaylist.forEach(songObj => {
+            songObj.song.pause();
+        });
     }
 
     stop(){
-        if(this.currentMusik.volume >= 0){
-            this.pause()
-            this.currentMusik.currentTime = 0;
-         }
+        this.currentPlaylist.forEach((songObj) => {
+            if(!songObj.isAmbient){
+                songObj.song.pause();
+                songObj.song.currentTime = 0;
+            }
+        });
+    }
+
+    stopAll(){
+        this.currentPlaylist.forEach((songObj) => {
+                songObj.song.pause();
+                songObj.song.currentTime = 0;
+        });  
     }
 
     resume(){
-        if(this.currentMusik.paused){
-            this.currentMusik.play();
-        }
+        this.currentPlaylist.forEach(songObj => {
+            songObj.song.play();
+        });
     }
 
-    play(track){
-            track.volume = 0.75 * this.globalVolume;
-            this.currentMusik = track;
-            this.currentMusik.loop = true;
-            this.currentMusik.play();
+    play(track, isAmbient = false){
+        this.addNewSongToList(track, isAmbient); 
+        this.currentPlaylist[0].song.volume = Math.abs(0.65 * this.globalVolume);
+        this.currentPlaylist[0].song.play();
     }
 
     setNewMusik(newTrack){
-        this.switchToNewTrack = true;
-        this.newTrack = newTrack;
-    }
-
-    switchMusik(){
-        if(!this.switchToNewTrack && !this.backfadeIn && !this.isAlreadyInSwitch) return;
-        this.isAlreadyInSwitch = true;
-        this.fadeOut();
-        this.fadeIn();
-    }
-
-    fadeOut(){
-        if(this.fadeBufferVolume > 0 && !this.backfadeIn){
-            this.fadeBufferVolume -= 0.01
-        } else if(this.fadeBufferVolume <= 0){
-            this.fadeBufferVolume = 0;
-            this.currentMusik.pause();
-            this.backfadeIn = true;
-        }
-    }
-
-    fadeIn(){
-        if(this.backfadeIn){
-            this.currentMusik.pause();
-            this.currentMusik = this.newTrack;
-            this.currentMusik.play();
-            this.currentMusik.loop = true;
-            if(this.fadeBufferVolume < 1){
-                this.fadeBufferVolume += 0.01
-            } else {
-                this.switchToNewTrack = false;
-                this.backfadeIn = false;
-                this.isAlreadyInSwitch = false;
+        this.currentPlaylist.forEach((songObj) => {
+            if(!songObj.isAmbient){
+                songObj.fadingOut = true;
             }
+        });
+        this.addNewSongToList(newTrack); 
+        this.currentPlaylist[0].song.volume = 0;
+        this.currentPlaylist[0].fadingIn = true;
+    }
+
+    updateSong(songObj, Volume, index){
+        if(!songObj.fadingIn && !songObj.fadingOut && !songObj.isPause){
+            songObj.song.volume = Math.abs(0.65 * Volume * songObj.fadingValue);
         }
     }
 
-    update(Volume, deltaTime){
+    fadingOut(songObj, index){
+        if( songObj.song.volume > 0.003){
+            songObj.song.volume -= 0.003
+        } else if( songObj.song.volume <= 0.003){
+            songObj.song.pause();
+            songObj.isPause = true;
+            this.currentPlaylist.splice(index, 1)
+        }
+    }
+
+    fadingIn(songObj, Volume){
+        if(songObj.song.paused){
+            songObj.song.play();
+        }
+        if(songObj.song.volume <= Math.abs(0.65 * Volume) && songObj.song.volume < 1){
+            songObj.song.volume += 0.003;
+        } else if( songObj.song.volume >= 1 || songObj.song.volume >= Math.abs(0.65 * Volume)) {
+            songObj.song.volume = Math.abs(0.65 * Volume);
+            songObj.fadingIn = false;
+        }
+    }
+
+    update(Volume){
         this.setGlobalVolume(Volume)
-        this.currentMusik.volume = Math.abs(0.65 * Volume * this.fadeBufferVolume);
-        this.switchMusik(this.newTrack, deltaTime / 1000);
+        this.currentPlaylist.forEach((songObj, index) => {
+            this.updateSong(songObj, Volume, index);
+            if(songObj.fadingOut){
+                this.fadingOut(songObj, index);
+            }
+            if(songObj.fadingIn){
+                this.fadingIn(songObj, Volume);
+            }
+        });
     }
 }

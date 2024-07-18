@@ -23,7 +23,7 @@ export function menuInit(){
         const clickedDiv = e.target;
         const attribute = clickedDiv.getAttribute("value");
         switch(attribute){
-            case "restartGame": currentGame.restartGame(); break;
+            case "restartGame": currentGame.restartGame(); checkForVolume(""); break;
             case "start": currentGame.startLevel(); break;
             case "controls": pullControllPanel(); break;
             case "impressum": pullControllImpressum(); break;
@@ -71,6 +71,11 @@ export function pullIngameGui(){
     canvasOverlayContent.innerHTML = renderIngameGui();
 }
 
+export function pullEndMenuScreen(isWon = false){
+    
+    canvasOverlayContent.innerHTML = renderEndMenu();
+}
+
 export function checkForVolume(methode = ""){
     if( methode == "plus" && globalVolume < 0.8){
         globalVolume += 0.20;
@@ -87,7 +92,7 @@ export function checkForVolume(methode = ""){
 }
 
 //  toggelAttributeValue (current, SwitchTo, setclass, removeClass, src)
-function checkVolumeButtons(){
+export function checkVolumeButtons(){
     if( globalVolume >= 0.9){
         globalVolume = 1;
         toggelAttributeValue("volumnePlus", "volumnePlusDisable", ["opacity"], ["hover"])
@@ -106,13 +111,8 @@ function checkVolumeButtons(){
 }
 
 export function playSound(sound){
-    if(!soundIsloadet[sound].paused){
-        soundIsloadet[sound].pause();
-        soundIsloadet[sound].currentTime = 0;
-    } else {
         soundIsloadet[sound].volume = 1 * globalVolume;
         soundIsloadet[sound].play();
-    }
 }
 
 
@@ -140,8 +140,3 @@ function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = 
     })
 }
 
-
-export function endMenuScreen(isWon = false){
-    
-    canvasOverlayContent.innerHTML = renderEndMenu();
-}

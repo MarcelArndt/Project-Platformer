@@ -77,8 +77,11 @@ export let imageIsToLoading = {
     blast2: "./assets/sound/misc/sfx_emerge_short_33.wav",
     teleport1: "./assets/sound/misc/sfx_movement_portal1.wav",
     teleport2: "./assets/sound/misc/sfx_emerge_medium_109.wav",
+    win:"./assets/sound/misc/sfx_positive_simple2.wav",
     battleBoss: "./assets/sound/music/bgm_evil_3_furious.mp3",
     musicPixelDayDream: "./assets/sound/music/bgm_stage_1.mp3",
     WhisperstheWoods: "./assets/sound/music/WhisperstheWoods.mp3",
     forestAmbient: "./assets/sound/music/forest-ambient.mp3",
+    bgm_outro: "./assets/sound/music/bgm_outro.wav",
+    bgm_main_title_theme: "./assets/sound/music/bgm_main_title_theme.wav",
     }
