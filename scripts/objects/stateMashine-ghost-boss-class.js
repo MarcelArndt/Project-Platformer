@@ -351,6 +351,7 @@ class Death{
         if(!entity.animationIsRunning){
             entity.isAlive = false;
             entity.level.musicManager.stop();
+            entity.level.playerIsStillAlive = true;
             entity.level.levelIsWon = true;
             entity.delete();
         }

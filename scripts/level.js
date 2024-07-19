@@ -35,6 +35,7 @@ export class Level {
     this.timer = new Timer();
     this.status = status.ready;
     this.levelIsWon = false;
+    this.playerIsStillAlive = true;
     this.Gamelose = false;
     this.timer.update = (thisDeltaTime) => this.update(thisDeltaTime);
     this.objectsOfType = {
@@ -91,6 +92,7 @@ export class Level {
       this.calculateScreenshakeValue(deltaTime);
       this.drawGame(deltaTime);
       this.checkGameWin();
+      this.playerStillGotLives();
   }
 
   drawGame(deltaTime){
@@ -170,7 +172,6 @@ export class Level {
         this.screenEffektTimer = 0;
       }
     }
-  
 
   updateCamera() {
     this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.5 , this.player.posRight - (canvas.width / 2) / 2 ) + this.screenshakeValue );
@@ -201,6 +202,13 @@ export class Level {
         this.demageBoxes[obj.index] = HitboxArray
       }
     });
+  }
+
+  playerStillGotLives(){
+    if(this.player.lives <= 0){
+      this.levelIsWon = true;
+      this.playerIsStillAlive = false;
+    }
   }
 
 }

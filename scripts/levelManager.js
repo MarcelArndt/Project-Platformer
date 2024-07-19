@@ -118,7 +118,7 @@ export class LevelManager{
         ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
         ctx.fillRect(0,0, canvas.width, canvas.height);
         drawMenuBookBackground();
-        pullEndMenuScreen();
+        pullEndMenuScreen(this.level.player.score, this.level.playerIsStillAlive);
         this.level.status = status.pause;
         this.level.timer.getInPause();
         this.level.savedGlobalVolume = this.level.globalVolume;

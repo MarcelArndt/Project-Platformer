@@ -140,7 +140,7 @@ export function renderPauseMenu(){
 }
 
 
-export function renderEndMenu(){
+export function renderEndMenu(bestScore = "00000", winText){
   return `<div class="GameMenu">
                 <h1>GameName <br>Here II</h1>
                   <nav>
@@ -150,11 +150,14 @@ export function renderEndMenu(){
                   </nav>
             </div>
             <div id="renderSidePanel">
-            <div id="currentGameState"><h2>You Won</h2></div>
-            <div>
+            <div  class="sidePanel">
+                 <div class="gameWon"><img src ="./img/win.png"></div>
+            <divid="currentGameState"><h1>${winText}</h1></div>
+            <div class="score">
             <ul>
-            <li>Your Score:</li>
+            <li>Your Score: ${bestScore}</li>
             </ul>
+            </div>
             </div>
             </div>`
 }

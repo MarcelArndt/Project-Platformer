@@ -71,9 +71,9 @@ export function pullIngameGui(){
     canvasOverlayContent.innerHTML = renderIngameGui();
 }
 
-export function pullEndMenuScreen(isWon = false){
-    
-    canvasOverlayContent.innerHTML = renderEndMenu();
+export function pullEndMenuScreen(score, isWon = true){
+    let isWonText = isWon == true? "You Won": "You Lose";
+    canvasOverlayContent.innerHTML = renderEndMenu(score, isWonText);
 }
 
 export function checkForVolume(methode = ""){
