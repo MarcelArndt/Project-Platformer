@@ -69,18 +69,18 @@ export class Player extends Box {
     this.scoreBar = new ScoreBar([32,73], {addSuffix: " ", addpPrefix: "SCORE:  "});
     this.lifeCounter = new ScoreBar([59,32], {addSuffix: " ", addPrefix: "x ", decimalAmount: 2, fontSize: 10,});
     this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,1)"}, this,)
-    this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,75,0,1))"}, this,)
+    this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,255,0,1)"}, this,)
     this.addControll();
   }
 
   keyPressedFunction(event){
     if(!this.gethit && !this.crouch){
       switch(event.key){
-        case "a": case "ArrowLeft":  this.move("left"); break;
-          case "d": case "ArrowRight": this.move("right");break;
+        case "a": case "ArrowLeft":  this.move("left"); event.stopPropagation(); event.preventDefault();; break;
+          case "d": case "ArrowRight": this.move("right"); event.stopPropagation(); event.preventDefault();;break;
           case "w": case "ArrowUp": case " ": this.playerJump();  event.stopPropagation(); event.preventDefault(); break;
-          case "s": case "ArrowDown": if(this.onGround){this.inCrouch()} ; break;
-          case "f": case "Enter": this.playerAttack(); break;
+          case "s": case "ArrowDown": if(this.onGround){this.inCrouch()};event.stopPropagation(); event.preventDefault(); break;
+          case "f": case "Enter": this.playerAttack(); event.stopPropagation(); event.preventDefault();; break;
       }
     }
   }
@@ -95,7 +95,7 @@ export class Player extends Box {
 
   addControll() {
     if(!this.alreadyGetControll){
-      document.addEventListener("keypress", this.keyfunctionPressRef);
+      document.addEventListener("keydown", this.keyfunctionPressRef);
       document.addEventListener("keyup", this.keyfunctionUpRef);
       this.alreadyGetControll = true;
     }
@@ -103,7 +103,7 @@ export class Player extends Box {
 
   removeControll() {
     if(this.alreadyGetControll){
-      document.removeEventListener("keypress", this.keyfunctionPressRef);
+      document.removeEventListener("keydown", this.keyfunctionPressRef);
       document.removeEventListener("keyup", this.keyfunctionUpRef);
       this.alreadyGetControll = false;
     }
@@ -153,7 +153,7 @@ export class Player extends Box {
   }
 
   playerJump() {
-    if ( this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch) {
+    if (this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch) {
       this.vel[1] += this.jumpseed;
       this.onGround = false;
       this.jump.alreadyInJump = false;

@@ -45,6 +45,7 @@ export class Level {
       Goal: [],
       Entity: [],
       Enemy: [],
+      Hitbox: [],
     };
     this.originPlayerSize = 0;
     this.demageBoxes = {};
@@ -81,6 +82,17 @@ export class Level {
     obj.level = this;
     this.objects.push(obj);
     this.objectsOfType[type].push(obj);
+  }
+
+  initializeLevelToHitbox(){
+    this.objects.forEach(obj => {
+      if (obj.demageBoxes != null && obj.demageBoxes != undefined && !obj.hitboxIsBoundToLevel){
+        obj.demageBoxes.forEach(hitbox => {
+          this.pushNewObject(hitbox);
+        });
+        obj.hitboxIsBoundToLevel = true;
+      }
+    });
   }
 
   update(deltaTime) {
@@ -188,20 +200,6 @@ export class Level {
     if(this.levelIsWon){
       this.levelManager.endGame()
     }
-  }
-
-  createDemageboxes(){
-  this.demageBoxes = {};
-  this.objects.forEach((obj) => {
-      let HitboxArray = [];
-      if(obj.demageBoxes != undefined && obj.demageBoxes.length > 0){
-        for (let i = 0; i < obj.demageBoxes.length; i++){
-          obj.demageBoxes[i].level = this;
-          HitboxArray.push(obj.demageBoxes[i]);
-        }
-        this.demageBoxes[obj.index] = HitboxArray
-      }
-    });
   }
 
   playerStillGotLives(){

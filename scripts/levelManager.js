@@ -91,18 +91,21 @@ export class LevelManager{
           imageIsloadet.backgroundTwo,
           imageIsloadet.backgroundThree,
         ], this.level);
-        this.level.status = status.running;
-        this.level.timer.pause = false;
-        this.level.timer.start();
+
         this.level.tileset.generateLevel(this.level);
-        this.level.createDemageboxes();
         this.level.player = this.level.objectsOfType.Player[0];
         this.level.originPlayerLives = this.level.player.maxHealth;
         this.level.originPlayerSize = [... this.level.player.size];
+        
         pullIngameGui();
+
         this.level.game.committedValueToGame();
         this.level.musicManager.play(soundIsloadet.musicPixelDayDream, false);
         this.level.musicManager.play(this.level.currentAmbient, true);
+
+        this.level.status = status.running;
+        this.level.timer.pause = false;
+        this.level.timer.start();
       }
 
       resetLevel() {  
@@ -151,7 +154,6 @@ export class LevelManager{
         this.level.globalVolume = this.level.savedGlobalVolume;
         canvasOverlayContent.innerHTML = "";
         this.level.tileset.generateLevel(this.level);
-        this.level.createDemageboxes();
         this.level.player = this.level.objectsOfType.Player[0];
         this.level.player.lives = this.level.playerLives -1;
         this.level.status = status.running;

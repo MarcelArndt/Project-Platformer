@@ -26,8 +26,8 @@ export class Collider {
     showCollider(){
         if(this.entity.level.showDebug){
                 ctx.beginPath();
-                ctx.lineWidth = "3";
-                ctx.strokeStyle = "rgba(50, 175, 200, 0.45)";
+                ctx.lineWidth = "1";
+                ctx.strokeStyle = "rgba(150, 255, 240, 0.45)";
                 ctx.rect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
                 ctx.stroke();
             }
@@ -39,9 +39,6 @@ export class Collider {
         this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
-            if (this.entity.isOnScreen && validType.includes(this.entity.type)){
-                this.checkHitbox();
-            }
             if(this.isAvailable == true && obj.subType != "SemiSolidBlock"){
                 this.checkFromBelow(obj);
                 this.checkFromAbove(obj);
@@ -55,17 +52,21 @@ export class Collider {
 
     checkFromAbove(obj) {
         if(this.entity.getPrevPosTop() <= obj.posBottom && this.entity.getPrevPosBottom() >= obj.posBottom && this.entity.collideWith(obj, [0, 0]) && this.checkSpecialHandle(obj ,"above")){
+           if (this.entity.type != "Hitbox"){
             this.entity.setTop(obj.posBottom);
-            this.entity.vel[1] = 0;
+            this.entity.vel[1] =  0;
+           }
         }
     }
 
     checkFromBelow(obj) {
         if(this.entity.getPrevPosBottom() >= obj.posTop && this.entity.getPrevPosTop() <= obj.posTop && this.entity.collideWith(obj, [0, 0]) && this.checkSpecialHandle(obj ,"below")){
-            this.entity.setBottom(obj.posTop);
-            this.entity.vel[1] = 0;
-            this.entity.onGround = true;
-        } else {
+            if (this.entity.type != "Hitbox"){
+                this.entity.setBottom(obj.posTop);
+                this.entity.vel[1] = 0;
+                this.entity.onGround = true;
+            }
+        }  else if(this.entity.type == "Player"){
             this.entity.jump.currentPressingKey = false;
             this.entity.jump.alreadyInJump = false
         }
@@ -73,44 +74,36 @@ export class Collider {
  
     checkFromLeft(obj) {
         if(this.entity.getPrevPosRight() <= obj.posLeft && this.entity.getPrevPosLeft() <= obj.posLeft && this.entity.collideWith(obj, [8, -2]) && this.checkSpecialHandle(obj ,"left")){
-            this.entity.setRight(obj.posLeft - 9);
-            this.entity.vel[0] = 0;
+            if (this.entity.type != "Hitbox"){
+                this.entity.setRight(obj.posLeft - 9);
+                this.entity.vel[0] = 0;
+            }
         }
     }
 
     checkFromRight(obj) {
         if(this.entity.getPrevPosLeft() >= obj.posRight && this.entity.getPrevPosLeft() >= obj.posLeft && this.entity.collideWith(obj, [-8, -2]) && this.checkSpecialHandle(obj ,"right")){
-            this.entity.setLeft(obj.posRight + 9);
-            this.entity.vel[0] = 0;
+            if (this.entity.type != "Hitbox"){
+                this.entity.setLeft(obj.posRight + 9);
+                this.entity.vel[0] = 0;
+            }
         }
     }
 
     checkSemiSolid(obj) {
         if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch && this.checkSpecialHandle(obj ,"below")) {
-            if(this.entity.vel[1] >= -0.001 && obj.collideWith(this.entity, [0, (-this.entity.size[1] / 2 * this.entity.vel[1])])){
-                this.entity.setBottom(obj.posTop - 2);
-                this.entity.vel[1] = 0;
-                this.entity.onGround = true;
-            }  else {
-                this.entity.jump.currentPressingKey = false;
-                this.entity.jump.alreadyInJump = false
+            if (this.entity.type != "Hitbox"){
+                if(this.entity.vel[1] >= -0.001 && obj.collideWith(this.entity, [0, (-this.entity.size[1] / 2 * this.entity.vel[1])])){
+                    this.entity.setBottom(obj.posTop - 2);
+                    this.entity.vel[1] = 0;
+                    this.entity.onGround = true;
+                }  else if(this.entity.type == "Player"){
+                    this.entity.jump.currentPressingKey = false;
+                    this.entity.jump.alreadyInJump = false
+                }
             }
         }
     }
-
-    checkHitbox(){
-        let hitBoxArray = null;
-        let gethitfrom = null;
-         for (let i = 0; i < Object.keys(this.entity.level.demageBoxes).length; i++){
-                 hitBoxArray = this.entity.level.demageBoxes[Object.keys(this.entity.level.demageBoxes)[i]];
-                 hitBoxArray.forEach((box => {
-                    if(this.entity.collideWith(box) && box.demageFlag == this.entity.type && box.isAktiv){
-                     gethitfrom = box.forceToLeft == true ? "left" : "right"
-                     box.aktivInCollision(this.entity, gethitfrom);
-                    }
-             }));
-         }
-     }
 
     /**
      * @param {*} obj  -> Object
@@ -120,6 +113,7 @@ export class Collider {
     checkSpecialHandle(obj, direction){
         return (
             !this.checkforBird(obj)
+            && !this.checkHitbox(obj)
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
             && !this.checkforGetHit(obj)
@@ -184,7 +178,20 @@ export class Collider {
         return false
     }
 
+    checkHitbox(obj){
+        let gethitfrom = false;
+        if(obj.type == "Hitbox"){
+            if(obj.isAktiv && obj.demageFlag == this.entity.type && this.entity.isOnScreen){
+                gethitfrom = obj.forceToLeft == true ? "left" : "right";
+                obj.aktivInCollision(this.entity, gethitfrom);
+            }
+            return true
+        }
+    }
+
     checkBoss(obj){
         return (obj.subType == "Boss" && this.entity.type != "Rectangle" || this.entity.subType == "Boss" && obj.type != "Rectangle");
     }
+
+
 }

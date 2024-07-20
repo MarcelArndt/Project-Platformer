@@ -286,7 +286,7 @@ class Death{
         entity.type = "Death";
         entity.subType = "Death";
         entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
-        entity.disableHitboxAndWithAllwaysOn(entity.index);
+        entity.removeHitboxFromLevel();
     }
 
     behave(entity){

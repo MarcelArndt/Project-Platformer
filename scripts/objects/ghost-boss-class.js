@@ -103,7 +103,6 @@ export class GhostBoss extends Enemy{
                 finalSpawnPoint = this.checkForSpawnPoint(lastSpawnPoint);
                 lastSpawnPoint = finalSpawnPoint;
                 this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
-                this.level.createDemageboxes();
             }
         }
     }

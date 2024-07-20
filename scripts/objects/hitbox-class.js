@@ -3,9 +3,9 @@ import { ctx } from "../canvas.js";
 import { Collider } from "./collider-class.js";
 
 export class Hitbox extends Entity{
-    constructor(options, type){
-        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset, object} = options
-        super({pos, size, color}, type || "Hitbox");
+    constructor(options, entity){
+        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset} = options
+        super({pos, size, color}, "Hitbox");
         this.subType = "Hitbox";
         this.lifespan = lifespan || 3;
         this.forceToLeft = forceToLeft || false;
@@ -15,10 +15,26 @@ export class Hitbox extends Entity{
         this.isAllawysAktiv = isAllawysAktiv || false;
         this.color = color || "rgba(255,125,0,0.5)";
         this.setOffset = offset || [0,0];
-        this.stickToObject = object || null
+        this.entity = entity || null
         this.frameCounter = 0;
         this.collider = new Collider(this);
         this.lifespan = lifespan || 1;
+    }
+
+    getPrevPosLeft(){
+        return this.prevPos[0];
+    }
+
+    getPrevPosRight(){
+        return this.prevPos[0] + this.size[0];
+    }
+
+    getPrevPosTop(){
+        return this.prevPos[1];
+    }
+
+    getPrevPosBottom(){
+        return this.prevPos[1] + this.size[1];
     }
 
     update(deltaTime){
@@ -26,16 +42,17 @@ export class Hitbox extends Entity{
         this.draw();
         this.updatePosition(this.stickToObject);
         this.updateCounter(deltaTime / 1000);
+        this.collider.update(deltaTime);
     }
 
-    updatePosition(obj){
-        this.pos[0] = obj.pos[0] + this.setOffset[0];
-        this.pos[1] = obj.pos[1] + this.setOffset[1];
+    updatePosition(){
+        this.pos[0] = this.entity.pos[0] + this.setOffset[0];
+        this.pos[1] = this.entity.pos[1] + this.setOffset[1];
     }
 
     draw(){
-        if(this.level.showDebug){
-            ctx.fillStyle = this.isAktiv ? "rgba(255,50,0,0.1)":"rgba(125,125,125,0.4)";
+       if(this.level.showDebug && this.isAktiv){
+            ctx.fillStyle = this.isAktiv ? this.color:"rgba(225,125,125,0.4)";
             ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
         }
     }

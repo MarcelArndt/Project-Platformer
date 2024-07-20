@@ -57,7 +57,7 @@ export class SpawnNew{
         entity.createHitBox(entity.pos, [108,75], [0,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, entity,);
         entity.createHitBox(entity.pos, [28,80], [-20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
         entity.createHitBox(entity.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, entity,);
-        entity.level.createDemageboxes();
+        entity.level.initializeLevelToHitbox();
         entity.level.minionCounter += 1;
     }
 }
@@ -307,7 +307,7 @@ export class Death{
         entity.animationSpeed = 1;
         entity.type = "Death";
         entity.level.player.score += entity.scoreValue - Math.floor(entity.scoreValue / 3);
-        entity.disableHitboxAndWithAllwaysOn(entity.index);
+        entity.removeHitboxFromLevel();
         entity.level.minionCounter--;
         entity.animationIsRunning = true;
     }

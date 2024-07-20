@@ -113,6 +113,7 @@ export class Tileset {
       Goal: [],
       Entity: [],
       Enemy: [],
+      Hitbox: [],
     };
     this.level.player = null;
     this.level.objects = [];
@@ -123,5 +124,6 @@ export class Tileset {
     this.createCollision();
     this.createTiles();
     this.createEntity();
+    this.level.initializeLevelToHitbox();
   }
 }

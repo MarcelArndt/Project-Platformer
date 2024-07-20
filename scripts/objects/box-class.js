@@ -30,6 +30,7 @@ export class Box extends Rectangle{
         this.health = 100;
         this.maxHealth = 100;
         this.alreadyLostHealth = false;
+        this.hitboxIsBoundToLevel = false;
     }
     
     genEntityIndex(){
@@ -48,7 +49,6 @@ export class Box extends Rectangle{
 
     canBeMoved(VectorOffest){
         let fildertObjects = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
-
         if( this.posLeft + VectorOffest[0] < 0 || 
             this.posRight + VectorOffest[0] > this.level.size[0] || 
             this.posTop + VectorOffest[1] < 0 || 
@@ -92,10 +92,6 @@ export class Box extends Rectangle{
         this.applyPhsics(deltaTime);
         this.boundToLevel();
         this.collider.update(deltaTime);
-        this.updateHitboxs(deltaTime);
-        this.demageBoxes.forEach( (hitbox) => {
-            hitbox.draw();
-        });
         this.checkInvincibilityTimer(deltaTime / 1000);
     }
 
@@ -151,7 +147,7 @@ export class Box extends Rectangle{
         return distance 
     }
 
-    createHitBox(pos, size, manualOffset, options, obj){
+    createHitBox(pos, size, manualOffset, options){
         let newBox = new Hitbox({
           pos: [pos[0], pos[1]],
           size: [size[0], size[1]],
@@ -163,32 +159,27 @@ export class Box extends Rectangle{
           isAllawysAktiv: options.isAllawysAktiv || false,
           lifespan: options.lifespan || 6,
           color: options.color || "rgba(255,125,0,0.25)",
-          object : obj,
-        })
+        }, this);
         this.demageBoxes.push(newBox);
       }
     
-      activateHitbox(ObjId, id = 0){
-        this.level.demageBoxes[ObjId][id].isAktiv = true;
-      }
-    
       pushBack(velX = 0.85, velY = 0.75){
-        let collide;
+        let willCollide;
+        let varifyArrayType = ["Entity", "Hitbox", "Enemy"]
         if (this.getHit && !this.gethitJumpAlready) {
             this.gethitJump(velY);
             this.onGround = false;
         }
-        collide = this.level.objects.some(obj => 
-            this.getHitLeft && (this.collideWith(obj, [-15, -5]) && obj.type != "Entity" || !this.getHitLeft && this.collideWith(obj, [15, -5]) && obj.type != "Entity")
+        willCollide = this.level.objects.some(obj => 
+            !this.getHitLeft && (this.collideWith(obj, [-15, -5]) && !varifyArrayType.includes(obj.type)  || this.getHitLeft && this.collideWith(obj, [15, -5]) && !varifyArrayType.includes(obj.type))
         );
-
-        if (this.getHit && !collide && !this.onGround) {
+        if (this.getHit && !willCollide && !this.onGround) {
             this.vel[0] = this.getHitLeft ? velX : -velX;
         }
         if (!this.getHit) {
             this.gethitJumpAlready = false;
         }
-        if (this.onGround || collide) {
+        if (this.onGround || willCollide) {
             this.vel[0] = 0;
         }
     }
@@ -204,29 +195,52 @@ export class Box extends Rectangle{
         }
       }
 
+      activateHitbox(ObjId, id = 0){
+        this.level.objectsOfType.Hitbox.forEach(box => {
+            if(box.index == this.demageBoxes[id].index ){
+                box.isAktiv = true;
+            }
+        });
+      }
+
+      getAllHitboxIds(){
+        let allHitboxIds = [];
+        this.demageBoxes.forEach(box => {
+            allHitboxIds.push(box.index)
+        });
+        return allHitboxIds;
+      }
 
       disableHitbox(ObjId, id = 0, disableAll = false){
-       switch(disableAll){
-        case true: this.level.demageBoxes[ObjId].forEach((box) => { box.isAktiv = false;}); break;
-        case false: this.level.demageBoxes[ObjId][id].isAktiv = false; break;
-       }
+        let validIds = [this.demageBoxes[id]]
+        if(disableAll){
+            validIds = this.getAllHitboxIds();
+        }
+        this.level.objectsOfType.Hitbox.forEach(box => {
+            if(validIds.includes(box.index)){
+                box.isAktiv = false;
+            }
+        });
       }
 
-      disableHitboxAndWithAllwaysOn(ObjId){
-        this.level.demageBoxes[ObjId].forEach((box) => { box.isAktiv = false; box.isAllawysAktiv = false; });
+      disableHitboxAndWithAllwaysOn(){
+        this.level.objectsOfType.Hitbox.forEach((box) => {
+            for (let i = 0; i < this.demageBoxes.length; i++){
+                if(box.index == this.demageBoxes[i].index ){
+                    box.isAktiv = false;
+                    box.isAllawysAktiv = false;
+                }
+            } 
+        });
         }
 
-    
-      updateHitboxs(deltaTime){
-        if (this.demageBoxes.length > 0){
-            this.level.demageBoxes[this.index].forEach((box) => {
-            box.update(deltaTime)
-            if(box.isAktiv || box.isAlwaysAktiv){
-                box.draw();
-          }
-          });
+       removeHitboxFromLevel(){
+            this.level.objects.forEach((box, dex) => {
+                if(box.type == "Hitbox" &&  this.demageBoxes[0].index == box.index){
+                    this.level.objects.splice(dex, this.demageBoxes.length);
+                }
+            });
         }
-      }
 
       screenShakeEnable(frameValue = 10){
         this.level.screenAnimationTime = 0;

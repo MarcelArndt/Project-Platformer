@@ -167,7 +167,7 @@ export class Enemy extends Box {
             offset = [offset[0] * -1, 0];
         }
         this.level.objects.forEach( obj => {
-            if (this.collideWith(obj, offset) && obj.type != "Entity" && obj.type != "Player"){
+            if (this.collideWith(obj, offset) && obj.type != "Entity" && obj.type != "Player" && obj.type != "Hitbox"){
                 if(this.posRight + offset[0] > obj.posLeft && this.posLeft < obj.posLeft) {
                     willCollide[1] = true
                 }
