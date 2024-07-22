@@ -274,7 +274,9 @@ export class Player extends Box {
     if(this.vel[1] > 1.25 ){
       this.vel[1] = 1.25;
     }
+    if(this.vel[1] < (this.jumpseed * 1.4)){
+      this.vel[1] = this.jumpseed;
+    }
   }
-
 }
 

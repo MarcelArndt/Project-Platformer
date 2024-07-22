@@ -1,4 +1,4 @@
-import { pullIngameGui, globalVolume, pullPauseMenu, checkForVolume, checkVolumeButtons, pullEndMenuScreen, drawMenuBookBackground, pullGameReady} from "./menuScript.js";
+import { pullIngameGui, globalVolume, saveInLocalStorage, pullPauseMenu, checkForVolume, checkVolumeButtons, pullEndMenuScreen, drawMenuBookBackground, pullGameReady} from "./menuScript.js";
 import { ctx, canvas} from "./canvas.js";
 import { imageIsloadet, canvasOverlayContent, soundIsloadet} from "./assets.js";
 import { Background } from "./background-class.js";
@@ -100,12 +100,13 @@ export class LevelManager{
         pullIngameGui();
 
         this.level.game.committedValueToGame();
-        this.level.musicManager.play(soundIsloadet.musicPixelDayDream, false);
-        this.level.musicManager.play(this.level.currentAmbient, true);
+        this.resetMusicManger();
 
         this.level.status = status.running;
         this.level.timer.pause = false;
         this.level.timer.start();
+
+        checkVolumeButtons()
       }
 
       resetLevel() {  
@@ -128,6 +129,7 @@ export class LevelManager{
         this.level.globalVolume = 0;
         this.level.musicManager.stopAll();
         this.level.musicManager.play(soundIsloadet.bgm_outro);
+        this.saveStats();
       }
     
       cleanUpLevel(){
@@ -190,6 +192,14 @@ export class LevelManager{
 
     resetScore(){
       this.level.player.score = 0;
+    }
+
+    saveStats(){
+      saveInLocalStorage({
+        firstTimePlaying: false,
+        globalVolume: this.level.savedGlobalVolume,
+        newScore: this.level.player.score,
+      });
     }
 
 }

@@ -126,11 +126,11 @@ export class Enemy extends Box {
         let inSmallAggro = false;
         if( playerdistance[0] > this.aggroRange * -1 && playerdistance[0] < this.aggroRange && playerdistance[1] > (this.aggroRange * -1 / 2) && playerdistance[1] < (this.aggroRange / 2)){
             if( playerdistance[0] > this.smallAggroRange * -1 && playerdistance[0] < this.smallAggroRange  && playerdistance[1] > this.smallAggroRange * -1 && playerdistance[1] < this.smallAggroRange){
-                inSmallAggro = true
+                inSmallAggro = true;
             }
-            inBigAggro = true
+            inBigAggro = true;
         }
-        this.PlayerInAggro = [inBigAggro, inSmallAggro]
+        this.PlayerInAggro = [inBigAggro, inSmallAggro];
     }
 
     /**
@@ -151,6 +151,7 @@ export class Enemy extends Box {
 
     jump(jumpspeed = this.jumpspeed){
         if(this.onGround){
+            this.isAlreadyJumping = true;
             this.vel[1] = jumpspeed;
             this.vel[0] = this.walkspeed;
         }
@@ -202,5 +203,11 @@ export class Enemy extends Box {
         if (this.vel[0] <= -0.2 && !this.gethit){
             this.vel[0] = -0.2;
         }
+        if(this.vel[1] >= 0 && this.onGround){
+            this.isAlreadyJumping = false;
+        }
+        if(this.vel[1] < (this.jumpseed * 1.4)){
+            this.vel[1] = this.jumpseed;
+          }
     }
 }

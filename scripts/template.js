@@ -3,7 +3,8 @@ export function renderMainMenu(){
                 <h1>GameName <br>Here II</h1>
                   <nav>
                     <div value="start" class="button">Start New Game</div>
-                    <div value="controls" class="button">Steuerung</div>
+                    <div value="controls" class="button">Controls</div>
+                    <div value="highscore" class="button">Highscore</div>
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>
@@ -84,6 +85,35 @@ export function renderControllPanel(){
 
 }
 
+
+export function renderHighScorePanel(object){
+  return ` 
+    <div class="sidePanel">
+
+      <div class="controllPanel">
+      <h2>HighScore</h2>
+
+        
+        <div class="intoText">Check out your personal Highsore. If it possible for you to beat me?<br><br>Your Highscore will saved in your LocalStorage</div>
+        <div class="scoreImage"><img src ="./img/win.png"></div>
+        <ul class="scoreList">
+          <li>1.: ${object.score[0]} - Points</li>
+          <li>2.: ${object.score[1]} - Points</li>
+          <li>3.: ${object.score[2]} - Points</li>
+          <li>4.: ${object.score[3]} - Points</li>
+          <li>5.: ${object.score[4]} - Points</li>
+          <li>6.: ${object.score[5]} - Points</li>
+          <li>7.: ${object.score[6]} - Points</li>
+          <li>8.: ${object.score[7]} - Points</li>
+          <li>9.: ${object.score[8]} - Points</li>
+          <li>10.: ${object.score[9]} - Points</li>
+          </ul>
+        </div>
+      </div>
+  </div>`
+
+}
+
 export function renderImpressum(){
   return `
   <div class="sidePanel alightText">
@@ -132,6 +162,7 @@ export function renderPauseMenu(){
                   <nav>
                     <div value="resume" class="button">Resume</div>
                     <div value="controls" class="button">Steuerung</div>
+                    <div value="highscore" class="button">Highscore</div>
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>
@@ -146,6 +177,7 @@ export function renderEndMenu(bestScore = "00000", winText){
                   <nav>
                     <div value="restartGame" class="button">Start New Game</div>
                     <div value="controls" class="button">Steuerung</div>
+                    <div value="highscore" class="button">Highscore</div>
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>

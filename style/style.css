@@ -97,13 +97,7 @@ p{
 }
 
 #canvas{
-  background-color: #1B1316;
-  width: 100%;
-  height: 100%;
-  max-height: 1240px;
-  max-height: 720px;
-  width:  1240px;
-  height: 720px;
+
 }
 
 .main_wrapper{
@@ -249,7 +243,8 @@ p{
   align-items: center;
   font-family: PixelifySans;
   user-select: none;
-  color: #ffe8df;
+  color: #ffffff;
+
   font-size: 45px;
   letter-spacing: 2px;
   position: absolute;
@@ -289,6 +284,7 @@ p{
   max-width: 200px;
   font-size: 18px;
   color: #fff;
+  filter:drop-shadow(1px 1px 0px #997342);
   text-align: left;
 }
 
@@ -297,6 +293,7 @@ p{
   line-height: 40px;
   font-weight: 600;
   color: #DEA67E;
+  filter:drop-shadow(1px 1px 0px #794a0d);
 }
 .sidePanel{
   top: 100px;
@@ -318,6 +315,7 @@ p{
 
 .sidePanel strong{
   color: rgb(228, 133, 73);
+  filter:drop-shadow(1px 1px 0px #883b17);
   margin-bottom: 32px;
 }
 .alightText {
@@ -330,6 +328,7 @@ p{
 .sidePanel h1{
   font-size: 36px;
   color: #DEA67E;
+  filter:drop-shadow(1px 1px 0px #794a0d);
 }
 
 .controllPanel{
@@ -353,10 +352,16 @@ p{
 
 .panelOne span, .panelTwo span{
   color: rgb(228, 133, 73);
+  filter:drop-shadow(1px 1px 0px #794a0d);
 }
 
 .panelOne .woman{
   color: rgb(226, 42, 186);
+  filter:drop-shadow(1px 1px 0px #530d79);
+}
+
+.impressum{
+  filter:drop-shadow(1px 1px 0px #927045);
 }
 
 .panelTwo{
@@ -400,6 +405,7 @@ p{
   position: absolute;
   width: 390px;
   color: #ffffff;
+  filter:drop-shadow(1px 1px 0px #997342);
   font-size: 36px;
 }
 
@@ -500,6 +506,7 @@ p{
   justify-content: center;
   text-align: left;
   color: #ffffff;
+  filter:drop-shadow(1px 1px 0px #794a0d);
   font-size: 21px;
   height: 60%;
   width: 32%;
@@ -550,11 +557,64 @@ p{
 .score ul{
   width: 300px;
   color: #fff;
+  filter:drop-shadow(1px 1px 1px #794a0d);
   list-style: none;
   font-size: 25px;
   position:absolute;
   left: calc(76% - 300px);
 }
+
+.relative{
+  position: relative;
+  top: 25px;
+}
+
+.intoText{
+  padding: 8px 48px 16px 48px;
+  font-size: 18px;
+  color: #fff;
+  filter:drop-shadow(1px 1px 0px #794a0d);
+}
+
+.scoreImage{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+  height: auto;
+  width: 230px;
+}
+
+.scoreList{
+  padding-inline-start: 0px;
+  margin-block-end: 0px;
+  margin-block-start: 0px;
+  list-style: none;
+  font-size: 20px;
+  color: #fff;
+}
+
+.scoreList li{
+  margin-top: 8px;
+  color: #ffffff;
+  filter:drop-shadow(1px 1px 0px #794a0d);
+  margin-bottom: 8px;
+}
+
+.scoreList :nth-child(1){
+  color: #e58d0a;
+  filter:drop-shadow(-1px -1px 0px #ffeab4);
+}
+
+.scoreList :nth-child(2){
+  color: #80929e;
+  filter:drop-shadow(-1px -1px 0px #d0ebff);
+}
+
+.scoreList :nth-child(3){
+  color: #bd592a;
+  filter:drop-shadow(-1px -1px 0px #ffe5b1);
+}
+
 
 @keyframes fadeInOut{
   from {

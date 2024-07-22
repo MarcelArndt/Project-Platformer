@@ -1,5 +1,5 @@
 import { loadAllAssests } from "./assets.js";
-import { InitMainMenu} from "./menuScript.js";
+import { InitMainMenu, loadFromLocalStorage} from "./menuScript.js";
 let myGame = null;
 const Game = null;
 const level_One = null;
@@ -12,6 +12,7 @@ window.onload = () => {
       const levelOne = levelModule.levelOne;
       const Game = gameModule.Game;
       let myGame = new Game([levelOne]);
+      loadFromLocalStorage();
       InitMainMenu(myGame, levelOne);
   }).catch((e) => {
       console.error('Failed to load modules:', e);

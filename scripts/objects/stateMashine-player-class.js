@@ -324,7 +324,9 @@ class Death {
   behave(entity) {
     if(!entity.animationIsRunning){
       this.countDown ++;
-      if(this.countDown >= 50){      
+      if(this.countDown >= 50){  
+        entity.level.musicManager.stop();
+        entity.level.musicManager.play(entity.level.currentLevelMusic);
         entity.level.levelManager.resetLevel();
       }
     }

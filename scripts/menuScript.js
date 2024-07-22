@@ -1,6 +1,6 @@
 
 
-import { renderMainMenu, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip, renderEndMenu} from "./template.js";
+import { renderMainMenu, renderHighScorePanel, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip, renderEndMenu} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
 import { soundIsloadet, imageIsloadet} from "./assets.js";
 import { ctx } from "./canvas.js";
@@ -9,6 +9,12 @@ export let currentLevelOne = null;
 export let globalVolume = 0.6;
 export let savedGlobalVolume = globalVolume
 export let sidePanel = ""
+
+let objectInLocalStorage = {
+    globalVolume: globalVolume,
+    firstTimePlaying: true,
+    score: [0,0,0,0,0,0,0,0,0,0],
+};
 
 
 export function InitMainMenu(myGame, levelOne){
@@ -26,6 +32,7 @@ export function menuInit(){
             case "restartGame": currentGame.restartGame(); checkForVolume(""); break;
             case "start": currentGame.startLevel(); break;
             case "controls": pullControllPanel(); break;
+            case "highscore": pullHighscorePanel(); break;
             case "impressum": pullControllImpressum(); break;
             case "resume" : currentGame.resume(); break;
             case "volumnePlus": checkForVolume("plus"); break;
@@ -60,6 +67,13 @@ function pullControllPanel(){
     sidePanel = document.getElementById("renderSidePanel");
     sidePanel.innerHTML = renderControllPanel();
 }
+
+function pullHighscorePanel(){
+    playSound("success09");
+    sidePanel = document.getElementById("renderSidePanel");
+    sidePanel.innerHTML = renderHighScorePanel(objectInLocalStorage);
+}
+
 function pullControllImpressum(){
     playSound("success09");
     sidePanel = document.getElementById("renderSidePanel");
@@ -89,6 +103,7 @@ export function checkForVolume(methode = ""){
         globalVolume = 0.3;
     } 
      checkVolumeButtons();
+     saveInLocalStorage({globalVolume: globalVolume,})
 }
 
 //  toggelAttributeValue (current, SwitchTo, setclass, removeClass, src)
@@ -97,7 +112,7 @@ export function checkVolumeButtons(){
         globalVolume = 1;
         toggelAttributeValue("volumnePlus", "volumnePlusDisable", ["opacity"], ["hover"])
         toggelAttributeValue("volumneMinusDisable", "volumneMinus", ["hover"], ["opacity"])
-    } else if(globalVolume <= 0.20){
+    } else if(globalVolume <= 0.20 || globalVolume == 0){
         globalVolume = 0;
         toggelAttributeValue("volumneMinus", "volumneMinusDisable",  ["opacity"], ["hover"])
         toggelAttributeValue("volumneSelf", "volumneSelfDisable",  [], [], "./img/volumne-mute.png")
@@ -108,6 +123,7 @@ export function checkVolumeButtons(){
         toggelAttributeValue("volumneMinusDisable", "volumneMinus", ["hover"], ["opacity"]);
         toggelAttributeValue("volumnePlusDisable", "volumnePlus", ["hover"], ["opacity"]);
     }
+   
 }
 
 export function playSound(sound){
@@ -137,6 +153,62 @@ function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = 
         if(newSrc.length > 0){
             obj.src = newSrc;
         }
-    })
+    });
 }
+
+function generateDataObject(ValueDataSet = {}){
+    let object = {
+        firstTimePlaying: ValueDataSet.firstTimePlaying ?? objectInLocalStorage.firstTimePlaying,
+        globalVolume: ValueDataSet.globalVolume ?? objectInLocalStorage.globalVolume,
+        score: ValueDataSet.score ?? generateHighstore(ValueDataSet),
+    }
+    return object;
+}
+
+
+function generateHighstore(ValueDataSet){
+    let currentHighScore = objectInLocalStorage.score;
+    if( ValueDataSet.newScore > 0 && ValueDataSet.newScore != undefined && ValueDataSet.newScore != null){
+        for (let i = 0; i < currentHighScore.length; i++){
+          if( ValueDataSet.newScore > currentHighScore[i]){
+            currentHighScore.splice([i], 0, ValueDataSet.newScore);
+            currentHighScore.pop();
+            break;
+          }
+        }
+    }
+    return currentHighScore;
+ }
+
+export function saveInLocalStorage(ValueDataSet){
+    let objectForSaving = generateDataObject(ValueDataSet);
+    objectForSaving = JSON.stringify(objectForSaving);
+    localStorage.setItem("GameSave", objectForSaving);
+}
+
+export function loadFromLocalStorage(){
+    let object  = localStorage.getItem("GameSave");
+    if( object != undefined && object != null){
+        object = JSON.parse(object);
+        objectInLocalStorage = {
+            globalVolume: object.globalVolume,
+            firstTimePlaying: object.firstTimePlaying,
+            score: object.score,
+        };
+        globalVolume = objectInLocalStorage.globalVolume;
+        checkVolumeButtons();
+    } else {
+        setNewSaveState();
+    }
+}
+
+function setNewSaveState(){
+    saveInLocalStorage({
+        firstTimePlaying: true,
+        globalVolume: 0.6,
+        score: [839,771,692,0,0,0,0,0,0,0],
+      });
+      loadFromLocalStorage();
+}
+
 

@@ -72,7 +72,7 @@ export class GhostBoss extends Enemy{
         this.health = this.maxHealth
         this.moveRange = 300;
         this.alreadyTeleport = false;
-        this.statusbar = new StatusBar( this.health || 30, this.health, [canvas.width * 0.8 / 2 - imageIsloadet.liveBarBossImageFull.width , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 5], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [11,10], 650, 0.8 );
+        this.statusbar = new StatusBar( this.health || 30, this.health, [(canvas.width * 0.8 / 2 ) - imageIsloadet.liveBarBossImageFull.width + 37 , (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 15], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [6.25,13], 650, 0.64 );
     }
 
 

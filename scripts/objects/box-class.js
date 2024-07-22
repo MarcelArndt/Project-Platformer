@@ -27,6 +27,7 @@ export class Box extends Rectangle{
         this.invincibility = false;
         this.invincibilityTimer = 0;
         this.maxInvincibilityTimer = 0.55;
+        this.allowToFickeringAnimation = true
         this.health = 100;
         this.maxHealth = 100;
         this.alreadyLostHealth = false;
@@ -274,9 +275,11 @@ export class Box extends Rectangle{
     }
 
     checkInvincibilityTimer(secDeltaTime){
+        this.animationflickring(secDeltaTime);
         if(this.getHit || this.invincibility){
             this.getHitAndLoseControllTimer += secDeltaTime;
             this.invincibilityTimer += secDeltaTime;
+
             if(this.invincibilityTimer >= this.maxInvincibilityTimer){
                 this.getHit = false;
                 this.invincibility = false;
@@ -284,6 +287,21 @@ export class Box extends Rectangle{
                 this.getHitAndLoseControllTimer = 0;
                 this.invincibilityTimer = 0;
             }
+        }
+    }
+
+    animationflickring(secDeltaTime){
+        if(this.getHit && this.health > 0 && this.allowToFickeringAnimation || this.invincibility && this.health > 0 && this.allowToFickeringAnimation ){
+            this.animationflickeringTimer += secDeltaTime;
+        if(Math.floor(this.animationflickeringTimer * 1000)/ 1000 >= 0.05){
+            this.animationflickeringTimer = 0;
+            this.drawCurrentAnimation = false;
+        } else{
+            this.drawCurrentAnimation = true; 
+        }
+        } else {
+            this.animationflickeringTimer = 0;
+            this.drawCurrentAnimation = true;
         }
     }
 

@@ -53,10 +53,10 @@ export class SpawnNew{
     
     leaveState(entity){
         entity.subType = undefined;
-        entity.createHitBox(entity.pos, [108,75], [-80,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
-        entity.createHitBox(entity.pos, [108,75], [0,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,75,0,0"}, entity,);
-        entity.createHitBox(entity.pos, [28,80], [-20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,255,0,0)"}, entity,);
-        entity.createHitBox(entity.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,255,0,0)"}, entity,);
+        entity.createHitBox(entity.pos, [108,75], [-80,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,125,0,0.25)"}, entity,);
+        entity.createHitBox(entity.pos, [108,75], [0,-10], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,125,0,0.25)"}, entity,);
+        entity.createHitBox(entity.pos, [28,80], [-20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,125,0,0.25)"}, entity,);
+        entity.createHitBox(entity.pos, [28,80], [20,-2], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,125,0,0.25)"}, entity,);
         entity.level.initializeLevelToHitbox();
         entity.level.minionCounter += 1;
     }

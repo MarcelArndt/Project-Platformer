@@ -41,6 +41,7 @@ export class Init{
         entity.acc = 0;
         entity.vel[0] = 0;
         this.timer = 0;
+        entity.allowToFickeringAnimation = false;
     }
 
     behave(entity){
@@ -60,6 +61,7 @@ export class Init{
     
     leaveState(entity){ 
         entity.level.bossAlreadySeen = true;
+        entity.allowToFickeringAnimation = true;
     }
 }
 
@@ -341,6 +343,8 @@ class Death{
     start(entity){
         entity.animationStatus = "death";
         entity.animationIsRunning = true;
+        entity.acc = 0;
+        entity.vel[0] = 0;
     }
 
     behave(entity){

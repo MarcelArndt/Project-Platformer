@@ -15,6 +15,8 @@ export class Rectangle {
     this.facingLeft = false;
     this.status = "";
     this.animationStatus = "idle";
+    this.drawCurrentAnimation = true;
+    this.animationflickeringTimer = 0;
     this.frame = {x:0, y:0};
     this.animationFrames = {};
     this.animationTimer = 0;
@@ -134,7 +136,9 @@ export class Rectangle {
         if(this.crouch){
             posY -= this.frameHight * 1.5;
         }
-        ctx.drawImage(this.animationImage, this.frame.x * this.frameWidth, this.frame.y * this.frameHight, this.frameWidth, this.frameHight, posX, posY, this.frameWidth* 2 * this.scaling, this.frameHight * 2 * this.scaling) 
+        if(this.drawCurrentAnimation){
+            ctx.drawImage(this.animationImage, this.frame.x * this.frameWidth, this.frame.y * this.frameHight, this.frameWidth, this.frameHight, posX, posY, this.frameWidth* 2 * this.scaling, this.frameHight * 2 * this.scaling) 
+        }
         ctx.restore();
     }
 

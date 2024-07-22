@@ -95,7 +95,7 @@ export class MusikManager{
         }
     }
 
-    fadingIn(songObj, Volume){
+    fadingIn(songObj, Volume, index){
         if(songObj.song.paused){
             songObj.song.play();
         }
@@ -104,6 +104,10 @@ export class MusikManager{
         } else if( songObj.song.volume >= 1 || songObj.song.volume >= Math.abs(0.65 * Volume)) {
             songObj.song.volume = Math.abs(0.65 * Volume);
             songObj.fadingIn = false;
+        }
+        if(songObj.fadingOut == true){
+            songObj.fadingIn = false;
+            this.fadingOut(songObj, index);
         }
     }
 
@@ -115,8 +119,14 @@ export class MusikManager{
                 this.fadingOut(songObj, index);
             }
             if(songObj.fadingIn){
-                this.fadingIn(songObj, Volume);
-            }
+                this.fadingIn(songObj, Volume, index);
+            }/*
+            if(songObj.fadingIn && songObj.fadingOut){
+                songObj.song.pause();
+                songObj.song.volume = 0;
+                songObj.fadingIn = false;
+                songObj.fadingOut = false;
+            }*/
         });
     }
 }
