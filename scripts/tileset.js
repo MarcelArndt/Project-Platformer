@@ -6,7 +6,7 @@ import { Character } from "./objects/main-character-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { Box } from "./objects/box-class.js";
-import { Trampoline } from "./objects/TrampolineBox.js";
+import { Trampoline } from "./objects/trampolineBox.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
 import { Coin } from "./objects/coin-class.js";

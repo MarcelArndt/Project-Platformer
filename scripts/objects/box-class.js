@@ -2,7 +2,7 @@ import { Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
 import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
-import { Trampoline } from "./TrampolineBox.js";
+import { Trampoline } from "./trampolineBox.js";
 
 
 export class Box extends Rectangle{
