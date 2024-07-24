@@ -127,7 +127,7 @@ export class Level {
     this.globalVolume = globalVolume;
   }
 
-  drawDebug(deltatime){
+  drawDebug(){
     if( this.showDebug){
       let debugArray = [this.minionCounter, this.player.pos[0], this.player.pos[1], this.player.animationStatus, this.player.health, canvas.width, canvas.height, this.cameraPos[0], this.cameraPos[1]];
       ctx.fillStyle = "rgba(0,10,35,0.8)"

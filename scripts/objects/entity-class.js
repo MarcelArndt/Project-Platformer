@@ -7,6 +7,46 @@ export class Entity extends Rectangle{
         this.index = this.genEntityIndex();  
     }
 
+    get posLeft(){
+        return this.pos[0];
+    }
+
+    get posRight(){
+        return this.pos[0] + this.size[0];
+    }
+
+    get posTop(){
+        return this.pos[1];
+    }
+
+    get posBottom(){
+        return this.pos[1] + this.size[1];
+    }
+
+    get posX(){
+        return (this.posLeft + this.posRight) / 2
+    }
+
+    get posY(){
+        return (this.posTop + this.posBottom) / 2
+    }
+
+    setLeft(value){
+        this.pos[0] = value;
+    }
+
+    setRight(value){
+        this.pos[0] = value - this.size[0] ;
+    }
+
+    setTop(value){
+        this.pos[1] = value;
+    }
+
+    setBottom(value){
+        this.pos[1] = value- this.size[1] ;
+    }
+
     genEntityIndex(){
         let newIndex = "";
         let subIndex = "";

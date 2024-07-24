@@ -2,6 +2,7 @@ import { Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
 import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
+import { Trampoline } from "./TrampolineBox.js";
 
 
 export class Box extends Rectangle{
@@ -160,6 +161,22 @@ export class Box extends Rectangle{
           isAllawysAktiv: options.isAllawysAktiv || false,
           lifespan: options.lifespan || 6,
           color: options.color || "rgba(255,125,0,0.25)",
+        }, this);
+        this.demageBoxes.push(newBox);
+      }
+
+      createTrampolineBox(pos, size, manualOffset, options){
+        let newBox = new Trampoline({
+          pos: [pos[0], pos[1]],
+          size: [size[0], size[1]],
+          offset: [manualOffset[0], manualOffset[1]],
+          forceToLeft: options.forceToLeft || false,
+          demage: options.demage || 10,
+          demageFlag: options.demageFlag || null,
+          isAktiv: options.isAktiv || true,
+          isAllawysAktiv: options.isAllawysAktiv || true,
+          lifespan: options.lifespan || 0,
+          color: options.color || "rgba(0,200,200,0.25)",
         }, this);
         this.demageBoxes.push(newBox);
       }

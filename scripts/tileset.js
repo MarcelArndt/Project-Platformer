@@ -6,6 +6,7 @@ import { Character } from "./objects/main-character-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
 import { Box } from "./objects/box-class.js";
+import { Trampoline } from "./objects/TrampolineBox.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
 import { Coin } from "./objects/coin-class.js";
@@ -64,7 +65,7 @@ export class Tileset {
           case 316: newEntity = new Coin({ pos: [x * this.tileSize, y * this.tileSize], size: [15, 15], color: "#FFD53D", }); this.level.pushNewObject(newEntity); break;
           case 688: newEntity = new Skelett({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 74], color: "#FFD53D",}); this.level.pushNewObject(newEntity); break;
           case 314: newEntity = new Mushroom({ pos: [x * this.tileSize, y * this.tileSize], size: [30, 62], color: "#FFD53D",jumpspeed: -1.07 }); this.level.pushNewObject(newEntity); break;
-          case 309: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [33, 56], color: "edff2b", type: "Player", health: 60,});  this.level.pushNewObject(newEntity); break;;
+          case 309: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [33, 56], color: "#edff2b", type: "Player", health: 60,});  this.level.pushNewObject(newEntity); break;;
           case 313: newEntity = new Bird({ pos: [x * this.tileSize, y * this.tileSize], size: [18, 23],}); this.level.pushNewObject(newEntity);break;
           case 319: newEntity = new GhostBoss({ pos: [x * this.tileSize, y * this.tileSize], size: [25, 95], color: "#FFD53D", jumpspeed: -1.07}); this.level.pushNewObject(newEntity); break;
           //case 640: newEntity = new Box({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 36], color: "brown",}); this.level.pushNewObject(newEntity); break;
@@ -98,6 +99,7 @@ export class Tileset {
           case 305: newCollisionBlock = new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.level.pushNewObject(newCollisionBlock); break;
           case 318: newCollisionBlock = new DeadlySolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.level.pushNewObject(newCollisionBlock); break;
           case 312: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)"}, "Rectangle"); this.level.pushNewObject(newCollisionBlock); break;
+          //case 307: newCollisionBlock = new Trampoline({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)"},this.level.player, "Hitbox"); console.log(newCollisionBlock); this.level.pushNewObject(newCollisionBlock);break;
           default: break;
         }
       });

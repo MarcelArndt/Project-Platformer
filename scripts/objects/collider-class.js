@@ -113,6 +113,7 @@ export class Collider {
     checkSpecialHandle(obj, direction){
         return (
             !this.checkforBird(obj)
+            && !this.checkTrampoline(obj)
             && !this.checkHitbox(obj)
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
@@ -121,7 +122,6 @@ export class Collider {
             && !this.checkEnemyinEnemey(obj)
             && !this.checkProjectile(obj, direction)
             && !this.checkDeadlySolidBlock(obj, direction)
-            && !this.checkMushroom(obj, direction)
             && !this.checkBoss(obj, direction)
         );
     }
@@ -162,13 +162,6 @@ export class Collider {
         }
     }
 
-    checkMushroom(obj, direction){
-        if (direction == "below" && obj.subType == "Mushroom"){
-            obj.activateTrap(this.entity);
-            return true
-        }
-    }
-
     checkProjectile(obj, direction){
         let validType = ["Player", "Enemy", "Rectangle"]
         if (obj.subType == "Projectile" && validType.includes(this.entity.type)){
@@ -176,6 +169,16 @@ export class Collider {
             return true
         }
         return false
+    }
+
+    checkTrampoline(obj, direction){
+        let valideTyps = ["Enemy", "Player"];
+        if(obj.subType == "Trampoline"){
+            if(this.entity.index != obj.entity.index && valideTyps.includes(this.entity.type) && this.entity.posBottom < obj.posBottom && this.entity.vel[1] >= 0){
+                obj.aktivInCollision(this.entity)
+            }
+            return true
+        }
     }
 
     checkHitbox(obj){
@@ -192,6 +195,8 @@ export class Collider {
     checkBoss(obj){
         return (obj.subType == "Boss" && this.entity.type != "Rectangle" || this.entity.subType == "Boss" && obj.type != "Rectangle");
     }
+
+
 
 
 }

@@ -102,18 +102,27 @@ export class GhostBoss extends Enemy{
             if(this.level.minionCounter <= 3 && distance < 500){
                 finalSpawnPoint = this.checkForSpawnPoint(lastSpawnPoint);
                 lastSpawnPoint = finalSpawnPoint;
-                this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
+                if(finalSpawnPoint != false){
+                    this.level.pushNewObject(new Skelett({ pos: [finalSpawnPoint, this.level.player.pos[1] - 76], size: [30, 74], color: "#FFD53D",}));
+                }
             }
         }
     }
 
     checkForSpawnPoint(lastSpawnPoint){
-        let spawnPoint;
-        let isNotPossibleToSpawn;
-        do {
-            spawnPoint = this.generateNewSpawnPoint();
-            isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
-        } while (isNotPossibleToSpawn || (Math.abs(lastSpawnPoint - spawnPoint) <= 45));
+        let spawnPoint = this.generateNewSpawnPoint();
+        let isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
+        for (let i = 0; i < 30; i++){
+            if( isNotPossibleToSpawn || Math.abs(lastSpawnPoint - spawnPoint) <= 45){
+                spawnPoint = this.generateNewSpawnPoint();
+                isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
+            } else {
+                break;
+            }
+        }
+        if(isNotPossibleToSpawn) {
+            spawnPoint = false;
+        }
         return spawnPoint;
     }
 
@@ -143,7 +152,7 @@ export class GhostBoss extends Enemy{
             this.isAbove = this.isAbove == false ? true:false;
             this.alreadyTeleport = true;
             let finalSpawnPoint = this.checkForSpawnPoint(this.pos[0]);
-            this.pos[0] = finalSpawnPoint;
+            this.pos[0] = finalSpawnPoint != false ? finalSpawnPoint:this.pos[0];
             if(this.isAbove){
                 this.setBottom(this.level.player.posTop - this.size[1] - 50);
             } else if(!this.isAbove){
