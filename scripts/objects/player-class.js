@@ -74,7 +74,7 @@ export class Player extends Box {
   }
 
   keyPressedFunction(event){
-    if(!this.gethit && !this.crouch){
+    if(!this.gethit && !this.crouch && !this.level.levelIsWon){
       switch(event.key){
         case "a": case "ArrowLeft":  this.move("left"); event.stopPropagation(); event.preventDefault();; break;
           case "d": case "ArrowRight": this.move("right"); event.stopPropagation(); event.preventDefault();;break;

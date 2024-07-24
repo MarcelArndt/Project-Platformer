@@ -10,11 +10,14 @@ export let globalVolume = 0.6;
 export let savedGlobalVolume = globalVolume
 export let sidePanel = ""
 
+let isAlreadySaved = false;
 let objectInLocalStorage = {
     globalVolume: globalVolume,
     firstTimePlaying: true,
     score: [0,0,0,0,0,0,0,0,0,0],
 };
+
+let currentHighscoreVector = [0,0];
 
 
 export function InitMainMenu(myGame, levelOne){
@@ -37,6 +40,7 @@ export function menuInit(){
             case "resume" : currentGame.resume(); break;
             case "volumnePlus": checkForVolume("plus"); break;
             case "volumneMinus": checkForVolume("minus"); break;
+            case "saveScore": saveNewHighscore();  pullHighscorePanel(); break;
             case "volumneSelf": savedGlobalVolume = globalVolume; globalVolume = 0; toggelAttributeValue("volumneSelf", "volumneSelfDisable",  [], [], "./img/volumne-mute.png"); checkForVolume(""); break;
             case "volumneSelfDisable": if(globalVolume <= 0.2){globalVolume = 0.6;} else {globalVolume = savedGlobalVolume;} toggelAttributeValue("volumneSelfDisable", "volumneSelf",  [], [], "./img/volumne-full.png"); checkForVolume(""); break;
         }
@@ -87,7 +91,15 @@ export function pullIngameGui(){
 
 export function pullEndMenuScreen(score, isWon = true){
     let isWonText = isWon == true? "You Won": "You Lose";
-    canvasOverlayContent.innerHTML = renderEndMenu(score, isWonText);
+    const renderPromise = new Promise((resolve, reject) => {
+        canvasOverlayContent.innerHTML = renderEndMenu(score, isWonText);
+        resolve();
+    });
+    renderPromise.then(() => {
+        checkForNewHighScore(score);
+    }).catch(error => {
+        console.error("Error id not found", error);
+    });
 }
 
 export function checkForVolume(methode = ""){
@@ -165,13 +177,36 @@ function generateDataObject(ValueDataSet = {}){
     return object;
 }
 
+function checkForNewHighScore(currentScore){
+    let currentHighScore = objectInLocalStorage.score;
+    let noHighscoreContent = document.getElementById("isNoNewHighScore");
+    let HighscoreContent =  document.getElementById("HighscorePanel");
+    if( currentScore >= 0 && currentScore != undefined && currentScore != null){
+        for (let i = 0; i < currentHighScore.length; i++){
+          if( currentScore > currentHighScore[i][0]){
+            noHighscoreContent.classList.add("disableNewHighscore");
+            HighscoreContent.classList.remove("disableNewHighscore");
+            currentHighscoreVector = [i -1, currentScore];
+            break;
+          }
+        }
+    }
+}
+
+function saveNewHighscore(){
+        let nameValue = document.getElementById("Scorename").value.length > 0 ? document.getElementById("Scorename").value : "unnamed Hero";
+        objectInLocalStorage.score[currentHighscoreVector[0]] = [currentHighscoreVector[1], nameValue];
+}
 
 function generateHighstore(ValueDataSet){
     let currentHighScore = objectInLocalStorage.score;
+    let newHighScore = [[]];
+    let name = "Unnamed Hero"
     if( ValueDataSet.newScore > 0 && ValueDataSet.newScore != undefined && ValueDataSet.newScore != null){
         for (let i = 0; i < currentHighScore.length; i++){
-          if( ValueDataSet.newScore > currentHighScore[i]){
-            currentHighScore.splice([i], 0, ValueDataSet.newScore);
+          if( ValueDataSet.newScore > currentHighScore[i][0]){
+            newHighScore = [ValueDataSet.newScore, name]
+            currentHighScore.splice([i], 0, newHighScore);
             currentHighScore.pop();
             break;
           }
@@ -206,7 +241,7 @@ function setNewSaveState(){
     saveInLocalStorage({
         firstTimePlaying: true,
         globalVolume: 0.6,
-        score: [839,771,692,0,0,0,0,0,0,0],
+        score: [[839, "Legendary Hero"],[771, "The Brave Hero"],[692, "Young Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"],[0, "Unnamed Hero"]],
       });
       loadFromLocalStorage();
 }

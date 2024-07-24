@@ -97,16 +97,16 @@ export function renderHighScorePanel(object){
         <div class="intoText">Check out your personal Highsore. If it possible for you to beat me?<br><br>Your Highscore will saved in your LocalStorage</div>
         <div class="scoreImage"><img src ="./img/win.png"></div>
         <ul class="scoreList">
-          <li>1.: ${object.score[0]} - Points</li>
-          <li>2.: ${object.score[1]} - Points</li>
-          <li>3.: ${object.score[2]} - Points</li>
-          <li>4.: ${object.score[3]} - Points</li>
-          <li>5.: ${object.score[4]} - Points</li>
-          <li>6.: ${object.score[5]} - Points</li>
-          <li>7.: ${object.score[6]} - Points</li>
-          <li>8.: ${object.score[7]} - Points</li>
-          <li>9.: ${object.score[8]} - Points</li>
-          <li>10.: ${object.score[9]} - Points</li>
+          <li>1.: ${object.score[0][0]} Points - ${object.score[0][1]}</li>
+          <li>2.: ${object.score[1][0]} Points - ${object.score[1][1]}</li>
+          <li>3.: ${object.score[2][0]} Points - ${object.score[2][1]}</li>
+          <li>4.: ${object.score[3][0]} Points - ${object.score[3][1]}</li>
+          <li>5.: ${object.score[4][0]} Points - ${object.score[4][1]}</li>
+          <li>6.: ${object.score[5][0]} Points - ${object.score[5][1]}</li>
+          <li>7.: ${object.score[6][0]} Points - ${object.score[6][1]}</li>
+          <li>8.: ${object.score[7][0]} Points - ${object.score[7][1]}</li>
+          <li>9.: ${object.score[8][0]} Points - ${object.score[8][1]}</li>
+          <li>10.: ${object.score[9][0]} Points - ${object.score[9][1]}</li>
           </ul>
         </div>
       </div>
@@ -181,14 +181,23 @@ export function renderEndMenu(bestScore = "00000", winText){
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>
+
             <div id="renderSidePanel">
+
             <div  class="sidePanel">
-                 <div class="gameWon"><img src ="./img/win.png"></div>
-            <divid="currentGameState"><h1>${winText}</h1></div>
-            <div class="score">
-            <ul>
-            <li>Your Score: ${bestScore}</li>
-            </ul>
+            <div class ="currentScore">
+
+            <div id="currentGameState"><h1>${winText}</h1></div>
+            <div class="gameWon"><img src ="./img/win.png"></div>
+            <div class="score">Your Score: ${bestScore}</div>
+
+            <div id="isNoNewHighScore" class="HighscorePanel noHighscore">No new Highscore. Try it Again!</div>
+            
+            <div id="HighscorePanel" class="disableNewHighscore HighscorePanel">
+            <div>New Highscore!</div>
+            <div>Enter Your Name:</div>
+            <div class="enterNameInput"><input id="Scorename" placeholder="Unnamed Hero"><div class="scoreSaveButton"><img value="saveScore" src="./img/save-icon.png"></div></div>
+            </div>
             </div>
             </div>
             </div>`

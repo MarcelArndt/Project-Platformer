@@ -58,7 +58,7 @@ export class Mushroom extends Enemy{
         this.createHitBox(this.pos, [48,64], [32,-8], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
         this.createHitBox(this.pos, [10,42], [-11,22], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,125,0,0.25)"}, this);
         this.createHitBox(this.pos, [10,42], [31,22], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
-        this.createTrampolineBox(this.pos, [64,23], [-16,-8], {color: "rgba(0,300,300,0.25)"}, this);
+        this.createTrampolineBox(this.pos, [64,23], [-16,-4], {color: "rgba(0,300,300,0.25)"}, this);
     }
 
     checkForCooldown(){

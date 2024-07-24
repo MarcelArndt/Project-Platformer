@@ -544,9 +544,21 @@ p{
   cursor: pointer;
 }
 
+.currentScore{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.gameWon {
+  user-select: none;
+  margin-top: 16px;
+  width: 100%;
+  height: 180x;
+}
+
 .gameWon img{
-  position: absolute;
-  left: calc(50% - 130px);
+  user-select: none;
   top: 120px;
   height: auto;
   width: 230px;
@@ -554,20 +566,13 @@ p{
   object-position: center;
 }
 
-.score ul{
-  width: 300px;
+.score{
   color: #fff;
   filter:drop-shadow(1px 1px 1px #794a0d);
-  list-style: none;
-  font-size: 25px;
-  position:absolute;
-  left: calc(76% - 300px);
+  font-size: 28px;
+  margin-top: 16px;
 }
 
-.relative{
-  position: relative;
-  top: 25px;
-}
 
 .intoText{
   padding: 8px 48px 16px 48px;
@@ -615,6 +620,83 @@ p{
   filter:drop-shadow(-1px -1px 0px #ffe5b1);
 }
 
+.enterNameInput{
+  align-items: center;
+  margin-top: 16px;
+  justify-content: center;
+  gap: 15px;
+  display: flex;
+}
+
+.enterNameInput input {
+  background-color: #DEA67E;
+  border: 1px solid white;
+  height: 32px;
+  padding: 0px 8px 0px 8px;
+  color: #fff;
+  font-family: PixelifySans;
+  font-size: 18px;
+  border-radius: 6px;
+  font-weight: lighter;
+}
+
+.enterNameInput input::placeholder{
+  color: #fff;
+  font-family: PixelifySans;
+  font-size: 18px;
+  font-weight: lighter;
+}
+
+.enterNameInput input:active{
+  outline: 1px solid rgb(255, 255, 255);
+}
+
+.enterNameInput input:focus{
+  outline: 1px solid rgb(255, 255, 255);
+}
+
+.scoreSaveButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #a33820;
+  padding: 4px;
+  height: 30px;
+  width: 30px;
+  border-radius: 8px;
+  border: 1px solid rgb(220, 142, 127);
+  object-fit: contain;
+}
+
+.scoreSaveButton:hover{
+  background-color: #dd9248;
+  cursor: pointer;
+  outline: 2px solid rgb(255, 255, 255);
+}
+
+.scoreSaveButton img{
+  user-select: none;
+  width: 100%;
+  height: auto;
+}
+
+.HighscorePanel{
+  color: #fff;
+  filter:drop-shadow(1px 1px 0px #794a0d);
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+}
+
+.disableNewHighscore {
+  display: none;
+}
+
+.noHighscore{
+  color: #fff;
+  filter:drop-shadow(1px 1px 0px #794a0d);
+}
 
 @keyframes fadeInOut{
   from {
