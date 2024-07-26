@@ -2,7 +2,7 @@ import { Rectangle} from "./rectangle-class.js";
 import { Hitbox } from "./hitbox-class.js";
 import { soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
-import { Trampoline } from "./trampolineBox.js";
+import { JumpPad } from "./jumpPad.js";
 
 
 export class Box extends Rectangle{
@@ -165,8 +165,8 @@ export class Box extends Rectangle{
         this.demageBoxes.push(newBox);
       }
 
-      createTrampolineBox(pos, size, manualOffset, options){
-        let newBox = new Trampoline({
+      createJumpPad(pos, size, manualOffset, options){
+        let newBox = new JumpPad ({
           pos: [pos[0], pos[1]],
           size: [size[0], size[1]],
           offset: [manualOffset[0], manualOffset[1]],

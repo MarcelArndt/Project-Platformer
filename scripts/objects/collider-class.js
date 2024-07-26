@@ -113,7 +113,7 @@ export class Collider {
     checkSpecialHandle(obj, direction){
         return (
             !this.checkforBird(obj)
-            && !this.checkTrampoline(obj)
+            && !this.checkJumpPad(obj)
             && !this.checkHitbox(obj)
             && !this.checkforDeath(obj)
             && !this.checkforItem(obj)
@@ -171,9 +171,9 @@ export class Collider {
         return false
     }
 
-    checkTrampoline(obj, direction){
+    checkJumpPad(obj, direction){
         let valideTyps = ["Enemy", "Player"];
-        if(obj.subType == "Trampoline"){
+        if(obj.subType == "JumpPad"){
             if(this.entity.index != obj.entity.index && valideTyps.includes(this.entity.type) && this.entity.posBottom < obj.posBottom && this.entity.vel[1] >= 0){
                 obj.aktivInCollision(this.entity)
             }

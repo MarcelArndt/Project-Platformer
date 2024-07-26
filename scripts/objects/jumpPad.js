@@ -1,12 +1,12 @@
 import { Hitbox } from "./hitbox-class.js";
 import { soundIsloadet } from "../assets.js";
-export class Trampoline extends Hitbox{
+export class JumpPad extends Hitbox{
     constructor(options, entity){
         const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset} = options
         super(pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset, entity, "Hitbox")
         this.isAllawysAktiv = isAllawysAktiv || false;
         this.entity = entity;
-        this.subType = "Trampoline";
+        this.subType = "JumpPad";
         this.pos = pos;
         this.size = size;
         this.color = color;
