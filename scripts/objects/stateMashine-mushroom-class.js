@@ -96,7 +96,7 @@ class Walking{
         }
 
         if(Math.floor(entity.animationTimer) == 1 && entity.checkThisOnScreen() || Math.floor(entity.animationTimer) == 5){
-            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03], false);
+            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03]);
         }
 
         if(entity.health <= 0){
@@ -136,7 +136,7 @@ class Chasing{
             entity.jump();
         }
         if(Math.floor(entity.animationTimer) == 1 || Math.floor(entity.animationTimer) == 3 || Math.floor(entity.animationTimer) == 6){
-            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03], false);
+            entity.chooseRandomSound([soundIsloadet.footsteps01,soundIsloadet.footsteps02, soundIsloadet.footsteps03]);
         }
 
     }
@@ -220,13 +220,9 @@ class Attack{
         entity.checkIsPlayerinAggro();
         if(!entity.PlayerInAggro[1] || entity.level.player.animationStatus == "death"){
             entity.stateMachine.changeState(new Walking()); 
-            if(!entity.PlayerInAggro[0]){
-                entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);
-            }
         }
 
         if(entity.getHit){
-            entity.stopPlayingSound(["whoosh02", "whoosh03", "whoosh04"]);
             entity.stateMachine.changeState(new GetHit());    
         }
         

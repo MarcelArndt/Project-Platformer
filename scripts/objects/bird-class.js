@@ -49,7 +49,6 @@ export class Bird extends Box {
         this.SoundDelay = 35;
         this.toggleSound = false;
         this.collider = new Collider(this);
-
         this.animationImage = new Image();
         this.animationImage = this.imageArray[this.randomNumber(3)];
         this.animationTimer = 0;

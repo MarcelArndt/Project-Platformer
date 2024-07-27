@@ -23,7 +23,9 @@ export class JumpPad extends Hitbox{
     }
 
     aktivInCollision(obj){
+        if(this.entity.index != obj.index && this.valideTyps.includes(obj.type)){
             obj.vel[1] = -1.45;
             this.chooseRandomSound(["bounce02"]);
+        }
     }
 }

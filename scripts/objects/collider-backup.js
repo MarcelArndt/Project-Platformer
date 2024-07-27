@@ -3,10 +3,6 @@ export class Collider {
     constructor(entity, toggle = true,){
         this.entity = entity;
         this.isAvailable = toggle || true;
-        this.posLeft =  0;
-        this.posRight = 0;
-        this.posBottom =  0;
-        this.posTop =  0;
         this.validType = [["Player", "Enemy", "Rectangle", "Death", "GetHit"], ["Item", "Bird", "Projectile"], ["Hitbox"], ["Hitbox", "JumpPad"]];
     }
 
@@ -41,7 +37,6 @@ export class Collider {
 
 
     update(deltaTime){
-
         this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
@@ -59,8 +54,8 @@ export class Collider {
     }
 
     checkFromAbove(obj) {
-        if(this.entity.getPrevPosTop() <= obj.posBottom && this.entity.getPrevPosBottom() >= obj.posBottom && this.entity.collideWith(obj, [0, 0])){
-           if (this.entity.type != "Hitbox" && this.checkSpecialHandle(obj ,"above")){
+        if(this.entity.getPrevPosTop() <= obj.posBottom && this.entity.getPrevPosBottom() >= obj.posBottom && this.entity.collideWith(obj, [0, 0]) && this.checkSpecialHandle(obj ,"above")){
+           if (this.entity.type != "Hitbox"){
             this.entity.setTop(obj.posBottom);
             this.entity.vel[1] =  0;
            }
@@ -68,8 +63,8 @@ export class Collider {
     }
 
     checkFromBelow(obj) {
-        if(this.entity.getPrevPosBottom() >= obj.posTop && this.entity.getPrevPosTop() <= obj.posTop && this.entity.collideWith(obj, [0, 0])){
-            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"below")){
+        if(this.entity.getPrevPosBottom() >= obj.posTop && this.entity.getPrevPosTop() <= obj.posTop && this.entity.collideWith(obj, [0, 0]) && this.checkSpecialHandle(obj ,"below")){
+            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad"){
                 this.entity.setBottom(obj.posTop);
                 this.entity.vel[1] = 0;
                 this.entity.onGround = true;
@@ -81,8 +76,8 @@ export class Collider {
     }
  
     checkFromLeft(obj) {
-        if(this.entity.getPrevPosRight() <= obj.posLeft && this.entity.getPrevPosLeft() <= obj.posLeft && this.entity.collideWith(obj, [8, -2])){
-            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"left")){
+        if(this.entity.getPrevPosRight() <= obj.posLeft && this.entity.getPrevPosLeft() <= obj.posLeft && this.entity.collideWith(obj, [8, -2]) && this.checkSpecialHandle(obj ,"left")){
+            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad"){
                 this.entity.setRight(obj.posLeft - 9);
                 this.entity.vel[0] = 0;
             }
@@ -90,8 +85,8 @@ export class Collider {
     }
 
     checkFromRight(obj) {
-        if(this.entity.getPrevPosLeft() >= obj.posRight && this.entity.getPrevPosLeft() >= obj.posLeft && this.entity.collideWith(obj, [-8, -2])){
-            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"right")){
+        if(this.entity.getPrevPosLeft() >= obj.posRight && this.entity.getPrevPosLeft() >= obj.posLeft && this.entity.collideWith(obj, [-8, -2]) && this.checkSpecialHandle(obj ,"right")){
+            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad"){
                 this.entity.setLeft(obj.posRight + 9);
                 this.entity.vel[0] = 0;
             }
@@ -99,8 +94,8 @@ export class Collider {
     }
 
     checkSemiSolid(obj) {
-        if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch) {
-            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"below")){
+        if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch && this.checkSpecialHandle(obj ,"below")) {
+            if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad"){
                 if(this.entity.vel[1] >= -0.001 && obj.collideWith(this.entity, [0, (-this.entity.size[1] / 2 * this.entity.vel[1])])){
                     this.entity.setBottom(obj.posTop - 2);
                     this.entity.vel[1] = 0;

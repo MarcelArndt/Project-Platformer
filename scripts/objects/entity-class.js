@@ -68,25 +68,12 @@ export class Entity extends Rectangle{
         })
     }
 
-    chooseRandomSound(soundArray = [], toInterrupt = true , setVolume = 1){
+    chooseRandomSound(soundArray = [], setVolume = 1){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
-        if(!soundIsloadet[soundArray[randomNumber]].paused && toInterrupt){
-            soundIsloadet[soundArray[randomNumber]].pause();
-            soundIsloadet[soundArray[randomNumber]].currentTime = 0;
-        } else {
             soundIsloadet[soundArray[randomNumber]].volume = setVolume * this.level.globalVolume;
             soundIsloadet[soundArray[randomNumber]].play();
-        }
       }
-      
-    stopPlayingSound(soundArray){
-        soundArray.forEach((sound => {
-            if(!soundIsloadet[sound].paused){
-                soundIsloadet[sound].pause();
-                soundIsloadet[sound].currentTime = 0;
-            }
-        }));
-    }
+    
 
     update(deltaTime){
         super.update(deltaTime);

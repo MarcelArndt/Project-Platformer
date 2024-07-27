@@ -138,7 +138,7 @@ export class Idle{
 class Teleporting{
 
     start(entity){
-        entity.chooseRandomSound([soundIsloadet.teleport1], false, 0.25);
+        entity.chooseRandomSound([soundIsloadet.teleport1], 0.25);
         entity.animationStatus = "teleport";
         entity.acc = 0;
         entity.vel[0] = 0;
@@ -219,7 +219,7 @@ class AttackThrow{
     entity.animationIsRunning = true;
     entity.acc = 0;
     this.fired = false;
-    entity.chooseRandomSound([soundIsloadet.loadingAttack1], false, 1);
+    entity.chooseRandomSound([soundIsloadet.loadingAttack1], 1);
     }
 
     behave(entity){
@@ -262,7 +262,7 @@ class AttackSpawnMinion{
     entity.animationStatus = "attackTwo";
     entity.animationIsRunning = true;
     entity.acc = 0;
-    entity.chooseRandomSound([soundIsloadet.loadingAttack2], false, 1);
+    entity.chooseRandomSound([soundIsloadet.loadingAttack2], 1);
     }
 
     behave(entity){
@@ -275,7 +275,7 @@ class AttackSpawnMinion{
     }
     
     leaveState(entity){ 
-        entity.chooseRandomSound([soundIsloadet.blast2], false, 1);
+        entity.chooseRandomSound([soundIsloadet.blast2], 1);
             entity.spawnNewMinion(1);
 
     }

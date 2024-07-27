@@ -127,7 +127,7 @@ export class Walking {
 
   behave(entity) {
     if(Math.floor(entity.animationTimer) == 1  ||  Math.floor(entity.animationTimer) == 5 ){
-      entity.chooseRandomSound([soundIsloadet.playerStepsOne], false);
+      entity.chooseRandomSound([soundIsloadet.playerStepsOne]);
       this.soundIsAlreadyPlayed = true
     }
 

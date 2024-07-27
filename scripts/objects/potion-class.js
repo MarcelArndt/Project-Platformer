@@ -24,7 +24,7 @@ export class Potion extends Entity{
 
     activateItem(){
         let newValue = null;
-        this.chooseRandomSound(["pop01","pop02","pop03"], false);
+        this.chooseRandomSound(["pop01","pop02","pop03"]);
         if(this.level.player.maxHealth - this.level.player.health >= this.value){
             this.level.player.health += this.healthValue;
             this.level.player.statusbar.refreshValue(this.level.player.health);

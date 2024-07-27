@@ -267,25 +267,13 @@ export class Box extends Rectangle{
         this.screenshakeAnimationRunning = true;
     }
 
-    chooseRandomSound(soundArray = [], toInterrupt = true, setVolume = 1){
+    chooseRandomSound(soundArray = [], setVolume = 1){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
-        if(!soundArray[randomNumber].paused && toInterrupt){
-            soundArray[randomNumber].pause();
-            soundArray[randomNumber].currentTime = 0;
-        } else if(this.checkThisOnScreen()){
+        if(this.checkThisOnScreen()){
             soundArray[randomNumber].volume = setVolume * this.level.globalVolume;
             soundArray[randomNumber].play();
         }
       }
-
-    stopPlayingSound(soundArray){
-        soundArray.forEach((sound => {
-            if(!soundIsloadet[sound].paused){
-                soundIsloadet[sound].pause();
-                soundIsloadet[sound].currentTime = 0;
-            }
-        }));
-    }
 
     checkThisOnScreen(){
         return (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width);

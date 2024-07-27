@@ -22,7 +22,7 @@ export class Coin extends Entity{
     }
 
     activateItem(){
-        this.chooseRandomSound(["coin01","coin02","coin03"], false);
+        this.chooseRandomSound(["coin01","coin02","coin03"]);
         this.level.player.score += this.value;
         this.deleteObject();
     }
