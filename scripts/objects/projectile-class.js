@@ -1,6 +1,7 @@
 import { Entity} from "./entity-class.js";
 import { imageIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
+import { ctx } from "../canvas.js";
 
 export class Projectile extends Entity{
     constructor(options, type){
@@ -9,6 +10,7 @@ export class Projectile extends Entity{
         this.subType = subType || "Projectile";
         this.value =  value || 0;
         this.vel = [0,0];
+        this.size = size || [50,50];
         this.speedX = options.speedX || 0.7;
         this.speedY = options.speedY || 0.5;
         this.speedMultiplyer = options.speedMultiplyer || 0.1;
@@ -22,18 +24,18 @@ export class Projectile extends Entity{
         this.demageFlag = options.demageFlag || "Player";
         this.demage = options.demage || 10;
         this.animationFrames = {
-            starting: [[{x:0, y:0},{x:0, y:0},{x:0, y:0},{x:3, y:0}], false],
-            idle: [[{x:0, y:0},{x:1, y:0},{x:2, y:0},{x:3, y:0},{x:4, y:0},{x:5, y:0},{x:6, y:0}], true],
+            starting: [[{x:0, y:0},{x:1, y:0},{x:2, y:0},{x:3, y:0},{x:4, y:0},{x:5, y:0},{x:6, y:0},{x:7, y:0},{x:8, y:0},{x:9, y:0}], false],
+            idle: [[{x:0, y:1},{x:1, y:1},{x:2, y:1},{x:3, y:1},{x:4, y:1},{x:5, y:1},{x:6, y:1},{x:7, y:1}], true],
             ending: [[{x:0, y:0},{x:0, y:2},{x:0, y:0},{x:0, y:2},{x:0, y:0},{x:0, y:2}], false],
         }
         this.animationSpeed = 1;
         this.animationStatus = "starting";
-        this.frameWidth = 15;
-        this.frameHight = 15;
-        this.frameHightOffset = 0;
-        this.frameWidthOffset = 8;
-        this.animationImage =  options.image || imageIsloadet.coin;
-        this.scaling = 0.625;
+        this.frameWidth = 50;
+        this.frameHight = 50;
+        this.frameHightOffset = -7;
+        this.frameWidthOffset = 16;
+        this.animationImage =  options.image || imageIsloadet.projectile;
+        this.scaling = 0.645;
         this.animationTimer = 0;
         this.collider = new Collider(this);
         this.isInCollision = false;
@@ -44,6 +46,19 @@ export class Projectile extends Entity{
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
         this.stateMaschine.updateState(deltaTime);
+        this.showCollider();
+    }
+
+    showCollider(){
+        if(this.level.showDebug){
+            if(this.level.showDebug){
+                ctx.beginPath();
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = "rgba(255, 125, 0, 0.85)";
+                ctx.rect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0] + 1, this.size[1]);
+                ctx.stroke();
+            }
+        }
     }
 
     aktivInCollision(obj, direction){

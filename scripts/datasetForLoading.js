@@ -17,6 +17,7 @@ export let imageIsToLoading = {
     liveBarImageEmpty: "./assets/bar/livebar-empty.png",
     lifePotion: "./assets/life-potion.png",
     coin: "./assets/coin-sheet.png",
+    projectile: "./assets/projectile.png",
     liveBarBossImageFull: "./assets/bar/boss-full.png",
     liveBarBossImageEmpty: "./assets/bar/boss-empty.png",
   };

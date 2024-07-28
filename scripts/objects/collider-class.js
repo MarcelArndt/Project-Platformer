@@ -32,7 +32,7 @@ export class Collider {
     showCollider(){
         if(this.entity.level.showDebug){
                 ctx.beginPath();
-                ctx.lineWidth = "1";
+                ctx.lineWidth = 1;
                 ctx.strokeStyle = "rgba(150, 255, 240, 0.45)";
                 ctx.rect(this.entity.pos[0] - this.entity.level.cameraPos[0], this.entity.pos[1] - this.entity.level.cameraPos[1], this.entity.size[0] + 1, this.entity.size[1]);
                 ctx.stroke();
@@ -41,7 +41,6 @@ export class Collider {
 
 
     update(deltaTime){
-
         this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
         this.entity.level.objects.forEach((obj) => {
@@ -53,9 +52,7 @@ export class Collider {
             } else {
                 this.checkSemiSolid(obj);
             }
-
         });
-
     }
 
     checkFromAbove(obj) {
