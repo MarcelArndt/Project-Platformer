@@ -3,12 +3,13 @@
 import { renderMainMenu, renderHighScorePanel, renderControllPanel, renderImpressum , renderIngameGui, renderPauseMenu, renderGameReady, renderQuickTip, renderEndMenu} from "./template.js";
 import { canvasOverlay, canvasOverlayContent} from "./assets.js";
 import { soundIsloadet, imageIsloadet} from "./assets.js";
-import { ctx } from "./canvas.js";
+import { ctx, canvas, canvasScalingFactor } from "./canvas.js";
 export let currentGame = null;
 export let currentLevelOne = null;
 export let globalVolume = 0.6;
 export let savedGlobalVolume = globalVolume
 export let sidePanel = ""
+export let canvasMaxSize = [1240, 720];
 
 let isAlreadySaved = false;
 let objectInLocalStorage = {
@@ -47,6 +48,7 @@ export function menuInit(){
     });
     sidePanel = document.getElementById("renderSidePanel");
 }
+
 
 export function pullPauseMenu(modus = 0){
     canvasOverlayContent.innerHTML = renderPauseMenu();

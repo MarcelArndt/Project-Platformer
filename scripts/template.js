@@ -1,5 +1,7 @@
 export function renderMainMenu(){
-    return `<div class="GameMenu">
+    return `
+          <div class="book">
+            <div class="GameMenu">
                 <h1>GameName <br>Here II</h1>
                   <nav>
                     <div value="start" class="button">Start New Game</div>
@@ -9,20 +11,25 @@ export function renderMainMenu(){
                   </nav>
             </div>
             <div id="renderSidePanel">
-            </div>`
+            </div>
+          </div>`
 }
 
 export function renderGameReady(){
-  return `<div class="GameMenu">        
-          </div>
-          <div id="renderSidePanel">
+  return `
+  <div class="book">
+    <div class="GameMenu">  
+        <div class="bookPageCenterWrapper">
           <div class="gameReady flickContent"><img value="startGame" class="hover" src ="./img/button-play.png"></div>
-          <div class="gameReady"> Game is Ready <br> press 'P' to start the Game.</div>
-          </div>
-          
-          <div id="quciktip" class="quickTipMenu"> 
-         
-          </div>
+          <div class="gameReady"> Game is Ready <br> press 'P' to start the Game.</div>      
+        </div>
+    </div>
+
+    <div id="renderSidePanel">
+      <div id="quciktip" class="quickTipMenu"> 
+      </div>
+    </div>
+  </div>
           `
 
 }
@@ -157,7 +164,9 @@ export function renderIngameGui(){
 
 
 export function renderPauseMenu(){
-  return `<div class="GameMenu">
+  return `
+          <div class="book">
+            <div class="GameMenu">
                 <h1>GameName <br>Here II</h1>
                   <nav>
                     <div value="resume" class="button">Resume</div>
@@ -167,12 +176,16 @@ export function renderPauseMenu(){
                   </nav>
             </div>
             <div id="renderSidePanel">
-            </div>`
+            </div>
+          </div>`
+
 }
 
 
 export function renderEndMenu(bestScore = "00000", winText){
-  return `<div class="GameMenu">
+  return `
+     <div class="book">
+      <div class="GameMenu">
                 <h1>GameName <br>Here II</h1>
                   <nav>
                     <div value="restartGame" class="button">Start New Game</div>
@@ -200,7 +213,8 @@ export function renderEndMenu(bestScore = "00000", winText){
             </div>
             </div>
             </div>
-            </div>`
+            </div>
+          </div>`
 }
 
 export function renderdebugCode(debugArray){

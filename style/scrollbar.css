@@ -2,11 +2,11 @@
     background: #3A0B25; 
     border-radius: 12px;
     position: relative;
-    border: 2px solid #FFE0BC;
+    border: 2px solid #FAC08A;
   }
     
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--join-blue); 
+    background: #61223a; 
   }
     
   ::-webkit-scrollbar {
@@ -14,7 +14,7 @@
   }
     
   ::-webkit-scrollbar-track {
-      border-left: 1px solid #FFE0BC;
+      border-left: 1px solid #FAC08A;
       background: #FFE0BC; 
   }
 
@@ -26,5 +26,13 @@
   }
 
   .sidePanel::-webkit-scrollbar-track{
+    display: none;
+  }
+
+  .GameMenu::-webkit-scrollbar-track{
+    display: none;
+  }
+
+  #renderSidePanel::-webkit-scrollbar-track{
     display: none;
   }
