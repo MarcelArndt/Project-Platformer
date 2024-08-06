@@ -179,7 +179,7 @@ class Attack{
         entity.acc = 0;
         entity.animationStatus = "attack"
         entity.animationTimer = 0;
-        entity.animationSpeed = 2
+        entity.animationSpeed = 2;
      
     }
 

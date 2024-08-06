@@ -97,6 +97,9 @@ export class Fall {
   }
 
   checkConditions(entity) {
+    if(entity.vel[1] < 0){
+      entity.stateMachine.changeState(new Jump());    
+    }
     if (entity.onGround && entity.vel[1] == 0) {
       entity.stateMachine.changeState(new Idle());
     }
@@ -106,7 +109,6 @@ export class Fall {
     if(entity.health <= 0){
       entity.stateMachine.changeState(new Death());
     }
-
   }
 
   leaveState(entity) {
@@ -171,6 +173,9 @@ export class Crouch {
   }
 
   checkConditions(entity) {
+    if(entity.crouch && entity.vel[1] > 0){
+      entity.stateMachine.changeState(new Fall());
+    }
     if(!entity.crouch){
       entity.stateMachine.changeState(new Idle());
     }
@@ -196,6 +201,7 @@ export class Attack {
     entity.vel[0] = 0;
     entity.acc = 0;
     entity.animationTimer = 0;
+    entity.animationSpeed = 1.5;
     entity.cooldown.startAttack = false;
     if(entity.cooldown.prepareNextAttack){
       entity.animationStatus = "attackTwo";
@@ -267,6 +273,7 @@ export class Attack {
   leaveState(entity) {
     entity.cooldown.mainAttack = false;
     entity.disableHitbox(entity.index, 0, true);
+    entity.animationSpeed = 1;
   }
 }
 
@@ -282,14 +289,14 @@ export class GetHit {
     entity.screenShakeEnable(55);
     entity.animationStatus = "getHit";
     entity.type = "GetHit";
-    entity.removeControll();
+    entity.keyBoard.removeControll();
     entity.chooseRandomSound([soundIsloadet.hitPlayer]);
   }
 
   behave(entity) {
     entity.pushBack(0.45,0.95);
     if(entity.getHitAndLoseControllTimer >= entity.maxGetHitAndLoseControllTimer && !this.alreadyGetControll){
-      entity.addControll();
+      entity.keyBoard.addControll();
       entity.getHit = false;
     }
   }
@@ -315,7 +322,7 @@ class Death {
   start(entity) {
     entity.chooseRandomSound([soundIsloadet.deathPlayer]);
     entity.animationStatus = "death";
-    entity.removeControll();
+    entity.keyBoard.removeControll();
     entity.type = "Death";
     entity.acc = 0;
     this.countDown = 0;

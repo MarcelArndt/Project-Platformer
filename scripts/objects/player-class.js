@@ -3,6 +3,8 @@ import { StateMachine, Idle } from "./stateMashine-player-class.js";
 import { StatusBar } from "./statusBar-class.js";
 import { ScoreBar } from "./score-class.js";
 import { imageIsloadet } from "../assets.js";
+import { PlayerKeyboard} from "./playerKeyboard-class.js";
+
 
 export class Player extends Box {
   constructor(options, type) {
@@ -39,6 +41,7 @@ export class Player extends Box {
     this.score = options.score || 0;
     this.lives = options.lives || 3;
     this.stateMachine = new StateMachine(new Idle(), this);
+    this.keyBoard = new PlayerKeyboard(this);
 
     this.cooldown = {
       getHurt : 0,
@@ -63,50 +66,12 @@ export class Player extends Box {
     };
     this.pressedKeys = [];
     this.alreadyGetControll = false;
-    this.keyfunctionPressRef = (e) => this.keyPressedFunction(e);
-    this.keyfunctionUpRef = (e) => this.keyUpFunction(e);
     this.statusbar = new StatusBar( options.health || 30, this.health, [20,17], imageIsloadet.liveBarImageFull, imageIsloadet.liveBarImageEmpty, [6.75,27], false, 1.11 );
     this.scoreBar = new ScoreBar([32,73], {addSuffix: " ", addpPrefix: "SCORE:  "});
     this.lifeCounter = new ScoreBar([59,32], {addSuffix: " ", addPrefix: "x ", decimalAmount: 2, fontSize: 10,});
     this.createHitBox(this.pos, [56,44], [-50,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: false, color: "rgba(255,255,0,1)"}, this,)
     this.createHitBox(this.pos, [56,44], [22,10], {lifespan: 10, demageFlag: "Enemy", forceToLeft: true, color: "rgba(255,255,0,1)"}, this,)
-    this.addControll();
-  }
-
-  keyPressedFunction(event){
-    if(!this.gethit && !this.crouch && !this.level.levelIsWon){
-      switch(event.key){
-        case "a": case "ArrowLeft":  this.move("left"); event.stopPropagation(); event.preventDefault();; break;
-          case "d": case "ArrowRight": this.move("right"); event.stopPropagation(); event.preventDefault();;break;
-          case "w": case "ArrowUp": case " ": this.playerJump();  event.stopPropagation(); event.preventDefault(); break;
-          case "s": case "ArrowDown": if(this.onGround){this.inCrouch()};event.stopPropagation(); event.preventDefault(); break;
-          case "f": case "Enter": this.playerAttack(); event.stopPropagation(); event.preventDefault();; break;
-      }
-    }
-  }
-
-    keyUpFunction(event){
-      switch(event.key){
-        case "a": case "ArrowLeft":  this.stopMove(); break;
-        case "d": case "ArrowRight": this.stopMove(); break;
-        case "s": case "ArrowDown":  this.outCrouch(); break;
-      }
-    }
-
-  addControll() {
-    if(!this.alreadyGetControll){
-      document.addEventListener("keydown", this.keyfunctionPressRef);
-      document.addEventListener("keyup", this.keyfunctionUpRef);
-      this.alreadyGetControll = true;
-    }
-  }
-
-  removeControll() {
-    if(this.alreadyGetControll){
-      document.removeEventListener("keydown", this.keyfunctionPressRef);
-      document.removeEventListener("keyup", this.keyfunctionUpRef);
-      this.alreadyGetControll = false;
-    }
+    this.keyBoard.addControll();
   }
 
   checkFacingLeft(){
@@ -118,7 +83,6 @@ export class Player extends Box {
     }
   }
  
-
   move(direction) {
     if (direction == "left"){
       this.acc = -this.walkspeed;
@@ -161,13 +125,6 @@ export class Player extends Box {
       clearTimeout(this.currentCoyoteTime);
     }
   }
-  
-  checkKeyPressedTime(keyIsPressedTime) {
-    if (keyIsPressedTime - 1000 >= this.jump.latestJump) {
-      return false;
-    }
-    return true;
-  }
 
   pushObject(box) {
     return {
@@ -207,6 +164,7 @@ export class Player extends Box {
 
   update(deltaTime) {
     super.update(deltaTime);
+    this.keyBoard.update();
     this.updateFrameAnimation(deltaTime);
     this.checkCoyoteTime();
     this.ceckCooldown(deltaTime);
