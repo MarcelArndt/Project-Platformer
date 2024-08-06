@@ -8,10 +8,13 @@ export class PlayerKeyboard {
     }
 
     keyPressedFunction(event){
+        if(event.key == " " || event.key == "w" || event.key == "ArrowUp"){
+            event.preventDefault();
+            event.stopPropagation();
+        }
         if(!this.Player.gethit && !this.Player.crouch && !this.Player.level.levelIsWon && this.KeyMap.indexOf(event.key) == -1 ){
             this.KeyMap.unshift(event.key);
         }
-
     }
 
     keyUpFunction(event){

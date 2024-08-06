@@ -141,14 +141,17 @@ export function checkVolumeButtons(){
 }
 
 export function playSound(sound){
+    if(soundIsloadet[sound] != undefined && soundIsloadet[sound] != null){
         soundIsloadet[sound].volume = 1 * globalVolume;
         soundIsloadet[sound].play();
+    }
 }
 
 
 export function drawMenuBookBackground(){
     ctx.drawImage(imageIsloadet.menuBackgroundBook, 0, 0, imageIsloadet.menuBackgroundBook.width, imageIsloadet.menuBackgroundBook.height, 0 , 0, imageIsloadet.menuBackgroundBook.width / 180 * 100 * 1.45, imageIsloadet.menuBackgroundBook.height / 180 * 100 * 1.45)
 }
+
 
 function toggelAttributeValue(attribute, switchTo, setClass = [], removeClass = [], newSrc = ""){
     let element = document.querySelectorAll([`[value="${attribute}"]`]);

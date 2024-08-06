@@ -53,6 +53,7 @@ export class LevelManager{
           }; break;
           case "?":  this.level.showDebug = this.level.showDebug == false ? true:false; break;
           case `*`:  this.level.levelIsWon = true; break;
+          case " " : case "w" : case "ArrowUp" :  event.preventDefault(); event.stopPropagation(); break;
         }
       }
 

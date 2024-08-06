@@ -180,7 +180,6 @@ class Attack{
         entity.animationStatus = "attack"
         entity.animationTimer = 0;
         entity.animationSpeed = 2;
-     
     }
 
     behave(entity){
