@@ -311,17 +311,19 @@ class Attack{
 class GetHit{
 
     start(entity){
-        entity.level.player.score += Math.floor(entity.scoreValue / 3);
-        entity.chooseRandomSound([soundIsloadet.hit09]);
-        entity.animationStatus = "getHit";
+            entity.level.player.score += Math.floor(entity.scoreValue / 3);
+            entity.animationStatus = "getHit";
+            entity.invincibility = true;
     }
 
     behave(entity){
-       
+        entity.invincibility = true;
+        this.invincibilityTimer = 0;
+        entity.getHit = true;
     }
 
     checkConditions(entity){
-        if(!entity.getHit){
+        if(entity.animationTimer >= 5){
             entity.stateMachine.changeState(new Teleporting());     
         }
         if(entity.health <= 0){
@@ -330,7 +332,7 @@ class GetHit{
     }
 
     leaveState(entity){
-
+        entity.invincibility = false;
     }
 }
 

@@ -1,6 +1,7 @@
 export let imageIsToLoading = {
     character: "./assets/character-animation-atlas.png",
     bluejayBird: "./assets/bird_1_bluejay.png",
+    blackBird: "./assets/bird_black.png",
     whiteBird: "./assets/bird_2_white.png",
     robinBird: "./assets/bird_3_robin.png",
     skeleton: "./assets/skelet-animation-atlas.png",

@@ -11,9 +11,6 @@ export let canvasOverlayContent = document.getElementById("canvasOverlayContent"
  */
 export let imageIsloadet = {};
 export let soundIsloadet = {};
-
-// Object.keys(imageIsToLoading)[i] == Name from Key
-// imageIsToLoading[Object.keys(imageIsToLoading)[i]] => zurgriff auf die Keys
 export async function loadAllAssests() {
   await loadAllImages();
   await loadAllSounds();

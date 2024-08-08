@@ -1,7 +1,5 @@
 import { Player} from "./player-class.js";
-import {imageIsloadet} from "../assets.js";
-
-
+import {imageIsloadet, soundIsloadet} from "../assets.js";
 
 export class Character extends Player {
     constructor(options){
@@ -30,6 +28,7 @@ export class Character extends Player {
         this.frameWidthOffset = 3;
         this.animationImage = imageIsloadet.character;
         this.walkspeed = 0.012;
+        this.hitSound = soundIsloadet.hitPlayer;
       
     }
 

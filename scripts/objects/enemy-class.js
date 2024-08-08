@@ -34,6 +34,7 @@ export class Enemy extends Box {
         this.animationStatus = "idle";
         this.prevStatus = "idle";
         this.demageBoxes = [];
+        this.maxInvincibilityTimer = 0.55;
         this.stateMachine = new StateMachine(new Idle(), this);
         this.scoreValue = options.scoreValue || 15;
     }

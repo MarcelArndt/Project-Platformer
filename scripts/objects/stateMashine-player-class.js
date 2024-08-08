@@ -290,7 +290,6 @@ export class GetHit {
     entity.animationStatus = "getHit";
     entity.type = "GetHit";
     entity.keyBoard.removeControll();
-    entity.chooseRandomSound([soundIsloadet.hitPlayer]);
   }
 
   behave(entity) {

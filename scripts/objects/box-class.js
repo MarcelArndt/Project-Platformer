@@ -27,12 +27,14 @@ export class Box extends Rectangle{
         this.maxGetHitAndLoseControllTimer = 0.5;
         this.invincibility = false;
         this.invincibilityTimer = 0;
-        this.maxInvincibilityTimer = 0.55;
+        this.maxInvincibilityTimer = 1.15;
         this.allowToFickeringAnimation = true
         this.health = 100;
         this.maxHealth = 100;
         this.alreadyLostHealth = false;
         this.hitboxIsBoundToLevel = false;
+        this.receiveHitCounter = 0;
+        this.hitSound = soundIsloadet.hit09;
     }
     
     genEntityIndex(){
@@ -289,6 +291,7 @@ export class Box extends Rectangle{
                 this.getHit = false;
                 this.invincibility = false;
                 this.alreadyLostHealth = false;
+                this.receiveHitCounter = 0;
                 this.getHitAndLoseControllTimer = 0;
                 this.invincibilityTimer = 0;
             }
@@ -321,6 +324,7 @@ export class Box extends Rectangle{
 
     reduceHealth(Value){
         if(!this.alreadyLostHealth){
+            this.chooseRandomSound([this.hitSound]);
             this.alreadyLostHealth = true;
             this.health += -Value;
             if(this.statusbar != undefined){

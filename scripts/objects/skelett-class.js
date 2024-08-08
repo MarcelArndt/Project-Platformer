@@ -1,6 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, SpawnNew} from "./stateMashine-skelett-class.js";
-import { imageIsloadet } from "../assets.js";
+import {imageIsloadet, soundIsloadet} from "../assets.js";
 import { ctx } from "../canvas.js";
 
 let animationImage = new Image();

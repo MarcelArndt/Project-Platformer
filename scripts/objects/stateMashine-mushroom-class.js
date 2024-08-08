@@ -245,7 +245,6 @@ class GetHit{
         entity.acc = 0;
         entity.vel[0] = 0
         entity.gethitJumpAlready = false;
-        entity.chooseRandomSound([soundIsloadet.slurp04]);
         entity.animationStatus = "getHit";
         entity.level.player.score += Math.floor(entity.scoreValue / 3);
     }

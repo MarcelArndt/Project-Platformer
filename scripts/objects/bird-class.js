@@ -42,7 +42,7 @@ export class Bird extends Box {
         this.frameWidth = 32;
         this.frameHight = 32;
         this.frameHightOffset = 8;
-        this.frameWidthOffset = 0;
+        this.frameWidthOffset = 4;
         this.imageArray = [imageIsloadet.whiteBird, imageIsloadet.bluejayBird, imageIsloadet.robinBird]
         this.soundArray = [soundIsloadet.flyingOne, soundIsloadet.flyingTwo, soundIsloadet.flyingThree];
         this.soundFrameTimer = 0;
