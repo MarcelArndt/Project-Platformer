@@ -6,7 +6,7 @@
   --second_background_color: #cce5cd;
   --theme-color: rgb(108, 191, 133);
   --footer_color: #0d2f2a;
-  --main_color: #056731;
+  --main_color: #FAC08A;
   --accent_color: #15b781;
   --error_color: #db371a;
 }
@@ -27,7 +27,7 @@ body{
   margin:0px;
   padding:0px;
   color:var(--darker_text_color);
-  background: var(--first_background_color);
+  background-color: #453D4F;
 }
 
 header{
@@ -50,6 +50,12 @@ footer{
 }
 
 h1{
+  font-family: PixelifySans;
+  vertical-align: middle;
+  text-align: center;
+  filter:drop-shadow(0px 4px 3px #23484e);
+  font-size: 63px;
+  font-weight: 500;
   padding-top: 32px;
   padding-bottom: 10px;
   margin-block-start: 0px;
@@ -100,8 +106,12 @@ p{
 }
 
 #canvas{
+  box-sizing: border-box;
   border-radius: 20px;
   width: 100%;
+  background-color: rgba(141, 81, 92, 0.3);
+  border: 2px solid  white;
+  outline: 7px solid black;
 }
 
 .main_wrapper{
@@ -109,7 +119,24 @@ p{
   flex-direction: column;
   height: 100%;
   width: 100%;
+  background-color: #453D4F;
+  position: relative;
 }
+
+.main_wrapper::before{
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url("../assets/background/background_layer_3.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: repeat-x;
+  opacity: 0.25;
+}
+
 
 .content_wrapper{
   height: 100%;
@@ -122,17 +149,59 @@ p{
   align-items: center;
 }
 
+.head_wrapper{
+  display: flex;
+  justify-content: center;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+}
+
+.setToColumn{
+  display: flex;
+  flex-direction: column;
+}
+
+.headpanel{
+  backdrop-filter: blur(4px);
+  width: 550px;
+  margin-top: 32px;
+  background-color: rgba(141, 81, 92, 0.3);
+  border-radius: 12px;
+  padding-bottom: 24px;
+}
+
 
 
 
 @media only screen and (max-width: 1240px){
   #canvas {
-    width: 100%;
+    box-sizing: border-box;
+    width: calc(100% - 28px);
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media only screen and (max-height: 920px){
+  .head_wrapper{
+    display: none;
+  }
+  .toCenterBox {
+    height: calc(100dvh - 28px);
+    width: calc(100dvh / 9 * 16);
   }
 }
 
 @media only screen and (max-height: 720px){
   #canvas {
-    height: 100dvh;
+
+    height: calc(100dvh - 28px);
+    width: calc(100dvh / 9 * 16);
+  }
+
+  .toCenterBox {
+    height: calc(100dvh - 28px);
+    width: calc(100dvh / 9 * 16);
   }
 }

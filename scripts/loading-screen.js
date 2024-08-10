@@ -26,16 +26,13 @@ function checkPercentageLoadet() {
   }
 
   function drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight){
-    ctx.fillStyle = "#1B1316";
-    ctx.fillRect(0, 0, screenWidth, screenHeight)
-  
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = "#562637";
     ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, maxlenght, maxheight); 
-  
+    ctx.fillStyle = "#fff";
     ctx.font = "14px PixelifySans"
     ctx.fillText(`Game is loading - ${percentageLoadet}%`, (screenWidth - maxlenght) / 2, ((screenHeight - maxheight) / 2) - 8)
   
-    ctx.fillStyle = "#d8ad56"; 
+    ctx.fillStyle = "#FAC08A"; 
     ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, (maxlenght / 100) * percentageLoadet, maxheight);
   }
 

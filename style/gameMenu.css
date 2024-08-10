@@ -136,6 +136,28 @@
     font-size: 45px;
     letter-spacing: 2px; 
   }
+
+  .landscapingScreen{
+    border-radius: 12px;
+    font-size: 36px;
+    color: white;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    position: absolute;
+    top: -18px;
+    left: -14px;
+    width: calc(100% + 18px) ;
+    padding: 10px 0px;
+    aspect-ratio: 16 / 9;
+    background-color: #3A0B25;
+  }
+
+  .landscapingScreen h2{
+    color: #FAC08A;
+  }
   
 .book{
     width: 71%;
@@ -186,6 +208,35 @@
     overflow-y: scroll;
     overflow-x: hidden;
   }
+
+  #renderSideMain{
+    user-select: none;
+    margin-top: 5%;
+    margin-left: 5%;
+    width: 90%;
+    height: 90%;
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    color: #DEA67E;
+    align-items: center;    
+    overflow: hidden;
+    border-radius: 42px;
+  }
+
+  #renderSideMain img{
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    width: auto;
+    height: calc(100% + 100px);
+    opacity: 0.45;
+    object-position: 0px 0px;
+  }
+
+
   
   
   .GameMenu h1 {
@@ -278,6 +329,17 @@
     width: 100%;
     filter:drop-shadow(1px 1px 0px #927045);
   }
+
+  .sources p{
+    margin-top: 24px;
+  }
+
+  .sources ul{
+    list-style: none;
+    padding-inline-start: 0px;
+    margin-block-end: 0px;
+    margin-block-start: 0px;
+  }
   
   .panelTwo{
     display: flex;
@@ -312,6 +374,14 @@
     animation-name: fadeInOut;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+  }
+
+  .movingAnimation{
+    animation-duration: 8s;
+    animation-name: moveFromTo;
+    animation-iteration-count: infinite;
+    animation-timing-function:ease-in-out;
+   
   }
   
   .gameReady{
@@ -640,7 +710,27 @@
     }
   }
 
-  @media (max-width: 1220px){
+  @keyframes moveFromTo{
+   0% {
+      object-position: -30px -20px;
+    }
+    25%{
+      object-position: -40px -35px
+    }
+    50%{
+      object-position: -30px -20px
+    }
+    75%{
+      object-position: -20px -5px
+    }
+    100%{
+      object-position: -30px -20px
+    }
+
+    
+  }
+
+  @media only screen and (max-width: 1220px){
 
     .impressum{
       padding-right: 16px;
@@ -735,11 +825,9 @@
       width: 90%;
     }
 
-
-
   }
 
-  @media (max-width: 1400px){
+  @media only screen and (max-width: 1400px){
 
     #isNoNewHighScore{
       margin-bottom: 32px;
@@ -773,7 +861,51 @@
     }
 
   }
-  @media (max-width: 970px){
+  @media only screen and (max-width: 970px){
+    .gameReady{
+      font-size: 15px;
+      letter-spacing: 0px;
+      margin-left: -15px;
+    }
+
+    .gameReady img{
+      max-width: 100px;
+      height: auto;
+    }
+
+    .scoreList li, .scoreList :nth-child(1), .scoreList :nth-child(2), .scoreList :nth-child(3){
+      padding: 8px;
+      background-color: #e5b480;
+      border-radius: 8px;
+      border: 3px solid #DEA67E;
+      filter: drop-shadow(0px 2px 0px #965920)
+    }
+    .scoreList :nth-child(1){
+      background-color: #e4b44e;
+      color: white;
+      border: 2px solid rgb(255, 230, 141);
+      border-bottom: 2px solid #965920;
+    }
+
+    .scoreList :nth-child(2){
+      background-color: #7b878f;
+      color: white;
+      border: 2px solid rgb(208, 207, 243);
+      border-bottom: 2px solid #252054;
+    }
+
+    .scoreList :nth-child(3){
+      background-color: #bd592a;
+      color: white;
+      border: 2px solid #ffd2a8;
+      border-bottom: 2px solid #83210b;
+    }
+
+    .GameMenu h1 {
+      font-size: 32px;
+      letter-spacing: 0px;
+      line-height: 34px;
+    }
 
     .button{
       font-size: 14px;
@@ -790,6 +922,90 @@
   }
 
 
+  @media only screen and (max-width: 730px){
+
+    .icons-container{
+      top: 20px;
+      right: 20px;
+    }
+
+    .icon img{
+      height: 36px;
+      width: auto;
+    }
+
+    .scoreList{
+      font-size: 14px;
+      letter-spacing: 0px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .intoText{
+      width: 90%;
+      font-size: 15px;
+      letter-spacing: 0px;
+    }
+    .GameMenu h1{
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .button{
+      width: 50%;
+      font-size: 13px;
+    }
+    .HighscorePanel{
+      letter-spacing: 0px;
+      font-size: 14px;
+    }
+    .score {
+      font-size: 20px;
+      letter-spacing: 0px;
+    }
+    
+    .gameWon img{
+      margin-left: 6px;
+    }
+    #Scorename::placeholder{
+      font-size: 16px;
+    }
+    #Scorename{
+      font-size: 16px;
+    }
+    .infoContainer{
+      width: 95%;
+      font-size: 12px;
+      letter-spacing: 0px;
+    }
+    .impressum{
+      letter-spacing: 0px;
+    }
+    .impressum h1{
+      letter-spacing: 0px;
+      font-size: 15px;
+    }
+  }
+
+
+  @media only screen and (max-width: 540px){
+    .button{
+      width: 10%;
+      letter-spacing: 0px;
+    }
+  }
+
+  @media only screen and (max-width: 500px){
+    .icons-container{
+      top: 10px;
+      right: 10px;
+    }
+    .icon img{
+      height: 28px;
+      width: auto;
+    }
+  }
+
+
 @media only screen and (max-width: 1240px){
     .GameMenu nav{
       position: static;
@@ -800,6 +1016,20 @@
 
   @media only screen and (max-height: 720px){
     #canvasOverlayContent{
+      
+      height: calc(100dvh - 18px);
+      width: calc(90vh / 9 * 16);
+    }
+
+    #canvasOverlay{
+      width: auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .landscapingScreen{
+      top: 0px;
+      width: 100%;
       height: 100dvh;
     }
 
@@ -807,4 +1037,40 @@
       font-size: 16px;
     }
 
+    .toCenterBox {
+      height: calc(100dvh - 28px);
+      width: calc(100dvh - 18px / 9 * 16);
+    }
+  }
+
+  
+  @media only screen and (max-width: 666px){
+
+    .landscapingScreen{
+      display: flex;
+      font-size: 15px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+    }
+    .landscapingScreen h2{
+      font-size: 20px;
+    }
+
+    .content_wrapper{
+      width: 100%;
+      justify-content:flex-end;
+    }
+  }
+
+  @media only screen and (max-width: 400px){
+    .landscapingScreen{
+      display: flex;
+      font-size: 15px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+    }
   }

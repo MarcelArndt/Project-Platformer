@@ -100,7 +100,7 @@ export class Fall {
     if(entity.vel[1] < 0){
       entity.stateMachine.changeState(new Jump());    
     }
-    if (entity.onGround && entity.vel[1] == 0) {
+    if (entity.onGround) {
       entity.stateMachine.changeState(new Idle());
     }
     if(entity.getHit){

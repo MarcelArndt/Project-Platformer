@@ -2,7 +2,7 @@ export function renderMainMenu(){
     return `
           <div class="book">
             <div class="GameMenu">
-                <h1>GameName <br>Here II</h1>
+               <h1>Phantom<br>Forest</h1>
                   <nav>
                     <div value="start" class="button">Start New Game</div>
                     <div value="controls" class="button">Controls</div>
@@ -10,8 +10,15 @@ export function renderMainMenu(){
                     <div value="impressum" class="button">Impressum</div>
                   </nav>
             </div>
+
             <div id="renderSidePanel">
+              <div id="quciktip" class="quickTipMenu"> 
             </div>
+
+            <div id="renderSideMain">
+              <img class="movingAnimation" src="./img/ComfyUI_01914.jpg"></div>
+            </div>
+            
           </div>`
 }
 
@@ -77,7 +84,7 @@ export function renderControllPanel(){
         </div>
 
         <div class="panelTwo">
-          <div class="infoContainer">If you need a break, you can pause the game by pressing <span>'P'</span>. Stuck? Press <span>'R'</span> to reload a level.</span> a Level</div>
+          <div class="infoContainer">If you need a break, you can pause the game by pressing <span>'P'</span>. Stuck? Press <span>'R'</span> to reload the level.</span></div>
           <div class="imageContainer"><img src="./img/button-set-three.png"></div>
         </div>
 
@@ -140,7 +147,23 @@ Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Komm
 Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten durch Dritte zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit ausdrücklich widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-Mails, vor.<br>
 </p><br> 
 Impressum vom <a target="_blank" href="https://www.impressum-generator.de">Impressum Generator</a> der <a target="_blank" href="https://www.kanzlei-hasselbach.de/">Kanzlei Hasselbach, Rechtsanwälte für Arbeitsrecht und Familienrecht</a>
- </div>
+<div class="sources"><p><strong>Quellen:</strong></br></br>
+<b>Picturs:</b> 
+<ul>
+<li><a target="_blank" href="https://opengameart.org/content/lpc-birds">Birds</a></li>
+<li><a target="_blank" href="https://clembod.itch.io/warrior-free-animation-set">Character</a></li>
+<li><a target="_blank" href="https://brullov.itch.io/oak-woods">Background</a></li>
+<li><a target="_blank" href="https://luizmelo.itch.io/ghost-warrior">Ghost</a></li>
+<li><a target="_blank" href="https://luizmelo.itch.io/monsters-creatures-fantasy">Monsters</a></li>
+</ul>
+<br>
+<b>Sound:</b>
+<ul>
+<li><a target="_blank" href="https://subspaceaudio.itch.io/platformer-chiptune-20-tracks">Background-Music</a></li>
+<li><a target="_blank" href="https://subspaceaudio.itch.io/6000-retro-sound-effects">Sound-Effects</a></li>
+</ul>
+</p></div>
+</div>
  </div>
  `
 }
@@ -167,7 +190,7 @@ export function renderPauseMenu(){
   return `
           <div class="book">
             <div class="GameMenu">
-                <h1>GameName <br>Here II</h1>
+                <h1>Phantom<br>Forest</h1>
                   <nav>
                     <div value="resume" class="button">Resume</div>
                     <div value="controls" class="button">Steuerung</div>
@@ -186,7 +209,7 @@ export function renderEndMenu(bestScore = "00000", winText){
   return `
      <div class="book">
       <div class="GameMenu">
-                <h1>GameName <br>Here II</h1>
+                <h1>Phantom<br>Forest</h1>
                   <nav>
                     <div value="restartGame" class="button">Start New Game</div>
                     <div value="controls" class="button">Steuerung</div>
