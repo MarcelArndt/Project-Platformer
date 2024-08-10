@@ -126,39 +126,41 @@ export class Player extends Box {
     }
   }
 
+pushObjectToLeft(box){
+  if (box.type != "Box") return false;
+  const distance = box.posRight - this.posLeft;
+  if (box.canBeMoved([-distance, 0])) {
+    box.setRight(this.posLeft);
+    return true;
+  }
+  const smallGap = box.getRemainingDistanceLeft();
+  if (box.canBeMoved([-smallGap, 0])) {
+    box.setLeft(box.posLeft - smallGap);
+    this.setLeft(box.posRight);
+    return true;
+  }
+  return false;
+}
+pushObjectToRight(box){
+  if (box.type != "Box") return false;
+  const distance = this.posRight - box.posLeft;
+  if (box.canBeMoved([distance, 0])) {
+    box.setLeft(this.posRight);
+    return true;
+  }
+  const smallGap = box.getRemainingDistanceRight();
+  if (box.canBeMoved([-smallGap, 0])) {
+    box.setRight(box.posRight + smallGap);
+    this.setRight(box.posLeft);
+    return true;
+  }
+  return false;
+}
+
   pushObject(box) {
     return {
-      toLeft: () => {
-        if (box.type != "Box") return false;
-        const distance = box.posRight - this.posLeft;
-        if (box.canBeMoved([-distance, 0])) {
-          box.setRight(this.posLeft);
-          return true;
-        }
-        const smallGap = box.getRemainingDistanceLeft();
-        if (box.canBeMoved([-smallGap, 0])) {
-          box.setLeft(box.posLeft - smallGap);
-          this.setLeft(box.posRight);
-          return true;
-        }
-        return false;
-      },
-
-      toRight: () => {
-        if (box.type != "Box") return false;
-        const distance = this.posRight - box.posLeft;
-        if (box.canBeMoved([distance, 0])) {
-          box.setLeft(this.posRight);
-          return true;
-        }
-        const smallGap = box.getRemainingDistanceRight();
-        if (box.canBeMoved([-smallGap, 0])) {
-          box.setRight(box.posRight + smallGap);
-          this.setRight(box.posLeft);
-          return true;
-        }
-        return false;
-      },
+      toLeft: () => pushObjectToLeft(box),
+      toRight: () => pushObjectToRight(box),
     };
   }
 

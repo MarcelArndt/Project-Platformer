@@ -31,6 +31,12 @@ export class Tileset {
     this.level = null;
   }
 
+
+  /**
+  * received the location of a block and compare the tileNumber with the current Tileset to place a block.
+  * Tileset-Image gets divided into sections by this.tileSize (32x32 Pixel for a Tile-Texture) and this.amountOfElementsInRow (16 x 32x32 -> 16 Blocks in a Row for Example) 
+  * so it will be possible to transalte a In-Game-Position into a Tile from the Tileset-Image
+  */
   translateTileMap(inGamePosX, inGamePosY, tileNumber) {
     let yValue = Math.floor(tileNumber / this.amountOfElementsInRow);
     let xValue = (tileNumber % this.amountOfElementsInRow) -1;
@@ -41,6 +47,9 @@ export class Tileset {
     this.tileArray.push(newTile);
   }
 
+  /**
+  * will draw any tile at the current location and only if the player/camera is in reach to gain some perfomance.
+  */
   draw(cameraPos) {
       this.tileArray.forEach((tile) => {
         if(tile.inGamePos[0] < cameraPos[0] + canvas.width && tile.inGamePos[0] > cameraPos[0] - (canvas.width / 10)){
@@ -51,6 +60,21 @@ export class Tileset {
       });
   }
 
+
+  /**
+  * loop though the Array which contains all data of Entity inside the current level.
+  * 0 = no Entity at the current Position
+  * 686 = will set a Projectile at current location/position
+  * 315 = Potion at current location/position
+  * 316 = Coin at current location/position
+  * 686 = Enemey -> Skelett at current location/position
+  * 314 = Enemey -> Mushroom at current location/position
+  * 309 = Main-Charater/Player at current location/position
+  * 313 = set a random Bird at current location/position
+  * 319 = Boss at current location/position
+  * 
+  * this.level.pushNewObject(newEntity) -> will inject the object to the current level.
+  */
   createEntity() {
     let newEntity = null;
     for ( let i = 0; i < this.entityArrayData.length; i += this.levelSizeInTiles) {
@@ -68,12 +92,16 @@ export class Tileset {
           case 309: newEntity = new Character({ pos: [x * this.tileSize, y * this.tileSize], size: [33, 56], color: "#edff2b", type: "Player", health: 60,});  this.level.pushNewObject(newEntity); break;;
           case 313: newEntity = new Bird({ pos: [x * this.tileSize, y * this.tileSize], size: [18, 23],}); this.level.pushNewObject(newEntity);break;
           case 319: newEntity = new GhostBoss({ pos: [x * this.tileSize, y * this.tileSize], size: [25, 95], color: "#FFD53D", jumpspeed: -1.07}); this.level.pushNewObject(newEntity); break;
-          //case 640: newEntity = new Box({ pos: [x * this.tileSize, y * this.tileSize], size: [36, 36], color: "brown",}); this.level.pushNewObject(newEntity); break;
         }
       });
     });
   }
 
+
+  /**
+  * loop though the Array which contains all data of Tiles inside the current level.
+  * this.translateTileMap -> translate any position of the leveldata into a tile from the tileset
+  */
   createTiles() {
     for ( let i = 0; i < this.tilesArrayData.length; i += this.levelSizeInTiles) {
       this.tilesArray.push( this.tilesArrayData.slice(i, i + this.levelSizeInTiles));
@@ -86,6 +114,13 @@ export class Tileset {
     });
   }
 
+  /**
+  * loop though the Array which contains all data of any Collison-Block inside the current level.
+  * 0 = no collision. no Block will placed
+  * 305 = a basic block to prevent falling to the floor for example.
+  * 318 = a dealdy block to kill any Entity immediately -> Spikes will need this kind of collison.
+  * 316 = SemiSolidBlock to create platforms. 
+  */
   createCollision() {
     let slicedCollisonBlock = [];
     for (let i = 0; i < this.collisionArray.length; i += this.levelSizeInTiles) {
@@ -99,13 +134,16 @@ export class Tileset {
           case 305: newCollisionBlock = new Rectangle({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.level.pushNewObject(newCollisionBlock); break;
           case 318: newCollisionBlock = new DeadlySolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)", type: "Rectangle",}); this.level.pushNewObject(newCollisionBlock); break;
           case 312: newCollisionBlock = new SemiSolidBlock({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)"}, "Rectangle"); this.level.pushNewObject(newCollisionBlock); break;
-          //case 307: newCollisionBlock = new JumpPad({ pos: [y * this.tileSize, x * this.tileSize], size: [this.tileSize, this.tileSize], color: "rgba(255,255,255,0.0)"},this.level.player, "Hitbox"); console.log(newCollisionBlock); this.level.pushNewObject(newCollisionBlock);break;
           default: break;
         }
       });
     });
   }
 
+
+  /**
+  * set all Values from current level back to zero and start regenerating the level from data again.
+  */
   generateLevel(level){
     this.level = level;
     this.level.objectsOfType = {

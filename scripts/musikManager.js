@@ -120,13 +120,7 @@ export class MusikManager{
             }
             if(songObj.fadingIn){
                 this.fadingIn(songObj, Volume, index);
-            }/*
-            if(songObj.fadingIn && songObj.fadingOut){
-                songObj.song.pause();
-                songObj.song.volume = 0;
-                songObj.fadingIn = false;
-                songObj.fadingOut = false;
-            }*/
+            }
         });
     }
 }
