@@ -53,15 +53,24 @@ export class Bird extends Box {
        
     }
 
+    /**
+     * switch the current animation to the right direction and move the bird.
+     */
     moving(){
         this.checkFacingLeft();
         this.vel[0] =  this.walkspeed * 300;
     }
 
+    /**
+     * stop bird from moving
+     */
     stopMoving(){
         this.acc = 0;
     }
 
+    /**
+     * checks the distance to player and decides in which way the bird is flying away
+     */
     flee(){
         let randomValue = Math.floor(Math.random() * 3);
         if (randomValue == 0){

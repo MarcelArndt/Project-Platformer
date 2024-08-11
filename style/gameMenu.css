@@ -700,6 +700,79 @@
   }
 
 
+  .mobilControll div img:hover{
+    transform: scale(1.1);
+  }
+
+  .mobilControll{
+    position: absolute;
+    bottom: 5%;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 155px;
+  }
+
+  .ButtonUpDown{
+    margin-left: 1px;
+    margin-right: 8px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .ButtonLeftRight{
+    margin-top: -10px ;
+    margin-bottom: -10px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .ButtonUpDown img{
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .ButtonLeftRight img{
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .blockContainer{
+    min-height: 20px;
+    min-width: 33px;
+    max-height: 20px;
+    max-width: 33px;
+    display: flex;
+  }
+  .controllSetRight{
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width: 160px;
+    height: 160px;
+  }
+
+  .controllSetLeft{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    position: absolute;
+    right: 5%;
+  }
+  .mobilControll{
+    display: none;
+  }
+
+
+
 @keyframes fadeInOut{
     from {
       opacity: 0;
@@ -861,6 +934,13 @@
     }
 
   }
+
+  @media only screen and (max-width: 1366px){
+    .mobilControll{
+      display: block;
+    }
+  }
+
   @media only screen and (max-width: 970px){
     .gameReady{
       font-size: 15px;
@@ -922,11 +1002,12 @@
   }
 
 
+
   @media only screen and (max-width: 730px){
 
     .icons-container{
       top: 20px;
-      right: 20px;
+      right: 5%;
     }
 
     .icon img{
@@ -984,6 +1065,44 @@
       letter-spacing: 0px;
       font-size: 15px;
     }
+
+    .blockContainer{
+      min-width: 24px;
+      min-height: 24px;
+    }
+
+    .ButtonLeftRight{
+      margin-top: 6px;
+      margin-bottom: 7px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .ButtonLeftRight img{
+      width: 32px;
+      height: 32px;
+    }
+
+    .ButtonUpDown{
+      
+      width: 24px;
+      height: 24px;
+    }
+    
+    .ButtonUpDown img{
+      width: 32px;
+      height: 32px;
+    }
+
+    
+    .controllSetRight{
+      height: 90px;
+      bottom: 30%;
+    }
+
+    .controllSetLeft{
+      right: 5%;
+    }
   }
 
 
@@ -1010,7 +1129,7 @@
     .GameMenu nav{
       position: static;
     }
-    
+
   }
 
 

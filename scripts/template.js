@@ -178,7 +178,30 @@ export function renderIngameGui(){
             <div class="icon"><img value="volumneSelf" class="hover" src="./img/volumne-full.png"></div>
             <div class="icon"><img value="volumneMinus" class="hover" src="./img/minus-icon.png"></div>
           </div> 
+          </div> 
       </div>
+         <div class="mobilControll">
+            <div class="controllSetRight">
+
+              <div class="blockContainer"></div>
+              <div class="ButtonUpDown"><img value="playerUp" class="hover" src="./img/mobil_button-up.png"></div>
+              <div class="blockContainer"></div>
+
+              <div class="ButtonLeftRight"><img value="playerLeft" class="hover" src="./img/mobil_button-left.png"></div>
+              <div class="blockContainer"></div>
+              <div class="ButtonLeftRight"><img value="playerRight" class="hover" src="./img/mobil_button-right.png"></div>
+
+              <div class="blockContainer"></div>
+              <div class="ButtonUpDown"><img value="playerBottom" class="hover" src="./img/mobil_button-bottom.png"></div>
+              <div class="blockContainer"></div>
+              
+
+            </div>
+
+            <div class="controllSetLeft">
+              <div class="icon"><img value="playerFight" class="hover" src="./img/mobil_button-fight.png"></div>
+              <div class="icon"><img value="playerJump" class="hover" src="./img/mobil_button-jump.png"></div>
+            </div>
   `
 }
 

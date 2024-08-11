@@ -45,6 +45,7 @@ export class LevelManager{
         case "startGame": this.start(); break;
       }
     }
+
     
     /**
     * checks and switch the state of a Game/level, prevent some propagation and enable the debug menu as well.
