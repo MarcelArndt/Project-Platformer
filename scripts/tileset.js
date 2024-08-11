@@ -5,8 +5,6 @@ import { Mushroom } from "./objects/mushroom-class.js";
 import { Character } from "./objects/main-character-class.js";
 import { Rectangle } from "./objects/rectangle-class.js";
 import { SemiSolidBlock } from "./objects/semiSolidBlock-class.js";
-import { Box } from "./objects/box-class.js";
-import { JumpPad } from "./objects/jumpPad.js";
 import { DeadlySolidBlock } from "./objects/deadlyBlock-class.js";
 import { Potion } from "./objects/potion-class.js";
 import { Coin } from "./objects/coin-class.js";

@@ -42,68 +42,43 @@ export class Background {
     this.ValueIsToSlow = false;
   }
 
+  /**
+   * update loop from level.
+   */
   updateBackground(playerArray) {
-    this.checkPlayerSpeed(playerArray);
     this.calcOffset();
     this.draw();
   }
 
-  checkPlayerSpeed(PlayerArray) {
-    this.playerVel = PlayerArray.vel;
-    this.playerPos = PlayerArray.pos;
-    this.playerSpeed = PlayerArray.walkspeed;
-  }
 
+  /**
+   * calculation the scrolling effekt for each Background-Element.
+   */
   calcOffset() {
-    this.multiplyerX = this.playerVel[0];
     this.image.forEach((backgroundImg) => {
-      if (backgroundImg.offset[1] > 10) {
-        backgroundImg.offset[1] = 0;
-      } else if (this.playerVel[0] == 0) {
-        backgroundImg.offset[1] = 0;
-      }
-
       backgroundImg.widthOffset = this.level.cameraPos[0] * backgroundImg.offsetValues[0];
-
       backgroundImg.offset[1] = this.level.cameraPos[1] * backgroundImg.offsetValues[1] + backgroundImg.heightOffset;
     });
   }
 
-  //drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
+
+  /**
+   * caluclate all necessary values to draw it correctly inside the game.
+   * @param {number} upscaling set a Value to upscale and make size of the backgound smaller or bigger.
+   * @param {number} offsetForWidth set a Value to set the backgound futher left or right.
+   * @param {number} offsetForHeight set a Value to set the backgound futher top or bottom.
+   * drawImage(image, selfx, selfy, selfWidth, selfHeight, dx, dy, dWidth, dHeight)
+   */
   draw(upscaling = 2.3, offsetForWidth = 0, offsetForHeight = 0) {
     let calcOffsetWidth = 0;
     let moduloValue = 0;
     let calcDoppelWidth = 0;
-    ctx.fillStyle = this.color;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
     this.image.forEach((backgroundImg) => {
       calcOffsetWidth = 0 - offsetForWidth - backgroundImg.widthOffset;
       calcDoppelWidth = backgroundImg.image.width * upscaling - 1;
       moduloValue = backgroundImg.image.width * upscaling;
-
-      ctx.drawImage(
-        backgroundImg.image,
-        0,
-        0,
-        backgroundImg.image.width,
-        backgroundImg.image.height,
-        (calcOffsetWidth % moduloValue) + 0,
-        0 - offsetForHeight - backgroundImg.offset[1],
-        backgroundImg.image.width * upscaling,
-        backgroundImg.image.height * upscaling
-      );
-
-      ctx.drawImage(
-        backgroundImg.image,
-        0,
-        0,
-        backgroundImg.image.width,
-        backgroundImg.image.height,
-        (calcOffsetWidth % moduloValue) + calcDoppelWidth,
-        0 - offsetForHeight - backgroundImg.offset[1],
-        backgroundImg.image.width * upscaling,
-        backgroundImg.image.height * upscaling
-      );
+      ctx.drawImage(backgroundImg.image, 0, 0, backgroundImg.image.width, backgroundImg.image.height, (calcOffsetWidth % moduloValue) + 0, 0 - offsetForHeight - backgroundImg.offset[1], backgroundImg.image.width * upscaling, backgroundImg.image.height * upscaling);
+      ctx.drawImage(backgroundImg.image, 0, 0, backgroundImg.image.width, backgroundImg.image.height, (calcOffsetWidth % moduloValue) + calcDoppelWidth, 0 - offsetForHeight - backgroundImg.offset[1], backgroundImg.image.width * upscaling, backgroundImg.image.height * upscaling);
     });
   }
 }

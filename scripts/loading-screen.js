@@ -8,6 +8,9 @@ export function checkCurrentStatus(){
     checkForLoadingFinish();
 }
 
+/**
+ * compare the list of already loading object with the complete list and will calculate the current percentage of it
+ */
 function checkPercentageLoadet() {
     let MaxValue = (Object.keys(imageIsToLoading).length) + (Object.keys(soundsIsToLoading).length);
     let currentValue = (Object.keys(imageIsloadet).length) + (Object.keys(soundIsloadet).length);
@@ -16,6 +19,9 @@ function checkPercentageLoadet() {
     }
 }
 
+/**
+ * draw the bar inside the canvas
+ */
   function fillLoadingBar() {
     clearCanvas();
     let screenWidth = (canvas.width / 180) * 100;
@@ -25,6 +31,9 @@ function checkPercentageLoadet() {
     drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight);
   }
 
+/**
+ * animate and draw the current state of the loading-bar
+ */
   function drawInLoadingBar(screenWidth,screenHeight,maxlenght,maxheight){
     ctx.fillStyle = "#562637";
     ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, maxlenght, maxheight); 
@@ -36,6 +45,9 @@ function checkPercentageLoadet() {
     ctx.fillRect( (screenWidth - maxlenght) / 2, (screenHeight - maxheight) / 2, (maxlenght / 100) * percentageLoadet, maxheight);
   }
 
+/**
+ * checks for finishing loading and draw the book_menu 
+ */
   function checkForLoadingFinish() {
     let menuImage = null;
     fillLoadingBar();

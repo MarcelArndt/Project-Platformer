@@ -31,19 +31,4 @@ export class Character extends Player {
         this.hitSound = soundIsloadet.hitPlayer;
       
     }
-
-  /**
-     * Just enable for debug purposes only
-     * 
-
-    update(deltaTime){
-        super.update(deltaTime);
-        this.draw();
-    }
-   
-    draw(){
-        ctx.fillStyle = "yellow";
-        ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
-    }
-  */
 }

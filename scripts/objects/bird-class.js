@@ -3,8 +3,6 @@ import { StateMachine, Idle } from "./stateMashine-bird-class.js";
 import { imageIsloadet, soundIsloadet } from "../assets.js";
 import { Collider } from "./collider-class.js";
 
-let soundArray = ["./assets/sound/entity/flying-001.mp3","./assets/sound/entity/flying-002.mp3","./assets/sound/entity/flying-003.mp3"]
-let SoundOne = new Audio("./assets/sound/entity/flying-001.mp3");
 
 export class Bird extends Box {
     constructor(options, type){

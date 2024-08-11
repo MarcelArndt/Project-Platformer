@@ -103,11 +103,8 @@ export function renderControllPanel(){
 export function renderHighScorePanel(object){
   return ` 
     <div class="sidePanel">
-
       <div class="controllPanel">
-      <h2>HighScore</h2>
-
-        
+      <h2>HighScore</h2>    
         <div class="intoText">Check out your personal Highsore. If it possible for you to beat me?<br><br>Your Highscore will saved in your LocalStorage</div>
         <div class="scoreImage"><img src ="./img/win.png"></div>
         <ul class="scoreList">

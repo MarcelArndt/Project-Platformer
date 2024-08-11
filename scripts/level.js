@@ -69,10 +69,9 @@ export class Level {
     this.musicManager = new MusikManager(option.currentLevelMusic, option.currentAmbient);
   }
 
-    /**
-   * @param obj -> adds Obj to current level level
-   */
-  
+  /**
+  * @param {object} obj -> adds Obj to current level level and bound and reference this level to this object.
+  */
   pushNewObject(obj) {
     if(obj.type == "Player"){
       obj.level = this;
@@ -84,6 +83,9 @@ export class Level {
     this.objectsOfType[type].push(obj);
   }
 
+  /**
+   * catch all hitboxes insise a object is inject it inside this level to "enable" them for the game. 
+   */
   initializeLevelToHitbox(){
     this.objects.forEach(obj => {
       if (obj.demageBoxes != null && obj.demageBoxes != undefined && !obj.hitboxIsBoundToLevel){
@@ -95,6 +97,11 @@ export class Level {
     });
   }
 
+
+  /**
+   * main update loop for the entirety game.
+   * will update Background, Music, level-Condition and object this level
+   */
   update(deltaTime) {
       clearCanvas();
       this.checkForVolume();
@@ -107,6 +114,9 @@ export class Level {
       this.playerStillGotLives();
   }
 
+  /**
+   * update and draw any object from the main update loop
+   */
   drawGame(deltaTime){
     this.background.updateBackground(this.player);
     this.tileset.draw(this.cameraPos);
@@ -123,12 +133,18 @@ export class Level {
     this.drawDebug(deltaTime);
   }
 
+  /**
+  * set from globalGame to tis level
+  */
   checkForVolume(){
     this.globalVolume = globalVolume;
   }
 
+  /**
+  * is showing debug menu aktiv it will render the the current values at the top of the scree
+  */
   drawDebug(){
-    if( this.showDebug){
+    if(this.showDebug){
       let debugArray = [this.minionCounter, this.player.pos[0], this.player.pos[1], this.player.animationStatus, this.player.health, canvas.width, canvas.height, this.cameraPos[0], this.cameraPos[1]];
       ctx.fillStyle = "rgba(0,10,35,0.8)"
       ctx.fillRect(0,0,1240,15)
@@ -140,6 +156,10 @@ export class Level {
     }
   }
 
+  /**
+   * @param {timeValue/number} deltaTime 
+   * @param {number} speed - controls the time value until the Screen-Shake-Effekt is turning off
+   */
   checkScreenshakeTime(deltaTime, speed = 1) {
     const secDeltaTime = (deltaTime / 10) * speed;
     if(this.screenshakeToggle){
@@ -154,6 +174,10 @@ export class Level {
     }
   }
 
+  /**
+   * @param {timeValue/number} deltaTime 
+   * simulate a screenshake effekt by scrolling up and down 
+   */
   calculateScreenshakeValue(deltaTime){ 
     let secDeltaTime = deltaTime / 10;
     this.screenEffektTimer += secDeltaTime;
@@ -171,6 +195,10 @@ export class Level {
       }
     }
 
+  /**
+   * @param {timeValue/number} secDeltaTime -> deltaTime / 10
+   * will set the Camara-Offset back to 0
+   */ 
     switchBackValueToZero(secDeltaTime){
       if(!this.screenshakeToggle){
         this.screenEffektTimer += secDeltaTime;
@@ -185,28 +213,33 @@ export class Level {
       }
     }
 
+
+  /**
+   * Core Camera function for this game. 
+   * dependent to the player location in the current level.
+   */ 
   updateCamera() {
     this.cameraPos[0] = Math.max( 0,Math.min( this.size[0] - canvas.width * 0.5 , this.player.posRight - (canvas.width / 2) / 2) + this.screenshakeValue );
     this.cameraPos[1] = Math.max(0,Math.min(this.size[1] - canvas.height * 0.5 , this.player.posTop - (canvas.height / 2.5 ) / 2 ) + this.screenshakeValue - (this.originPlayerSize[1]) - this.cameraHeightOffset + 15);
   }
 
-  drawObjects() {
-    for (let i = 0; i < this.objects.length; i++) {
-      this.objects[i].draw();
-    }
-  }
 
+  /**
+   * update and checks is game already over
+   */
   checkGameWin() {
     if(this.levelIsWon){
       this.levelManager.endGame()
     }
   }
 
+  /**
+   * update and checks for Player Live Counter
+   */
   playerStillGotLives(){
     if(this.player.lives <= 0){
       this.levelIsWon = true;
       this.playerIsStillAlive = false;
     }
   }
-
 }

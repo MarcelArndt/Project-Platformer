@@ -6,7 +6,6 @@ let ambientMusic = soundIsloadet.forestAmbient;
 let levelMusic = soundIsloadet.musicPixelDayDream
 let bossMusic = soundIsloadet.battleBoss;
 let tileSetImage = imageIsloadet.tileset;
-
 let tileset = null
 let tileSize = 0;
 let levelSizeInTiles = 0;
@@ -15,6 +14,9 @@ let entityArrayData = [];
 let tilesArrayData = [];
 let collisionArray = [];
 
+/**
+ * fetch and load the the level.json to enable the generating process of a level.
+ */
 async function loadJson() {
   let response = await fetch("./scripts/levels/level_one.json");
   response = await response.json();
@@ -26,6 +28,9 @@ async function loadJson() {
   tileSize = await response.tileheight;
 }
 
+/**
+ * create a Tileset-Object
+ */
 function generateTileset(){
   tileset = new Tileset({
     image: tileSetImage,
@@ -37,12 +42,18 @@ function generateTileset(){
   });
 }
 
+/**
+ * init function to start the process of generating a level.
+ */
 async function init() {
   await loadJson();
   generateTileset();
 }
-await init();
+await init()
 
+/**
+ * after loading a level it will send back to game as a level.
+ */
 export const levelOne = new Level({
   size: [levelSizeInTiles * tileSize, levelHeighInTiles * tileSize],
   tileset: tileset,

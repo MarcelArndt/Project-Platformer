@@ -281,30 +281,6 @@ class AttackSpawnMinion{
     }
 }
 
-
-//////////////////////////////////////
-////////// ATTACK STATUS /////////////
-//////////////////////////////////////
-class Attack{
-
-    start(entity){
- 
-    }
-
-    behave(entity){
-     
-    }
-
-    checkConditions(entity){
-      
-    }
-    
-    leaveState(entity){ 
-        
-    }
-}
-
-
 //////////////////////////////////////
 ///////// GET HIT STATUS /////////////
 //////////////////////////////////////
