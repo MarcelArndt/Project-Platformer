@@ -29,6 +29,5 @@ export class Character extends Player {
         this.animationImage = imageIsloadet.character;
         this.walkspeed = 0.012;
         this.hitSound = soundIsloadet.hitPlayer;
-      
     }
 }
