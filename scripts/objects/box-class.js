@@ -37,6 +37,9 @@ export class Box extends Rectangle{
         this.hitSound = soundIsloadet.hit09;
     }
     
+    /**
+     * generates a Index or Id for this Entity
+     */ 
     genEntityIndex(){
         let newIndex = "";
         let subIndex = "";
@@ -47,10 +50,10 @@ export class Box extends Rectangle{
         return newIndex;
     }
 
-    checkCollideWithObjects(){
-        return false;
-    }
-
+     /**
+     * checks is Entity moveable in each direction
+     * @param {Array} VectorOffest to add a offset to check in width and heigh
+     */ 
     canBeMoved(VectorOffest){
         let fildertObjects = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
         if( this.posLeft + VectorOffest[0] < 0 || 
@@ -64,22 +67,9 @@ export class Box extends Rectangle{
         return fildertObjects.every(obj => !this.collideWith(obj, VectorOffest));
     }
 
-    getPrevPosLeft(){
-        return this.prevPos[0];
-    }
-
-    getPrevPosRight(){
-        return this.prevPos[0] + this.size[0];
-    }
-
-    getPrevPosTop(){
-        return this.prevPos[1];
-    }
-
-    getPrevPosBottom(){
-        return this.prevPos[1] + this.size[1];
-    }
-
+    /**
+     * enable any Physic to this Entity
+     */ 
     applyPhsics(deltaTime){
         this.vel[0] += this.acc * deltaTime;
         this.vel[0] *= 1 - this.fraction;
@@ -91,6 +81,9 @@ export class Box extends Rectangle{
         this.onGround = false
     }
 
+     /**
+     * Main Update loop for this Entity
+     */ 
     update(deltaTime){
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
@@ -99,13 +92,10 @@ export class Box extends Rectangle{
         this.checkInvincibilityTimer(deltaTime / 1000);
     }
 
-    pushObject(){
-        return{
-            toRight:() => false,
-            toLeft: () => false
-        }
-    }
  
+     /**
+     * don't allow this entity to leave the level. 
+     */ 
     boundToLevel(){
         if (this.posBottom >= this.level.size[1]){
             if(this.type == "Enemy"){
@@ -125,6 +115,9 @@ export class Box extends Rectangle{
         }
     }
 
+     /**
+     * checks the distance between a Object in level and this entity to his right side
+     */ 
     getRemainingDistanceRight(){
         let distance = this.level.size[0] - this.posRight;
         let filterdArray = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
@@ -138,6 +131,9 @@ export class Box extends Rectangle{
         return distance 
     }
 
+     /**
+     * checks the distance between a Object in level and this entity to his left side
+     */ 
     getRemainingDistanceLeft(){
         let distance = this.posLeft;
         let filterdArray = [...this.level.objectsOfType.Rectangle, ...this.level.objectsOfType.Box];
@@ -151,6 +147,12 @@ export class Box extends Rectangle{
         return distance 
     }
 
+     /**
+     * @param {Array} pos set a start value of his position
+     * @param {Array} size set a size in width and height
+     * @param {Array} manualOffset set a offset for position in width and height
+     * @param {object} options to set all params for this object
+     */ 
     createHitBox(pos, size, manualOffset, options){
         let newBox = new Hitbox({
           pos: [pos[0], pos[1]],
@@ -167,7 +169,13 @@ export class Box extends Rectangle{
         this.demageBoxes.push(newBox);
       }
 
-      createJumpPad(pos, size, manualOffset, options){
+    /**
+     * @param {Array} pos set a start value of his position
+     * @param {Array} size set a size in width and height
+     * @param {Array} manualOffset set a offset for position in width and height
+     * @param {object} options to set all params for this object
+     */ 
+    createJumpPad(pos, size, manualOffset, options){
         let newBox = new JumpPad ({
           pos: [pos[0], pos[1]],
           size: [size[0], size[1]],
@@ -183,7 +191,12 @@ export class Box extends Rectangle{
         this.demageBoxes.push(newBox);
       }
     
-      pushBack(velX = 0.85, velY = 0.75){
+
+    /**
+     * @param {number} velX adjust and finetune the amount of pusback to left and right
+     * @param {number} velY adjust and finetune the amount of pushback in hight
+     */ 
+    pushBack(velX = 0.85, velY = 0.75){
         let willCollide;
         let varifyArrayType = ["Entity", "Hitbox", "Enemy"]
         if (this.getHit && !this.gethitJumpAlready) {
@@ -204,8 +217,10 @@ export class Box extends Rectangle{
         }
     }
 
-
-      gethitJump(velY){
+     /**
+     * jump in the air after getting hit/demage from something
+     */
+    gethitJump(velY){
         if (!this.gethitJumpAlready){
             this.vel[1] = -velY
             this.gethitJumpAlready = true;
@@ -215,7 +230,10 @@ export class Box extends Rectangle{
         }
       }
 
-      activateHitbox(ObjId, id = 0){
+     /**
+     * to switch a Hitbox to on. for Example enable/init a Attack
+     */
+    activateHitbox(ObjId, id = 0){
         this.level.objectsOfType.Hitbox.forEach(box => {
             if(box.index == this.demageBoxes[id].index ){
                 box.isAktiv = true;
@@ -223,7 +241,10 @@ export class Box extends Rectangle{
         });
       }
 
-      getAllHitboxIds(){
+     /**
+     * to get the id of a hitbox
+     */
+    getAllHitboxIds(){
         let allHitboxIds = [];
         this.demageBoxes.forEach(box => {
             allHitboxIds.push(box.index)
@@ -231,7 +252,10 @@ export class Box extends Rectangle{
         return allHitboxIds;
       }
 
-      disableHitbox(ObjId, id = 0, disableAll = false){
+     /**
+     * if enity gets hit or is dead it will disable onetime active hitbox
+     */
+    disableHitbox(ObjId, id = 0, disableAll = false){
         let validIds = [this.demageBoxes[id]]
         if(disableAll){
             validIds = this.getAllHitboxIds();
@@ -243,7 +267,10 @@ export class Box extends Rectangle{
         });
       }
 
-      disableHitboxAndWithAllwaysOn(){
+     /**
+     * if enity gets hit or is dead it will disable all his hitbox
+     */
+    disableHitboxAndWithAllwaysOn(){
         this.level.objectsOfType.Hitbox.forEach((box) => {
             for (let i = 0; i < this.demageBoxes.length; i++){
                 if(box.index == this.demageBoxes[i].index ){
@@ -254,14 +281,21 @@ export class Box extends Rectangle{
         });
         }
 
-       removeHitboxFromLevel(){
-            this.level.objects.forEach((box, dex) => {
-                if(box.type == "Hitbox" &&  this.demageBoxes[0].index == box.index){
-                    this.level.objects.splice(dex, this.demageBoxes.length);
-                }
-            });
-        }
+     /**
+     * if enity is dead it will delete his hitbox from game
+     */
+    removeHitboxFromLevel(){
+        this.level.objects.forEach((box, dex) => {
+            if(box.type == "Hitbox" &&  this.demageBoxes[0].index == box.index){
+                this.level.objects.splice(dex, this.demageBoxes.length);
+            }
+        });
+    }
 
+     /**
+     * enable screenshake effect
+     * @param {number} frameValue - to set a timer in frames
+     */
       screenShakeEnable(frameValue = 10){
         this.level.screenAnimationTime = 0;
         this.level.screenAnimationMaxTimer = frameValue
@@ -269,6 +303,11 @@ export class Box extends Rectangle{
         this.screenshakeAnimationRunning = true;
     }
 
+    /**
+     * to play a random sound from an arraypool of sounds
+     * @param {array} soundArray - pool of soundsObjects where can choose from.
+     * @param {number} setVolume - to adjust the volume of a sound 
+     */  
     chooseRandomSound(soundArray = [], setVolume = 1){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
         if(this.checkThisOnScreen()){
@@ -277,10 +316,17 @@ export class Box extends Rectangle{
         }
       }
 
+     /**
+     * return true or false and checks for is Entity on Screen/Camera
+     */  
     checkThisOnScreen(){
         return (this.pos[0] > this.level.cameraPos[0] - (canvas.width / 10) && this.pos[0] < this.level.cameraPos[0] + canvas.width);
     }
 
+    /**
+     * enable or disable all onhit effects and invincibility.
+     * @param {number/timeValue} secDeltaTime - to add it to the current Timer and compare it with the maxValue of this Timer
+     */
     checkInvincibilityTimer(secDeltaTime){
         this.animationflickring(secDeltaTime);
         if(this.getHit || this.invincibility){
@@ -298,6 +344,10 @@ export class Box extends Rectangle{
         }
     }
 
+     /**
+     * enable a animation to show thats this enity is invincibility.
+     * @param {number/timeValue} secDeltaTime - to add it to the current Timer and compare it with the maxValue of this Timer
+     */
     animationflickring(secDeltaTime){
         if(this.getHit && this.health > 0 && this.allowToFickeringAnimation || this.invincibility && this.health > 0 && this.allowToFickeringAnimation ){
             this.animationflickeringTimer += secDeltaTime;
@@ -313,6 +363,10 @@ export class Box extends Rectangle{
         }
     }
 
+     /**
+     * @param {string} directionFrom - for pushback() to decide in which way this entiy gets pushed back
+     * @param {number} demage - for reduceHealt() -> reduce the current Health by a Value
+     */
     reciveHitFromObj(directionFrom, demage){
       if (!this.getHit && !this.alreadyLostHealth && !this.invincibility){
         this.getHit = true;
@@ -321,7 +375,10 @@ export class Box extends Rectangle{
         this.reduceHealth(demage);
       }
     }
-
+    
+    /**
+     * @param {number} Value - reduce the current Health by a Value
+     */
     reduceHealth(Value){
         if(!this.alreadyLostHealth){
             this.chooseRandomSound([this.hitSound]);

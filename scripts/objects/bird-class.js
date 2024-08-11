@@ -86,18 +86,27 @@ export class Bird extends Box {
         this.enableSound();
     }
     
+    /**
+     * set toggleSound to true;
+     */
     enableSound(){
         if(!this.toggleSound){
             this.toggleSound = true;
         }
     }
 
+    /**
+     * set toggleSound to true;
+     */
     disableSound(){
         if(this.toggleSound){
             this.toggleSound = false;
         }
     }
 
+    /**
+     * checks the distance between bird and Player and adjust the Volume to this distance
+     */
     playFlappingSound(deltaTime){
         let distance = 0;
         const secDeltaTime = deltaTime / 10;
@@ -116,6 +125,9 @@ export class Bird extends Box {
         }
     }
 
+    /**
+     * Main loop Update
+     */
     update(deltaTime){
         this.prevPos = [...this.pos];
         this.applyPhsics(deltaTime);
@@ -127,6 +139,9 @@ export class Bird extends Box {
         this.playFlappingSound(deltaTime)
     }
 
+    /**
+     * checks in which direction the bird is looking
+     */
     checkFacingLeft(){
         if (this.walkspeed > 0){
             this.facingLeft = false;
@@ -135,6 +150,9 @@ export class Bird extends Box {
         }
     }
 
+     /**
+     * enable flying or gravity to the bird
+     */
     applyFlyingPhsics(){
         if(this.isFlying){
             this.grav = this.flyGrav;
@@ -143,9 +161,13 @@ export class Bird extends Box {
         }
     }
 
+
+    /**
+     * checks is bird current vertical position. is this position to high, it will despawn otherwise it will fly further.
+     */
     fly(){
         let flyAgain = this.randomNumber(3);
-       if(this.pos[1] <= 150) {
+       if(this.pos[1] <= 30) {
         this.despawn()
        } else if (this.pos[1] > 200 && flyAgain == 1){
         this.vel[1] = -0.375
@@ -153,14 +175,23 @@ export class Bird extends Box {
        }
     }
 
+    /**
+     * first time init to enable bird moving
+     */
     init(){
         this.acc = this.walkspeed
     }
 
+    /**
+     * help-function to get random numbers in a range of a specific Value
+     */
     randomNumber(value){
         return Math.floor(Math.random() * value);
     }
 
+     /**
+     * help-function to get the distance between player and Bird
+     */
     checkDistanceToPlayer(playerObj){
         let distanceX = (this.pos[0] - playerObj.pos[0]) * -1;
         let distanceY = (this.pos[1] - playerObj.pos[1]) * -1;
@@ -168,12 +199,18 @@ export class Bird extends Box {
         return distance;
     }
 
+     /**
+     * let the Bird make a tiny jump
+     */
     jump(){
         if (this.onGround){
                 this.vel[1] = -0.4
             }
         }
 
+    /**
+     * returns the distane from bird to SpawnPoint
+     */    
     checkDistanceToOriginPos(){
         let distanceX = (this.pos[0] - this.originPos[0]) * -1;
         let distanceY = (this.pos[1] - this.originPos[1]) * -1;
@@ -181,6 +218,10 @@ export class Bird extends Box {
         return distance;
     }
 
+
+    /**
+     * disable a bird and prepare it to respawn 
+     */    
     despawn(){
         this.grav = 0;
         this.vel = [0, 0];
@@ -189,6 +230,9 @@ export class Bird extends Box {
         this.animationStatus = "ghosting";
     }
 
+    /**
+     * respawn the bird dependent his old original values.
+     */   
     spawn(){
         this.grav = this.originGrav;
         this.pos = [...this.originPos];

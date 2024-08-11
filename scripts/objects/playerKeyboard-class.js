@@ -70,5 +70,4 @@ export class PlayerKeyboard {
             this.alreadyGetControll = false;
         }
       }
-
 }

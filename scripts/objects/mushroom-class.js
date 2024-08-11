@@ -68,9 +68,4 @@ export class Mushroom extends Enemy{
             this.cooldown.isMainAttack = false;
         }
     }
-
-
-    update(deltaTime){
-        super.update(deltaTime);
-    }
 }

@@ -71,6 +71,22 @@ export class Rectangle {
         this.pos[1] = val - this.size[1] ;
     }
 
+    getPrevPosLeft(){
+        return this.prevPos[0];
+    }
+
+    getPrevPosRight(){
+        return this.prevPos[0] + this.size[0];
+    }
+
+    getPrevPosTop(){
+        return this.prevPos[1];
+    }
+
+    getPrevPosBottom(){
+        return this.prevPos[1] + this.size[1];
+    }
+
     draw(){
         let buffer = 75;
         if (this.pos[0] > this.level.cameraPos[0] - buffer && this.pos[0]  < this.level.cameraPos[0] + canvas.width
@@ -144,6 +160,4 @@ export class Rectangle {
 
     update(){
     }
-
-    
 }
