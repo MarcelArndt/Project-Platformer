@@ -7,13 +7,13 @@ export class StateMachine {
     this.currentState.start(this.entity);
   }
 
-    /**
-     * active in switching between States
-     */
-    changeState(newState){
-      this.currentState.leaveState(this.entity);
-      this.currentState = newState;
-      this.currentState.start(this.entity);
+  /**
+  * active in switching between States
+  */
+  changeState(newState){
+    this.currentState.leaveState(this.entity);
+    this.currentState = newState;
+    this.currentState.start(this.entity);
   }
 
   /**

@@ -144,11 +144,11 @@ class StateMachine {
     }
 
     /**
-     * Update-Main-loop
-     */
-    updateState(){
-        this.currentState.behave(this.entity);
-        this.currentState.checkConditions(this.entity);
+    * Update-Main-loop
+    */
+    updateState(deltaTime){
+        this.currentState.behave(this.entity, deltaTime);
+        this.currentState.checkConditions(this.entity, deltaTime);
     }
 }
 
