@@ -16,11 +16,18 @@ export class ScoreBar{
         this.fontSize = fontSize || 11;
     }
 
+    /**
+     * Update Main Loop
+     * @param {*} currentValue of Points from Player
+     */
     update(currentValue){
         this.refreshValue(currentValue);
         this.drawScore();  
     }
 
+    /**
+     * draw Ponits as Text to the canvas
+     */
     drawScore(){
         ctx.font = `${this.fontSize}px PixelifySans`;
         ctx.fillStyle = this.shadowColor;
@@ -29,12 +36,17 @@ export class ScoreBar{
         ctx.fillText(`${this.addPrefix}${this.stingyfyValue}${this.addSuffix}`, this.posX, this.posY);
     }
 
-
+    /**
+     * generate a String out of the Amount of Points from Player 
+     */
     refreshValue(currentValue){
         this.stingyfyValue = this.valueToString(currentValue);
     }
 
 
+    /**
+     * will add 0 before the current Score depending on this.decimalAmount.
+     */
     valueToString(stingValue){
         let value = 0;
         if(typeof stingValue != "sting"){

@@ -1,7 +1,6 @@
 import { Enemy } from "./enemy-class.js";
 import { StateMachine, SpawnNew} from "./stateMashine-skelett-class.js";
-import {imageIsloadet, soundIsloadet} from "../assets.js";
-import { ctx } from "../canvas.js";
+import {imageIsloadet} from "../assets.js";
 
 let animationImage = new Image();
     animationImage.src = "./assets/skelet-animation-atlas.png";
@@ -57,21 +56,5 @@ export class Skelett extends Enemy{
         this.currentTime = 0;
         this.health = 10;
         this.scoreValue = options.scoreValue || 8;
-    }
-
-    update(deltaTime){
-        super.update(deltaTime)
-        this.drawConnectionLine()
-    }
-
-    drawConnectionLine(){
-        if(this.level.showDebug){
-            ctx.beginPath();
-            ctx.strokeStyle = 'grey';
-            ctx.lineWidth = 1;
-            ctx.moveTo((this.pos[0] + (this.size[0] / 2 )) - this.level.cameraPos[0] , (this.pos[1] + (this.size[1] / 2 )) - this.level.cameraPos[1]);
-            ctx.lineTo((this.level.player.pos[0] + (this.level.player.size[0] / 2)) - this.level.cameraPos[0] ,(this.level.player.pos[1] + (this.level.player.size[1] / 2)) - this.level.cameraPos[1])
-            ctx.stroke();
-        }
     }
 }

@@ -14,7 +14,7 @@ export class Timer {
   }
 
   /**
-  *  if game doesn't start already and isn't paused it will start this loop and will manage the timeValue to prevent lag spikes.
+  * if game doesn't start already and isn't paused it will start this loop and will manage the timeValue to prevent lag spikes.
   */
   loop(currentTime) {
     if (this.pause) return;

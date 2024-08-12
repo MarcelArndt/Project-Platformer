@@ -1,6 +1,5 @@
 import { Entity} from "./entity-class.js";
 import { imageIsloadet } from "../assets.js";
-import { soundIsloadet } from "../assets.js";
 export class Potion extends Entity{
     constructor(options, type){
         const {pos, size, color, value, subType} = options

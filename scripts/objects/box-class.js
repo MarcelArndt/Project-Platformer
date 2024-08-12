@@ -161,8 +161,8 @@ export class Box extends Rectangle{
           forceToLeft: options.forceToLeft || false,
           demage: options.demage || 10,
           demageFlag: options.demageFlag || "Player",
-          isAktiv: options.isAktiv || false,
-          isAllawysAktiv: options.isAllawysAktiv || false,
+          isActive: options.isActive || false,
+          isAllawysActive: options.isAllawysActive || false,
           lifespan: options.lifespan || 6,
           color: options.color || "rgba(255,125,0,0.25)",
         }, this);
@@ -183,8 +183,8 @@ export class Box extends Rectangle{
           forceToLeft: options.forceToLeft || false,
           demage: options.demage || 10,
           demageFlag: options.demageFlag || null,
-          isAktiv: options.isAktiv || true,
-          isAllawysAktiv: options.isAllawysAktiv || true,
+          isActive: options.isActive || true,
+          isAllawysActive: options.isAllawysActive || true,
           lifespan: options.lifespan || 0,
           color: options.color || "rgba(0,200,200,0.25)",
         }, this);
@@ -235,7 +235,7 @@ export class Box extends Rectangle{
     activateHitbox(ObjId, id = 0){
         this.level.objectsOfType.Hitbox.forEach(box => {
             if(box.index == this.demageBoxes[id].index ){
-                box.isAktiv = true;
+                box.isActive = true;
             }
         });
       }
@@ -261,7 +261,7 @@ export class Box extends Rectangle{
         }
         this.level.objectsOfType.Hitbox.forEach(box => {
             if(validIds.includes(box.index)){
-                box.isAktiv = false;
+                box.isActive = false;
             }
         });
       }
@@ -273,8 +273,8 @@ export class Box extends Rectangle{
         this.level.objectsOfType.Hitbox.forEach((box) => {
             for (let i = 0; i < this.demageBoxes.length; i++){
                 if(box.index == this.demageBoxes[i].index ){
-                    box.isAktiv = false;
-                    box.isAllawysAktiv = false;
+                    box.isActive = false;
+                    box.isAllawysActive = false;
                 }
             } 
         });

@@ -6,7 +6,7 @@ const level_One = null;
 
 /**
  * will load all necessity Images and Sounds before starting any scripts to prevent any issues of missing Textuers or similary Bugs
- * After loading any Source the Game gets injected, the latest Save gets loadet and the menu will be rendert.
+ * after loading any Source the Game gets injected, the latest Save gets loadet and the menu will be rendert.
  */
 window.onload = () => {
   loadAllAssests().then(() => {

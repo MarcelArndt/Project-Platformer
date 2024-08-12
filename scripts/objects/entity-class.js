@@ -7,46 +7,9 @@ export class Entity extends Rectangle{
         this.index = this.genEntityIndex();  
     }
 
-    get posLeft(){
-        return this.pos[0];
-    }
-
-    get posRight(){
-        return this.pos[0] + this.size[0];
-    }
-
-    get posTop(){
-        return this.pos[1];
-    }
-
-    get posBottom(){
-        return this.pos[1] + this.size[1];
-    }
-
-    get posX(){
-        return (this.posLeft + this.posRight) / 2
-    }
-
-    get posY(){
-        return (this.posTop + this.posBottom) / 2
-    }
-
-    setLeft(value){
-        this.pos[0] = value;
-    }
-
-    setRight(value){
-        this.pos[0] = value - this.size[0] ;
-    }
-
-    setTop(value){
-        this.pos[1] = value;
-    }
-
-    setBottom(value){
-        this.pos[1] = value- this.size[1] ;
-    }
-
+    /**
+     * will generate a id for this Entity
+     */
     genEntityIndex(){
         let newIndex = "";
         let subIndex = "";
@@ -57,7 +20,9 @@ export class Entity extends Rectangle{
         return newIndex;
     }
 
-
+    /**
+     * will search this Entity inside all objetc in level and will delete it.
+     */
     deleteObject(){
         let index = null
         this.level.objects.forEach(obj => {
@@ -68,15 +33,15 @@ export class Entity extends Rectangle{
         })
     }
 
+     /**
+     * to play a random sound from an Array of sounds
+     * @param {array} soundArray - pool of soundsObjects where can choose from.
+     * @param {number} setVolume - to adjust the volume of a sound 
+     */  
     chooseRandomSound(soundArray = [], setVolume = 1){
         let randomNumber = Math.floor(Math.random() * soundArray.length);
             soundIsloadet[soundArray[randomNumber]].volume = setVolume * this.level.globalVolume;
             soundIsloadet[soundArray[randomNumber]].play();
       }
-    
 
-    update(deltaTime){
-        super.update(deltaTime);
-    }
 }
-

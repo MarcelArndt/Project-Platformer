@@ -74,6 +74,10 @@ export class Player extends Box {
     this.keyBoard.addControll();
   }
 
+
+  /**
+   * switch between character is looking to the left or right
+   */
   checkFacingLeft(){
     if (this.acc > 0){
       this.facingLeft = true;
@@ -83,6 +87,10 @@ export class Player extends Box {
     }
   }
  
+
+  /**
+   * let the Player move forwards
+   */
   move(direction) {
     if (direction == "left"){
       this.acc = -this.walkspeed;
@@ -92,10 +100,18 @@ export class Player extends Box {
     this.checkFacingLeft();
   }
 
+
+  /**
+   * let the Player stand still
+   */
   stopMove() {
     this.acc = 0;
   }
 
+
+  /**
+   * let the Player crouch
+   */
   inCrouch(){
     this.stopMove(); 
     this.vel[0] = 0;
@@ -107,6 +123,9 @@ export class Player extends Box {
     }
   }
 
+   /**
+   * let the Player standing up
+   */
   outCrouch(){
     if (this.crouch){
       this.crouch = false;
@@ -116,6 +135,9 @@ export class Player extends Box {
         }
   }
 
+   /**
+   * let the Player jump
+   */
   playerJump() {
     if (this.onGround && !this.crouch || this.isCoyoteTimeReady && !this.crouch) {
       this.vel[1] += this.jumpseed;
@@ -126,37 +148,48 @@ export class Player extends Box {
     }
   }
 
-pushObjectToLeft(box){
-  if (box.type != "Box") return false;
-  const distance = box.posRight - this.posLeft;
-  if (box.canBeMoved([-distance, 0])) {
-    box.setRight(this.posLeft);
-    return true;
-  }
-  const smallGap = box.getRemainingDistanceLeft();
-  if (box.canBeMoved([-smallGap, 0])) {
-    box.setLeft(box.posLeft - smallGap);
-    this.setLeft(box.posRight);
-    return true;
-  }
-  return false;
-}
-pushObjectToRight(box){
-  if (box.type != "Box") return false;
-  const distance = this.posRight - box.posLeft;
-  if (box.canBeMoved([distance, 0])) {
-    box.setLeft(this.posRight);
-    return true;
-  }
-  const smallGap = box.getRemainingDistanceRight();
-  if (box.canBeMoved([-smallGap, 0])) {
-    box.setRight(box.posRight + smallGap);
-    this.setRight(box.posLeft);
-    return true;
-  }
-  return false;
-}
+   /**
+   * Push Object aside if possible to the left
+   */
+  pushObjectToLeft(box){
+    if (box.type != "Box") return false;
+    const distance = box.posRight - this.posLeft;
+    if (box.canBeMoved([-distance, 0])) {
+      box.setRight(this.posLeft);
+      return true;
+    }
+    const smallGap = box.getRemainingDistanceLeft();
+    if (box.canBeMoved([-smallGap, 0])) {
+      box.setLeft(box.posLeft - smallGap);
+      this.setLeft(box.posRight);
+      return true;
+    }
+    return false;
+    }
 
+   /**
+   * Push Object aside if possible to the right
+   */
+  pushObjectToRight(box){
+    if (box.type != "Box") return false;
+    const distance = this.posRight - box.posLeft;
+    if (box.canBeMoved([distance, 0])) {
+      box.setLeft(this.posRight);
+      return true;
+    }
+    const smallGap = box.getRemainingDistanceRight();
+    if (box.canBeMoved([-smallGap, 0])) {
+      box.setRight(box.posRight + smallGap);
+      this.setRight(box.posLeft);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+  * Push Object aside if possible
+  * @param {Object} box is a Object, that is possible to push aside
+  */
   pushObject(box) {
     return {
       toLeft: () => pushObjectToLeft(box),
@@ -164,6 +197,9 @@ pushObjectToRight(box){
     };
   }
 
+   /**
+   * Main Update-Loop
+   */
   update(deltaTime) {
     super.update(deltaTime);
     this.keyBoard.update();
@@ -177,6 +213,9 @@ pushObjectToRight(box){
     this.lifeCounter.update(this.lives);
   }
 
+   /**
+   * let the Player attack
+   */
   playerAttack() {
     if (!this.cooldown.mainAttack && this.status != "jump" && this.status != "crouch") {
       this.cooldown.mainAttack = true;
@@ -187,11 +226,18 @@ pushObjectToRight(box){
     }
   }
 
+   /**
+   * check for cooldown after swining the sword
+   */
   ceckCooldown(deltaTime) {
     let secDeltaTime = deltaTime / 100
     this.checkMainAttackCooldown(secDeltaTime);
   }
 
+  /**
+   * check for cooldown after swining the sword
+   * @param {timeValue/number} currentTime - compare it against the latest timer to check if cooldown is ready
+   */
   checkMainAttackCooldown(currentTime){
     if(this.cooldown.mainAttack){
       this.cooldown.mainCurrentTimer += currentTime;
@@ -203,6 +249,9 @@ pushObjectToRight(box){
     }
   }
 
+  /**
+  * wil reset and check if Coyote-Time acceptable in general.
+  */
   checkCoyoteTime() {
     if (this.onGround && !this.isCoyoteTimeReady) {
       this.isCoyoteTimeReady = true;
@@ -216,6 +265,9 @@ pushObjectToRight(box){
     }
   }
 
+  /**
+  * start a timer if play is leaving a Platform to give him a change to jump
+  */
   startCoyoteTime() {
     this.latestOnGround = new Date();
     this.currentCoyoteTime = setTimeout(() => {
@@ -223,6 +275,9 @@ pushObjectToRight(box){
     }, this.coyoteTime);
   }
 
+  /**
+  * checks for Coyote-Time is over and doesn't allow to jumo in air.
+  */
   isCoyoteTimeOver() {
     let currentTime = new Date();
     if (currentTime - this.coyoteTime >= this.currentCoyoteTime) {
@@ -230,6 +285,9 @@ pushObjectToRight(box){
     }
   }
 
+ /**
+ * will set a maximun of jumpspeed - prevent Player of jumping to high
+ */
   checkVerticalSpeed(){
     if(this.vel[1] > 1.25 ){
       this.vel[1] = 1.25;
@@ -239,4 +297,3 @@ pushObjectToRight(box){
     }
   }
 }
-

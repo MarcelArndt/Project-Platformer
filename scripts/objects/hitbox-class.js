@@ -4,15 +4,15 @@ import { Collider } from "./collider-class.js";
 
 export class Hitbox extends Entity{
     constructor(options, entity){
-        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset} = options
+        const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isActive, isAllawysActive , offset} = options
         super({pos, size, color}, "Hitbox");
         this.subType = "Hitbox";
         this.lifespan = lifespan || 3;
         this.forceToLeft = forceToLeft || false;
         this.demage = demage ||0;
         this.demageFlag = demageFlag || "Enemy";
-        this.isAktiv = isAktiv || false;
-        this.isAllawysAktiv = isAllawysAktiv || false;
+        this.isActive = isActive || false;
+        this.isAllawysActive = isAllawysActive || false;
         this.color = color || "rgba(255,125,0,0.5)";
         this.setOffset = offset || [0,0];
         this.entity = entity || null
@@ -21,68 +21,76 @@ export class Hitbox extends Entity{
         this.lifespan = lifespan || 1;
     }
 
-    getPrevPosLeft(){
-        return this.prevPos[0];
-    }
-
-    getPrevPosRight(){
-        return this.prevPos[0] + this.size[0];
-    }
-
-    getPrevPosTop(){
-        return this.prevPos[1];
-    }
-
-    getPrevPosBottom(){
-        return this.prevPos[1] + this.size[1];
-    }
-
+     /**
+     * Main-Update-Update
+     */
     update(deltaTime){
-        this.checkIsAllawysAktiv();
+        this.checkIsAllawysActive();
         this.draw();
         this.updatePosition(this.stickToObject);
         this.updateCounter(deltaTime / 1000);
         this.collider.update(deltaTime);
     }
 
+    /**
+     * is this Hitbox attach to a Entity it will move with it
+     */
     updatePosition(){
         this.pos[0] = this.entity.pos[0] + this.setOffset[0];
         this.pos[1] = this.entity.pos[1] + this.setOffset[1];
     }
 
+    /**
+     *  activate this Hitbox
+     */
     draw(){
-       if(this.level.showDebug && this.isAktiv){
-            ctx.fillStyle = this.isAktiv ? this.color:"rgba(225,125,125,0.4)";
+       if(this.level.showDebug && this.isActive){
+            ctx.fillStyle = this.isActive ? this.color:"rgba(225,125,125,0.4)";
             ctx.fillRect(this.pos[0] - this.level.cameraPos[0], this.pos[1] - this.level.cameraPos[1], this.size[0], this.size[1]);
         }
     }
 
-    aktivateCounter(){
-        this.console("hell")
-        this.isAktiv = true;
+     /**
+     *  activate this Hitbox
+     */
+    activateCounter(){
+        this.isActive = true;
     }
 
+    /**
+     *  deactivate this Hitbox
+     */
     deactivateCounter(){
-        this.isAktiv = false;
+        this.isActive = false;
         this.frameCounter = 0;
     }
 
-    checkIsAllawysAktiv(){
-        if(this.isAllawysAktiv){
-            this.isAktiv = true;
+    /**
+     *make sure that a hitbox with isAllawysActiv is still always activ
+     */
+    checkIsAllawysActive(){
+        if(this.isAllawysActive){
+            this.isActive = true;
         }
     }
 
+    /**
+     * update the Timer-Counter for deactivate the Hitbox
+     */
     updateCounter(secDeltaTime){
-       if(this.isAktiv && Math.floor(this.frameCounter) >= this.lifespan){
+       if(this.isActive && Math.floor(this.frameCounter) >= this.lifespan){
             this.deactivateCounter();
-        } else if (this.isAktiv){
+        } else if (this.isActive){
             this.frameCounter += secDeltaTime;
         }
     }  
-
-    aktivInCollision(obj, direction){
-        if(obj.type == this.demageFlag && this.isAktiv){
+    /**
+     * if a collision was successful it give a callback to this Entity to activate a hit
+     * @param {object} obj Entity get hit by this hitbox
+     * @param {string} direction where Entity gets hit from
+     */
+    activeInCollision(obj, direction){
+        if(obj.type == this.demageFlag && this.isActive){
             obj.reciveHitFromObj(direction, this.demage);
         }
     }

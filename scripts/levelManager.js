@@ -59,10 +59,7 @@ export class LevelManager{
         } else if (this.level.status == status.pause) {
           this.resume();
         }; break;
-        case "r": if(this.level.status == status.running){
-          this.resetLevel(); 
-          this.resetMusicManger();
-        }; break;
+        case "r": if(this.level.status == status.running){this.resetLevel(); this.resetMusicManger();}; break;
         case "?":  this.level.showDebug = this.level.showDebug == false ? true:false; break;
         case `*`:  this.level.levelIsWon = true; break;
         case " " : case "w" : case "ArrowUp" :  e.preventDefault(); e.stopPropagation(); break;
@@ -235,9 +232,9 @@ export class LevelManager{
       this.level.player.score = 0;
     }
 
- /**
- * save the all current Values into the LocalStorage. !Import function from menuScript.js!
- */
+    /**
+    * save the all current Values into the LocalStorage. !Import function from menuScript.js!
+    */
     saveStats(){
       saveInLocalStorage({
         firstTimePlaying: false,
@@ -245,5 +242,4 @@ export class LevelManager{
         newScore: this.level.player.score,
       });
     }
-
 }

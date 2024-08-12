@@ -76,14 +76,9 @@ export class GhostBoss extends Enemy{
         this.statusbar = new StatusBar( this.health || 30, this.health, [(canvas.width / 2) - (imageIsloadet.liveBarBossImageFull.width + 47.5), (canvas.height * 0.8 / 6 * 4) - imageIsloadet.liveBarBossImageFull.height - 15], imageIsloadet.liveBarBossImageFull, imageIsloadet.liveBarBossImageEmpty, [6.25,13], 650, 0.64 );
     }
 
-
-    checkForCooldown(){
-        this.currentTime = new Date();
-        if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
-            this.cooldown.isMainAttack = false;
-        }
-    }
-
+     /**
+     * Update-Main-Loop
+     */
     update(deltaTime){
         super.update(deltaTime);
         this.facingTowardsPlayer();
@@ -95,6 +90,9 @@ export class GhostBoss extends Enemy{
         this.adjustMusik();
     }
 
+     /**
+     * looking for a spawnpoint and spawn a new Enemy
+     */
     spawnNewMinion(Amount){
         let distance = this.distancePlayerToOrigin();
         let finalSpawnPoint = 0;
@@ -110,6 +108,11 @@ export class GhostBoss extends Enemy{
         }
     }
 
+     /**
+     * Main Function for creating a Spawnpoint by looking for a random point and test it for possibility
+     * After succesfull find a point it will return this Point back.
+     * Is there no Point after 30 attempt it will stop looking for.
+     */
     checkForSpawnPoint(lastSpawnPoint){
         let spawnPoint = this.generateNewSpawnPoint();
         let isNotPossibleToSpawn = this.checkForPossibleToSpawn(spawnPoint);
@@ -127,6 +130,9 @@ export class GhostBoss extends Enemy{
         return spawnPoint;
     }
 
+     /**
+     * checks for collsion and for possibility for spawn something at this spawnpoint
+     */
     checkForPossibleToSpawn(spawnPoint){
         let isNotPossibleToSpawn = false;
         let isCollision = false;
@@ -139,6 +145,9 @@ export class GhostBoss extends Enemy{
         return isNotPossibleToSpawn;
     }
 
+    /**
+     * create a new spawnpoint next to player location
+     */
     generateNewSpawnPoint(){
         let randomizer = [
             this.level.player.pos[0] - 95 - Math.floor(Math.random() * 125),
@@ -147,6 +156,9 @@ export class GhostBoss extends Enemy{
         return randomizer[Math.floor(Math.random() * randomizer.length)];
     }
 
+    /**
+     * let the boss teleport between above the player and to the same level as player
+     */
     teleporting(){
         let distance = this.distancePlayerToOrigin();
         if(!this.alreadyTeleport && this.pos[0] > this.originalPos[0] - this.moveRange && this.pos[0] < this.originalPos[0] + this.moveRange && distance < 600){
@@ -162,14 +174,18 @@ export class GhostBoss extends Enemy{
         }
     }
 
-
+    /**
+     * make sure that Boss is always on top of Player
+     */
     checkIsAbove(){
         if(this.isAbove && this.animationStatus != "teleport" && this.distanceYToPlayer < -20){
             this.setBottom(this.level.player.posTop - this.size[1] - 50);
         }
     }
 
-
+    /**
+     * if Player is close enough the camera will move upwards
+     */
     adjustLevelCamera(){
         if(this.distanceToPlayer < 550 && this.level.cameraHeightOffset <= 100){
             this.level.cameraHeightOffset ++;
@@ -178,6 +194,10 @@ export class GhostBoss extends Enemy{
         } 
     }
 
+    
+    /**
+     * if Player is close enough the music will switch 
+     */
     adjustMusik(){
         if(this.distanceToPlayer <= 600 && !this.musicAlreadyPlaying){
             this.level.musicManager.setNewMusik(this.bossMusic);
@@ -189,13 +209,18 @@ export class GhostBoss extends Enemy{
         }
     }
 
-
+    /**
+     * set a start Value to let the boss move
+     */
     initMovement(){
         let randomMovement = [this.walkspeed, -this.walkspeed]
         this.acc = randomMovement[Math.floor(Math.random() * randomMovement.length)];
 
     }
 
+    /**
+     * used to let Boss move randomy in the sky
+     */
     moveRandomly(){
         let randomChoice = Math.floor(Math.random() * 50)
         if(randomChoice == 5){
@@ -204,6 +229,9 @@ export class GhostBoss extends Enemy{
         }
     }
 
+    /**
+     * if Boss to far away from HomePoint he will turn back
+     */
     checkHomePoint(){
         let distanceX = this.distanceToOrigin();
         if(!this.isTurningBack){
@@ -216,11 +244,18 @@ export class GhostBoss extends Enemy{
         }
     }
 
+    /**
+     * check the distance between Boss and his Homepoint
+     */
     distanceToOrigin(){
         let distanceX = this.pos[0] - this.originalPos[0];
         return distanceX
     }
 
+
+     /**
+     * check the distance between Player and Boss his Homepoint
+     */
     distancePlayerToOrigin(){
         let distanceX = this.level.player.pos[0] - this.originalPos[0];
         if(distanceX < 0){
@@ -229,6 +264,9 @@ export class GhostBoss extends Enemy{
         return distanceX
     }
 
+     /**
+     * let Boss walk around randomly
+     */
     flyAround(){
         let distance = this.distanceToOrigin();
         let randomNumber = Math.random() * 75;
@@ -246,6 +284,9 @@ export class GhostBoss extends Enemy{
         this.turnAroundBydistance();
     }
 
+    /**
+     * if Boss to far away from HomePoint he will turn back
+     */
     turnAroundBydistance(){
         let distance = this.distanceToOrigin();
         if(distance < -300 && !this.isTurningBack){
@@ -259,7 +300,9 @@ export class GhostBoss extends Enemy{
         }
     }
 
-
+    /**
+     * will force the boss to switch look at the direction of the Player 
+     */
     facingTowardsPlayer(){
         let distanceX = this.pos[0] - this.level.player.pos[0];
         if(this.health > 0){
@@ -271,12 +314,18 @@ export class GhostBoss extends Enemy{
         }
     }
 
+    /**
+     * check th Distance between Boss and Player
+     */
     checkDistanceToPlayer(){
         this.distanceXToPlayer = (this.pos[0] + (this.size[0] / 2 )) - (this.level.player.pos[0] + (this.level.player.size[0] / 2));
         this.distanceYToPlayer = (this.pos[1] + (this.size[1] / 2 )) - (this.level.player.pos[1] + (this.level.player.size[1] / 2));
         this.distanceToPlayer = Math.floor(Math.hypot(this.distanceXToPlayer, this.distanceYToPlayer));
     }
 
+    /**
+     * For debugging will draw a line from Boss to Player
+     */
     drawConnectionLine(){
         if(this.level.showDebug){
             ctx.beginPath();

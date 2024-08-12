@@ -55,10 +55,13 @@ export class Mushroom extends Enemy{
         this.health = 30;
         this.hitSound = soundIsloadet.slurp04;
         
+        /**
+        * create all needet Hitboxes by init this class
+        */
         this.createHitBox(this.pos, [48,45], [-49,5], {lifespan: 10, demageFlag: "Player", forceToLeft: false, color: "rgba(255,125,0,0.25)"}, this);
         this.createHitBox(this.pos, [48,45], [32,5], {lifespan: 10, demageFlag: "Player", forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
-        this.createHitBox(this.pos, [10,32], [-11,20], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: false, color: "rgba(255,125,0,0.25)"}, this);
-        this.createHitBox(this.pos, [10,32], [31,20], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
+        this.createHitBox(this.pos, [10,32], [-11,20], {lifespan: 10, demageFlag: "Player", isActive: true, isAllawysActive: true, forceToLeft: false, color: "rgba(255,125,0,0.25)"}, this);
+        this.createHitBox(this.pos, [10,32], [31,20], {lifespan: 10, demageFlag: "Player", isActive: true, isAllawysActive: true, forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
         this.createJumpPad(this.pos, [52,23], [-11,-4], {color: "rgba(0,300,300,0.25)"}, this);
     }
 }

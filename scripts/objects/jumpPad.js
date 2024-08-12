@@ -1,5 +1,4 @@
 import { Hitbox } from "./hitbox-class.js";
-import { soundIsloadet } from "../assets.js";
 export class JumpPad extends Hitbox{
     constructor(options, entity){
         const {pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset} = options
@@ -18,7 +17,7 @@ export class JumpPad extends Hitbox{
      /**
      * will actived by collision and will let the hitting Entity jump.
      */
-    aktivInCollision(obj){
+    activeInCollision(obj){
         if(this.entity.index != obj.index && this.valideTyps.includes(obj.type)){
             obj.vel[1] = -1.45;
             this.chooseRandomSound(["bounce02"]);

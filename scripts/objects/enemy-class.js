@@ -39,7 +39,9 @@ export class Enemy extends Box {
         this.scoreValue = options.scoreValue || 15;
     }
 
-
+    /**
+     * will look inisde level Objects for his id and delete it.
+     */
     delete(){
             let index = null;
             this.level.objects.forEach((obj) => {
@@ -50,6 +52,9 @@ export class Enemy extends Box {
         });
     }   
     
+   /**
+   * Push Object aside if possible to the left
+   */
     pushObjectToLeft(box){
         if (box.type != "Box") return false;
             const distance = box.posRight - this.posLeft;
@@ -66,6 +71,10 @@ export class Enemy extends Box {
         return false;
     }
 
+
+   /**
+   * Push Object aside if possible to the right
+   */
     pushObjectToRight(box){
         if (box.type != "Box") return false;
             const distance = this.posRight - box.posLeft;
@@ -82,6 +91,10 @@ export class Enemy extends Box {
         return false;
     }
     
+    /**
+     * Push Object aside if possible
+     * @param {Object} box is a Object, that is possible to push aside
+     */
     pushObject(box) {
         return {
         toLeft: () => pushObjectToLeft(box),
@@ -89,6 +102,9 @@ export class Enemy extends Box {
         };
     }
 
+    /**
+     * save the current location of Player
+     */
     checkPlayerPosition(){
         let currentPosRight = this.level.objectsOfType.Player[0].posRight
         let currentPosLeft = this.level.objectsOfType.Player[0].posLeft
@@ -98,6 +114,9 @@ export class Enemy extends Box {
     } 
 
 
+     /**
+     * Main-Update-Loop
+     */
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);
@@ -106,6 +125,9 @@ export class Enemy extends Box {
         this.stateMachine.updateState();
     }
 
+    /**
+    * check is this Enemy is looking right or left
+    */
     checkIsFacingLeft(){
         if(this.acc < 0.00020 && !this.getHit && this.acc != 0){
             this.facingLeft = false
@@ -114,7 +136,9 @@ export class Enemy extends Box {
         }
     }
 
-
+    /**
+    * check is enemy falling
+    */
     isInFall(){
         let isInFall = false;
         if(this.vel[1] > 0 && !this.onGround){
@@ -123,7 +147,11 @@ export class Enemy extends Box {
         return;
     }
 
-
+    /**
+    * checks is Player in any AggroRange 
+    * first AggroRange for running towards Player
+    * is Enemy close enough and Player is in the second AggroRange -> Enemy will attack
+    */
     checkIsPlayerinAggro(){
         let playerdistance = this.checkDistanceToPlayer();
         let inBigAggro = false;
@@ -138,6 +166,8 @@ export class Enemy extends Box {
     }
 
     /**
+     * Checks the distance between Player and Enemey
+     * returns an Array 
      * posArray[0] & posArray[1] = Player Position X und Player Position Y
      * posArray[2] & posArray[3] = Enemy Position X und Enemy Position Y
      */
@@ -153,6 +183,10 @@ export class Enemy extends Box {
         return [distanceX, distanceY, Math.hypot(distanceX, distanceY)]
     }
 
+    /**
+    * let Enemy jump
+    * @param {Number} jumpspeed -> to discribe how strong this jump is
+    */
     jump(jumpspeed = this.jumpspeed){
         if(this.onGround){
             this.isAlreadyJumping = true;
@@ -161,6 +195,9 @@ export class Enemy extends Box {
         }
     }
 
+    /**
+     * check for his cooldown and stop attacking if is not ready
+     */
     checkForCooldown(){
         this.currentTime = new Date();
         if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
@@ -168,10 +205,10 @@ export class Enemy extends Box {
         }
     }
 
-/**
- * 
- * @returns - Value 1 = will it collide at all | Value 2 = will it collide from left = true or Right = false;
- */
+    /**
+    * checks is something in way of Enemy
+    * @returns - Value 1 => will it collide at all -> true or false | Value 2 => will it collide from left = true or Right = false;
+    */
     checkisObjectNear(){
         let offset = [25,0];
         let willCollide = [false, false];
@@ -191,22 +228,27 @@ export class Enemy extends Box {
         return willCollide;
     }
 
-
+    /**
+     * Help function for checkisObjectNear() and checks is enemy infront of the end of the level
+     * @param {*} willCollide will adding infos about collsion of the end of the level
+     * @param {Value} offset for checking the end of the level
+     * @returns 
+     */
     checkIsLevelSizeNear(willCollide, offset){
         if(this.posRight + offset[0] >= this.level.size[0]){
             willCollide[0] = true;
             willCollide[1] = true;
         }
-
         if (this.posLeft + offset[0] <= 0){
             willCollide[0] = true;
             willCollide[1] = false;
-
         }
         return willCollide;
     }
 
-
+    /**
+     * Set max Speed to any direction to prevent bugs
+     */
     checkMaxSpeed(){
         if (this.vel[0] >= 0.2 && !this.gethit){
             this.vel[0] = 0.2;

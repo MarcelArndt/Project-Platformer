@@ -41,6 +41,9 @@ export class Projectile extends Entity{
         this.isInCollision = false;
     }
 
+     /**
+     * Main-Update-Loop
+     */
     update(deltaTime){
         this.prevPos = [...this.pos];
         super.update(deltaTime);
@@ -49,6 +52,10 @@ export class Projectile extends Entity{
         this.showCollider();
     }
 
+
+    /**
+     * for debugging and show his Hitbox
+     */
     showCollider(){
         if(this.level.showDebug){
             if(this.level.showDebug){
@@ -61,7 +68,12 @@ export class Projectile extends Entity{
         }
     }
 
-    aktivInCollision(obj, direction){
+    /**
+     * 
+     * @param {object} obj the Entity itself which gets hit by this projectile
+     * @param {string} direction where the Entity gets hit from
+     */
+    activeInCollision(obj, direction){
         if(obj.type == this.demageFlag){
             obj.reciveHitFromObj(direction, this.demage);
         } else if(obj.type == "Rectangle"){
@@ -70,15 +82,20 @@ export class Projectile extends Entity{
         this.isInCollision = true;
     }
 
+    /**
+    * to move a projectile
+    */
     moveProjectile(deltaTime){
         if( this.animationStatus != "starting"){
             this.pos[0] += this.speedX * this.speedMultiplyer * deltaTime;
             this.pos[1] += this.speedY * this.speedMultiplyer * deltaTime;
             this.vel[1] += this.grav * deltaTime;
         }
-
     }
 
+    /**
+    * after times past it will this projectile will turn off.
+    */
     updateLifeSpan(deltaTime){
         let secDeltaTime = deltaTime / 1000;
         if(this.currentlifeTimer < this.lifespan && this.alive){
@@ -90,6 +107,26 @@ export class Projectile extends Entity{
     }
 }
 
+/**
+ * StateMachine to controll the start-, mid-, and end-State of a Projectile
+ * 
+ * //////////////////////////////////////
+ * //////// DESCRIBE A STATUS ///////////
+ * //////////////////////////////////////
+ *
+ * Structure of a State:
+ * 
+ * export class State{
+ *  start(entity){} -> automatically execute any command if entity enters this State
+ * 
+ *  behave(entity){} -> Update-Loop to describe his behaviour and let entity act as programmed
+ * 
+ *  checkConditions(entity){} -> Update-Loop to check Conditions to leave this current State
+ * 
+ *  leaveState(entity){} -> automatically execute any command if entity leaves this State
+ *  }
+ * 
+ */
 class StateMachine {
     constructor(state, entity){
         this.currentState = state;
@@ -97,15 +134,21 @@ class StateMachine {
         this.currentState.start(this.entity);
     }
 
+    /**
+     * active in switching between States
+     */
     changeState(newState){
         this.currentState.leaveState(this.entity);
         this.currentState = newState;
         this.currentState.start(this.entity);
     }
 
-    updateState(deltaTime){
-        this.currentState.behave(this.entity, deltaTime);
-        this.currentState.checkConditions(this.entity, deltaTime);
+    /**
+     * Update-Main-loop
+     */
+    updateState(){
+        this.currentState.behave(this.entity);
+        this.currentState.checkConditions(this.entity);
     }
 }
 

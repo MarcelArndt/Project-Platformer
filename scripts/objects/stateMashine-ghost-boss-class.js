@@ -8,12 +8,18 @@ export class StateMachine {
         this.currentState.start(this.entity);
     }
 
+    /**
+     * active in switching between States
+     */
     changeState(newState){
         this.currentState.leaveState(this.entity);
         this.currentState = newState;
         this.currentState.start(this.entity);
     }
 
+    /**
+     * Update-Main-loop
+     */
     updateState(){
         this.currentState.behave(this.entity);
         this.currentState.checkConditions(this.entity);
@@ -21,15 +27,24 @@ export class StateMachine {
 }
 
 
+//////////////////////////////////////
+//////// DESCRIBE A STATUS ///////////
+//////////////////////////////////////
 /**
- * Strukture of a new State:
+ * Structure of a State:
+ * 
+ * export class State{
+ *  start(entity){} -> automatically execute any command if entity enters this State
+ * 
+ *  behave(entity){} -> Update-Loop to describe his behaviour and let entity act as programmed
+ * 
+ *  checkConditions(entity){} -> Update-Loop to check Conditions to leave this current State
+ * 
+ *  leaveState(entity){} -> automatically execute any command if entity leaves this State
+ *  }
+ * 
  */
-export class State{
-    start(entity){}
-    behave(entity){}
-    checkConditions(entity){}
-    leaveState(entity){}
-}
+
 
 
 //////////////////////////////////////

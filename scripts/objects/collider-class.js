@@ -203,7 +203,7 @@ export class Collider {
     checkProjectile(obj, direction){
         let validType = ["Player", "Enemy", "Rectangle"]
         if (obj.subType == "Projectile" && validType.includes(this.entity.type)){
-            obj.aktivInCollision(this.entity, direction);
+            obj.activeInCollision(this.entity, direction);
             return true
         }
         return false
@@ -215,20 +215,20 @@ export class Collider {
     checkJumpPad(obj){
         let valideTyps = ["Enemy", "Player"];
         if(obj.subType == "JumpPad" && this.entity.type != "Hitbox" && this.entity.index != obj.index && valideTyps.includes(this.entity.type) && this.entity.vel[1] >= 0){
-                obj.aktivInCollision(this.entity)
+                obj.activeInCollision(this.entity)
             return true
         }
     }
 
      /**
-     * checks for Enity is getting hit by a activ Hitbox with the Entity's Type for his target.
+     * checks for Enity is getting hit by a active Hitbox with the Entity's Type for his target.
      */
     checkHitbox(obj){
         let gethitfrom = false;
         if(obj.type == "Hitbox" && this.entity.subType != "JumpPad"){
-            if(obj.isAktiv && obj.demageFlag == this.entity.type && this.entity.isOnScreen){
+            if(obj.isActive && obj.demageFlag == this.entity.type && this.entity.isOnScreen){
                 gethitfrom = obj.forceToLeft == true ? "left" : "right";
-                obj.aktivInCollision(this.entity, gethitfrom);
+                obj.activeInCollision(this.entity, gethitfrom);
             }
             return true
         }
