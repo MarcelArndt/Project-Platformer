@@ -6,14 +6,12 @@ export class Timer {
     this.pause = false;
   }
 
-
   /**
   * the game-loop itself to repeat any update-loop inside the game.
   */
   start() {
     requestAnimationFrame(this.loop.bind(this));
   }
-
 
   /**
   *  if game doesn't start already and isn't paused it will start this loop and will manage the timeValue to prevent lag spikes.

@@ -191,7 +191,6 @@ export class Box extends Rectangle{
         this.demageBoxes.push(newBox);
       }
     
-
     /**
      * @param {number} velX adjust and finetune the amount of pusback to left and right
      * @param {number} velY adjust and finetune the amount of pushback in hight
@@ -296,7 +295,7 @@ export class Box extends Rectangle{
      * enable screenshake effect
      * @param {number} frameValue - to set a timer in frames
      */
-      screenShakeEnable(frameValue = 10){
+    screenShakeEnable(frameValue = 10){
         this.level.screenAnimationTime = 0;
         this.level.screenAnimationMaxTimer = frameValue
         this.level.screenshakeToggle = true;
@@ -388,5 +387,5 @@ export class Box extends Rectangle{
                 this.statusbar.refreshValue(this.health);
             }
         }  
-      }
+    }
 }

@@ -45,7 +45,6 @@ export class LevelManager{
         case "startGame": this.start(); break;
       }
     }
-
     
     /**
     * checks and switch the state of a Game/level, prevent some propagation and enable the debug menu as well.
@@ -73,58 +72,58 @@ export class LevelManager{
       /**
       * for enter the pause function and switch off all necessary data inside this level.
       */
-      pause(modus = 0) {
-        soundIsloadet.tone07.volume = 1 * this.level.globalVolume;
-        soundIsloadet.tone07.play();
-        ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
-        ctx.fillRect(0,0, canvas.width, canvas.height);
-        drawMenuBookBackground();
-        pullPauseMenu(modus);
-        this.level.status = status.pause;
-        this.level.timer.getInPause();
-        this.level.savedGlobalVolume = this.level.globalVolume;
-        this.level.globalVolume = 0;
-        this.level.musicManager.pause();
-      }
+    pause(modus = 0) {
+      soundIsloadet.tone07.volume = 1 * this.level.globalVolume;
+      soundIsloadet.tone07.play();
+      ctx.fillStyle = "rgba(28, 13, 8, 0.8)";
+      ctx.fillRect(0,0, canvas.width, canvas.height);
+      drawMenuBookBackground();
+      pullPauseMenu(modus);
+      this.level.status = status.pause;
+      this.level.timer.getInPause();
+      this.level.savedGlobalVolume = this.level.globalVolume;
+      this.level.globalVolume = 0;
+      this.level.musicManager.pause();
+    }
 
-      /**
-      * for leaving the pause function and switch back all necessary data inside this level.
-      */
-      resume(){
-        soundIsloadet.tone09.volume = 1 * this.level.globalVolume;
-        soundIsloadet.tone09.play();
-        this.level.globalVolume = this.level.savedGlobalVolume;
-        canvasOverlayContent.innerHTML = "";
-        this.level.status = status.running;
-        this.level.timer.pause = false;
-        this.level.timer.start();
-        pullIngameGui();
-        checkForVolume();
-        this.level.musicManager.resume();
-      }
+    /**
+    * for leaving the pause function and switch back all necessary data inside this level.
+    */
+    resume(){
+      soundIsloadet.tone09.volume = 1 * this.level.globalVolume;
+      soundIsloadet.tone09.play();
+      this.level.globalVolume = this.level.savedGlobalVolume;
+      canvasOverlayContent.innerHTML = "";
+      this.level.status = status.running;
+      this.level.timer.pause = false;
+      this.level.timer.start();
+      pullIngameGui();
+      checkForVolume();
+      this.level.musicManager.resume();
+    }
     
-      /**
-      * loads all necessary data inside this level and start this level for the frist time. 
-      */
-      start() {
-        this.level.currentBossMusic.volume = 0;
-        canvasOverlayContent.innerHTML = "";
-        this.level.background = new Background({ color: "#453d4f" }, [
-          imageIsloadet.backgroundOne,
-          imageIsloadet.backgroundTwo,
-          imageIsloadet.backgroundThree,
-        ], this.level);
-        this.level.tileset.generateLevel(this.level);
-        this.level.player = this.level.objectsOfType.Player[0];
-        this.level.originPlayerLives = this.level.player.maxHealth;
-        this.level.originPlayerSize = [... this.level.player.size];
-        pullIngameGui();
-        this.level.game.committedValueToGame();
-        this.resetMusicManger();
-        this.level.status = status.running;
-        this.level.timer.pause = false;
-        this.level.timer.start();
-        checkVolumeButtons()
+    /**
+    * loads all necessary data inside this level and start this level for the frist time. 
+    */
+    start() {
+      this.level.currentBossMusic.volume = 0;
+      canvasOverlayContent.innerHTML = "";
+      this.level.background = new Background({ color: "#453d4f" }, [
+        imageIsloadet.backgroundOne,
+        imageIsloadet.backgroundTwo,
+        imageIsloadet.backgroundThree,
+      ], this.level);
+      this.level.tileset.generateLevel(this.level);
+      this.level.player = this.level.objectsOfType.Player[0];
+      this.level.originPlayerLives = this.level.player.maxHealth;
+      this.level.originPlayerSize = [... this.level.player.size];
+      pullIngameGui();
+      this.level.game.committedValueToGame();
+      this.resetMusicManger();
+      this.level.status = status.running;
+      this.level.timer.pause = false;
+      this.level.timer.start();
+      checkVolumeButtons()
       }
 
       /**

@@ -6,6 +6,7 @@ export class JumpPad extends Hitbox{
         super(pos, size, color, lifespan, forceToLeft, demage, demageFlag, isAktiv, isAllawysAktiv , offset, entity, "Hitbox")
         this.isAllawysAktiv = isAllawysAktiv || false;
         this.entity = entity;
+        this.type = "Hitbox";
         this.subType = "JumpPad";
         this.pos = pos;
         this.size = size;
@@ -14,14 +15,9 @@ export class JumpPad extends Hitbox{
         this.setOffset = offset || [0,0];
     }
 
-    update(deltaTime){
-        this.checkIsAllawysAktiv();
-        this.draw();
-        this.updatePosition(this.stickToObject);
-        this.updateCounter(deltaTime / 1000);
-        this.collider.update(deltaTime);
-    }
-
+     /**
+     * will actived by collision and will let the hitting Entity jump.
+     */
     aktivInCollision(obj){
         if(this.entity.index != obj.index && this.valideTyps.includes(obj.type)){
             obj.vel[1] = -1.45;

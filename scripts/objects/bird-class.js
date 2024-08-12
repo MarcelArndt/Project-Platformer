@@ -218,7 +218,6 @@ export class Bird extends Box {
         return distance;
     }
 
-
     /**
      * disable a bird and prepare it to respawn 
      */    
@@ -239,5 +238,4 @@ export class Bird extends Box {
         this.walkspeed =  this.originWalkspeed
         this.stateMachine = new StateMachine(new Idle(), this);
     }
-
 }

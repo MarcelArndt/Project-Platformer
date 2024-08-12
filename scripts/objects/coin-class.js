@@ -21,12 +21,18 @@ export class Coin extends Entity{
         this.collider = new Collider(this);
     }
 
+     /**
+     * will actived by collision and add points to the player's score
+     */
     activateItem(){
         this.chooseRandomSound(["coin01","coin02","coin03"]);
         this.level.player.score += this.value;
         this.deleteObject();
     }
 
+    /**
+     * Main Update-Loop
+     */
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);

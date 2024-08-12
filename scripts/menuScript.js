@@ -29,7 +29,6 @@ export function InitMainMenu(myGame, levelOne){
     menuInit();
 }
 
-
 /**
  * checks if The Player is clicking on a Button and execute the necessity function for it.
  */
@@ -53,7 +52,6 @@ export function menuInit(){
     });
     sidePanel = document.getElementById("renderSidePanel");
 }
-
 
 /**
  * will render Pause Screen from template.js

@@ -22,6 +22,9 @@ export class Potion extends Entity{
 
     }
 
+     /**
+     * will actived by collision and add healthPoint to Player
+     */
     activateItem(){
         let newValue = null;
         this.chooseRandomSound(["pop01","pop02","pop03"]);
@@ -37,7 +40,9 @@ export class Potion extends Entity{
         this.deleteObject();
     }
 
-
+     /**
+     * Main Update-Loop
+     */
     update(deltaTime){
         super.update(deltaTime);
         this.updateFrameAnimation(deltaTime);

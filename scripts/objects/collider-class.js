@@ -39,7 +39,9 @@ export class Collider {
             }
         }
 
-
+     /**
+     * Main Update-Loop and checks for collision in any direction and if something is landing on a SemiSolid Plattform
+     */
     update(deltaTime){
         this.showCollider();
         this.entity.prevPos = [...this.entity.pos];
@@ -55,6 +57,9 @@ export class Collider {
         });
     }
 
+     /**
+     * Checks for Entity is colliding with something from above
+     */
     checkFromAbove(obj) {
         if(this.entity.getPrevPosTop() <= obj.posBottom && this.entity.getPrevPosBottom() >= obj.posBottom && this.entity.collideWith(obj, [0, 0])){
            if (this.entity.type != "Hitbox" && this.checkSpecialHandle(obj ,"above")){
@@ -64,6 +69,9 @@ export class Collider {
         }
     }
 
+    /**
+     * Checks for Entity is colliding with something from bottom
+     */
     checkFromBelow(obj) {
         if(this.entity.getPrevPosBottom() >= obj.posTop && this.entity.getPrevPosTop() <= obj.posTop && this.entity.collideWith(obj, [0, 0])){
             if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"below")){
@@ -76,7 +84,10 @@ export class Collider {
             this.entity.jump.alreadyInJump = false
         }
     }
- 
+    
+    /**
+     * Checks for Entity is colliding with something from left
+     */
     checkFromLeft(obj) {
         if(this.entity.getPrevPosRight() <= obj.posLeft && this.entity.getPrevPosLeft() <= obj.posLeft && this.entity.collideWith(obj, [8, -2])){
             if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"left")){
@@ -86,6 +97,9 @@ export class Collider {
         }
     }
 
+    /**
+     * Checks for Entity is colliding with something from right
+     */
     checkFromRight(obj) {
         if(this.entity.getPrevPosLeft() >= obj.posRight && this.entity.getPrevPosLeft() >= obj.posLeft && this.entity.collideWith(obj, [-8, -2])){
             if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"right")){
@@ -95,6 +109,9 @@ export class Collider {
         }
     }
 
+     /**
+     * Checks for Entity is landing on a SemiSolid Plattform
+     */
     checkSemiSolid(obj) {
         if(this.entity.getPrevPosBottom() <= obj.posTop && !this.entity.crouch) {
             if (this.entity.type != "Hitbox" && this.entity.subType != "JumpPad" && this.checkSpecialHandle(obj ,"below")){
@@ -111,8 +128,8 @@ export class Collider {
     }
 
     /**
-     * @param {*} obj  -> Object
-     * @param {*} direction  -> Direction form where Object hits this.entity. - "above" object hits this.entity from above
+     * @param {object} obj  -> Object
+     * @param {string} direction  -> Direction form where Object hits this.entity. - "above" object hits this.entity from above
      *  For special conditions to check Collisions. if one conditions is true it will prevent to collide. 
      */
     checkSpecialHandle(obj, direction){
@@ -130,10 +147,16 @@ export class Collider {
         );
     }
 
+     /**
+     * prevent collsion against Entity of any Typ with Entity with subType "noCollider"
+     */
     checkNoCollsionSubType(obj){
         return (obj.subType == "noCollider" && this.entity.type != "Rectangle" || this.entity.type == "noCollider" && obj.type != "Rectangle");
     }
 
+     /**
+     * checks for Player is in collision with an item and prevent Enemy can collide with items
+     */
     checkforItem(obj){
         if (obj.subType == "Item" && this.entity.type == "Player") {
                 obj.activateItem();
@@ -143,18 +166,30 @@ export class Collider {
         }
     } 
 
+     /**
+     * prevent collison withs Birds
+     */
     checkforBird(obj){
         return (obj.subType == "Bird" && this.entity.type != "Rectangle" || this.entity.subType == "Bird" && obj.type != "Rectangle");
     }
 
+    /**
+     * prevent collison withs Objects/Entities with Type "Dead"
+     */
     checkforDeath(obj){
         return (obj.type == "Death" && this.entity.type != "Rectangle" || this.entity.type == "Death" && obj.type != "Rectangle");
     }
 
+     /**
+     * prevent collison withs Objects/Entities with Type "Dead"
+     */
     checkforGetHit(obj){
         return (obj.type == "GetHit" && this.entity.type != "Rectangle" || this.entity.type == "GetHit" && obj.type != "Rectangle");
     }
 
+     /**
+     * checks for collision with Spikes to kill the Entity
+     */
     checkDeadlySolidBlock(obj, direction){
         if (direction == "below" && obj.subType == "deadlySolidBlock"){
             obj.activateTrap(this.entity);
@@ -162,6 +197,9 @@ export class Collider {
         }
     }
 
+     /**
+     * checks for collision with porjectiles and give Entity some demage
+     */
     checkProjectile(obj, direction){
         let validType = ["Player", "Enemy", "Rectangle"]
         if (obj.subType == "Projectile" && validType.includes(this.entity.type)){
@@ -171,16 +209,20 @@ export class Collider {
         return false
     }
 
+     /**
+     * checks if Entity is jump on a JumpPad to push back into the air
+     */
     checkJumpPad(obj){
         let valideTyps = ["Enemy", "Player"];
-        if(obj.subType == "JumpPad" && this.entity.type != "Hitbox"){
-            if(this.entity.index != obj.index && valideTyps.includes(this.entity.type) && this.entity.vel[1] >= 0){
+        if(obj.subType == "JumpPad" && this.entity.type != "Hitbox" && this.entity.index != obj.index && valideTyps.includes(this.entity.type) && this.entity.vel[1] >= 0){
                 obj.aktivInCollision(this.entity)
-            }
             return true
         }
     }
 
+     /**
+     * checks for Enity is getting hit by a activ Hitbox with the Entity's Type for his target.
+     */
     checkHitbox(obj){
         let gethitfrom = false;
         if(obj.type == "Hitbox" && this.entity.subType != "JumpPad"){
@@ -192,8 +234,10 @@ export class Collider {
         }
     }
 
+     /**
+     * to allow to run though the Boss
+     */
     checkBoss(obj){
         return (obj.subType == "Boss" && this.entity.type != "Rectangle" || this.entity.subType == "Boss" && obj.type != "Rectangle");
     }
-
 }

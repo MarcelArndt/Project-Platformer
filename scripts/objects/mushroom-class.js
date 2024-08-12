@@ -61,11 +61,4 @@ export class Mushroom extends Enemy{
         this.createHitBox(this.pos, [10,32], [31,20], {lifespan: 10, demageFlag: "Player", isAktiv: true, isAllawysAktiv: true, forceToLeft: true, color: "rgba(255,125,0,0.25)"}, this);
         this.createJumpPad(this.pos, [52,23], [-11,-4], {color: "rgba(0,300,300,0.25)"}, this);
     }
-
-    checkForCooldown(){
-        this.currentTime = new Date();
-        if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
-            this.cooldown.isMainAttack = false;
-        }
-    }
 }

@@ -161,6 +161,13 @@ export class Enemy extends Box {
         }
     }
 
+    checkForCooldown(){
+        this.currentTime = new Date();
+        if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
+            this.cooldown.isMainAttack = false;
+        }
+    }
+
 /**
  * 
  * @returns - Value 1 = will it collide at all | Value 2 = will it collide from left = true or Right = false;

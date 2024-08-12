@@ -8,8 +8,4 @@ export class SemiSolidBlock extends Rectangle{
         this.type = type || "Rectangle";
         this.subType = "SemiSolidBlock";
     }
-    
-    update(deltaTime){
-        super.update(deltaTime);
-    }
 }

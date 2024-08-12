@@ -9,10 +9,9 @@ export class DeadlySolidBlock extends Rectangle{
         this.subType = "deadlySolidBlock";
     }
     
-    update(deltaTime){
-      
-    }
-
+     /**
+     * will actived by collision and will kill any Entity
+     */
     activateTrap(obj){
       if (obj.subType == "Bird"){
         obj.despawn()
@@ -20,5 +19,4 @@ export class DeadlySolidBlock extends Rectangle{
         obj.health = 0;
       }
     }
-
 }

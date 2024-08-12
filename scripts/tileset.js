@@ -29,7 +29,6 @@ export class Tileset {
     this.level = null;
   }
 
-
   /**
   * received the location of a block and compare the tileNumber with the current Tileset to place a block.
   * Tileset-Image gets divided into sections by this.tileSize (32x32 Pixel for a Tile-Texture) and this.amountOfElementsInRow (16 x 32x32 -> 16 Blocks in a Row for Example) 
@@ -57,7 +56,6 @@ export class Tileset {
       }
       });
   }
-
 
   /**
   * loop though the Array which contains all data of Entity inside the current level.
@@ -94,7 +92,6 @@ export class Tileset {
       });
     });
   }
-
 
   /**
   * loop though the Array which contains all data of Tiles inside the current level.
@@ -137,7 +134,6 @@ export class Tileset {
       });
     });
   }
-
 
   /**
   * set all Values from current level back to zero and start regenerating the level from data again.

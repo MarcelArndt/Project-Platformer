@@ -86,7 +86,6 @@ export class MusikManager{
         });
     }
 
-
     /**
     * Core Function to play a new song from system and build some new necessary information around the original Object.
     */ 
@@ -110,7 +109,6 @@ export class MusikManager{
         this.currentPlaylist[0].fadingIn = true;
     }
 
-
     /**
     * constantly updating the current Object/Song Volume
     */ 
@@ -119,7 +117,6 @@ export class MusikManager{
             songObj.song.volume = Math.abs(0.65 * Volume * songObj.fadingValue);
         }
     }
-
 
     /**
      * @param {object} songObj - a current playing track in the current Playlist
@@ -135,7 +132,6 @@ export class MusikManager{
             this.currentPlaylist.splice(index, 1)
         }
     }
-
 
     /**
      * @param {object} songObj - set to play the current Object if and will fading in.
@@ -156,7 +152,6 @@ export class MusikManager{
             this.fadingOut(songObj, index);
         }
     }
-
 
     /**
     * @param {number} volume - received from current level-update-loop and keeping update all tracks inside the Playlist

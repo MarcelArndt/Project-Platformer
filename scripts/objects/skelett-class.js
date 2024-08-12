@@ -59,13 +59,6 @@ export class Skelett extends Enemy{
         this.scoreValue = options.scoreValue || 8;
     }
 
-    checkForCooldown(){
-        this.currentTime = new Date();
-        if (this.currentTime - this.cooldown.MainAttackCooldownValue > this.cooldown.latestDateOfAttack && this.cooldown.isMainAttack){
-            this.cooldown.isMainAttack = false;
-        }
-    }
-
     update(deltaTime){
         super.update(deltaTime)
         this.drawConnectionLine()
