@@ -68,6 +68,7 @@ export function pullPauseMenu(modus = 0){
  * will render Game is ready Screen from template.js
  */
 export function pullGameReady(){
+    
     let quciktipPanel = null
     let randomNumber = Math.floor(Math.random()* 3) 
     playSound("success09");

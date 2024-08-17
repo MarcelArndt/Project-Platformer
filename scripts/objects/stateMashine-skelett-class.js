@@ -134,11 +134,9 @@ export class Walking{
         entity.checkIsPlayerinAggro();
         if (entity.PlayerInAggro[0]){
             entity.stateMachine.changeState(new Chasing());
-            this.leaveState(entity);
         }
 
         if(entity.getHit){
-            this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
 
@@ -184,15 +182,12 @@ export class Chasing{
     checkConditions(entity){
         entity.checkIsPlayerinAggro();
         if (!entity.PlayerInAggro[0]){
-            entity.stateMachine.changeState(new Walking());
-            this.leaveState(entity) ; 
+            entity.stateMachine.changeState(new Walking()); 
         } else if (entity.PlayerInAggro[1]){
             entity.stateMachine.changeState(new Attack());  
-            this.leaveState(entity);
         }
 
         if(entity.getHit){
-            this.leaveState(entity);  
             entity.stateMachine.changeState(new GetHit());    
         }
 

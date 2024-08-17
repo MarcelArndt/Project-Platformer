@@ -42,7 +42,7 @@ export class LevelManager{
       switch(atribute){
         case "openKeyboard": this.pause(1); break;
         case "restartButton": this.resetLevel();  this.resetMusicManger(); break;
-        case "startGame": this.start(); break;
+        case "startGame":this.resetMusicManger(); this.start(); break;
       }
     }
     
@@ -148,6 +148,8 @@ export class LevelManager{
         this.level.savedGlobalVolume = this.level.globalVolume;
         this.level.globalVolume = 0;
         this.level.musicManager.stopAll();
+        this.removeControll();
+        this.level.player.keyBoard.removeControll();
         this.level.musicManager.play(soundIsloadet.bgm_outro);
         this.saveStats();
       }
@@ -211,6 +213,7 @@ export class LevelManager{
       this.resetLife();
       this.resetScore();
       this.resetLevel();
+      this.addControll();
       this.level.status = status.pause;
       this.level.timer.getInPause();
       this.level.musicManager.stop();

@@ -19,7 +19,8 @@ export class PlayerKeyboard {
         const clickedDiv = event.target;
         const atribute = clickedDiv.getAttribute("value");
         const eventValue = event.key || atribute;
-        if(eventValue == " " || eventValue == "w" || eventValue == "ArrowUp"){
+        const preventKeys = [" ", "w" , "ArrowUp"]
+        if(preventKeys.includes(eventValue) && !this.Player.level.levelIsWon){
             event.preventDefault();
             event.stopPropagation();
         }
@@ -29,7 +30,7 @@ export class PlayerKeyboard {
     }
 
     /**
-     * checks for a key is going up and prevent any move from it. Delete this Key out of the Array of all current pressing Keys
+     * checks for a key is going up and prevent any move from it. Delete this Key out of the Array of all current pressing Keysa 
      */
     keyUpFunction(event){
         const clickedDiv = event.target;
@@ -81,7 +82,6 @@ export class PlayerKeyboard {
      * will delete all Event-Listener to the document.
      */
     removeControll() {
-    if(this.alreadyGetControll){
         this.KeyMap = [];
         document.removeEventListener("keydown", this.keyfunctionPressRef);
         document.removeEventListener("keyup", this.keyfunctionUpRef);
@@ -90,6 +90,5 @@ export class PlayerKeyboard {
         document.addEventListener("mousedown", this.mouseDownFuncRef);
         document.addEventListener("mouseup", this.mouseUpFuncRef);
         this.alreadyGetControll = false;
-    }
     }
 }
